@@ -1,27 +1,23 @@
-/* ============================================================
-   R.C PAY GOOGLE SHEETS BACKEND
-   ============================================================ */
+/*
+============================================================
+R.C PAY - GOOGLE SHEETS BACKEND
+============================================================
+
+This receives reports from the R.C PAY web application
+and appends them to a Google Sheet.
+
+IMPORTANT:
+Change SECRET below to your own private secret.
+Do NOT use the example value in production.
+============================================================
+*/
+
 
 const CONFIG = {
 
-  /*
-     CHANGE THIS TOKEN.
+  SECRET: "CHANGE_THIS_TO_YOUR_PRIVATE_SECRET",
 
-     Use the same token in the R.C PAY web application.
-  */
-  TOKEN: "CHANGE_THIS_TO_YOUR_PRIVATE_TOKEN",
-
-  /*
-     If you leave SHEET_ID empty, the script will use the
-     spreadsheet that this Apps Script is attached to.
-  */
-  SHEET_ID: "",
-
-  REPORT_SHEET: "RC PAY REPORT",
-
-  KML_SHEET: "KML BLOCKS",
-
-  LOG_SHEET: "PAY LOG"
+  DEFAULT_SHEET: "RC_PAY_REPORTS"
 
 };
 
@@ -32,17 +28,16 @@ const CONFIG = {
 
 function doGet(e) {
 
-  return ContentService
-    .createTextOutput(
-      JSON.stringify({
-        success: true,
-        application: "R.C PAY",
-        status: "online"
-      })
-    )
-    .setMimeType(
-      ContentService.MimeType.JSON
-    );
+  return jsonResponse({
+
+    ok: true,
+
+    service: "R.C PAY",
+
+    message:
+      "R.C PAY Google Sheets integration is running."
+
+  });
 
 }
 
@@ -55,70 +50,322 @@ function doPost(e) {
 
   try {
 
-    const raw =
-      e.postData &&
-      e.postData.contents
-        ? e.postData.contents
-        : "{}";
-
-    const data =
-      JSON.parse(raw);
-
     if (
-      CONFIG.TOKEN &&
-      data.token !== CONFIG.TOKEN
+      !e ||
+      !e.postData ||
+      !e.postData.contents
     ) {
 
       return jsonResponse({
-        success: false,
-        error: "Invalid token"
+
+        ok: false,
+
+        error:
+          "No POST data received."
+
       });
 
     }
 
-    if (
-      data.action === "test"
-    ) {
 
-      writeLog(
-        "TEST",
-        data.worker || ""
+    const body =
+      JSON.parse(
+        e.postData.contents
       );
 
-      return jsonResponse({
-        success: true,
-        message: "R.C PAY connection successful"
-      });
 
-    }
+    /* --------------------------------------------------------
+       SECURITY CHECK
+       -------------------------------------------------------- */
 
     if (
-      data.action === "saveReport"
+      !body.secret ||
+      body.secret !== CONFIG.SECRET
     ) {
 
-      saveReport(data);
-
       return jsonResponse({
-        success: true,
-        message: "Report saved"
+
+        ok: false,
+
+        error:
+          "Unauthorized."
+
       });
 
     }
+
+
+    /* --------------------------------------------------------
+       SPREADSHEET
+       -------------------------------------------------------- */
+
+    const spreadsheetId =
+      body.spreadsheetId;
+
+
+    if (!spreadsheetId) {
+
+      return jsonResponse({
+
+        ok: false,
+
+        error:
+          "Spreadsheet ID is required."
+
+      });
+
+    }
+
+
+    const spreadsheet =
+      SpreadsheetApp.openById(
+        spreadsheetId
+      );
+
+
+    const sheetName =
+      body.sheetName ||
+      CONFIG.DEFAULT_SHEET;
+
+
+    let sheet =
+      spreadsheet.getSheetByName(
+        sheetName
+      );
+
+
+    if (!sheet) {
+
+      sheet =
+        spreadsheet.insertSheet(
+          sheetName
+        );
+
+    }
+
+
+    /* --------------------------------------------------------
+       ROWS
+       -------------------------------------------------------- */
+
+    const rows =
+      body.rows;
+
+
+    if (
+      !Array.isArray(rows) ||
+      rows.length === 0
+    ) {
+
+      return jsonResponse({
+
+        ok: false,
+
+        error:
+          "No report rows supplied."
+
+      });
+
+    }
+
+
+    /* --------------------------------------------------------
+       CREATE HEADERS
+       -------------------------------------------------------- */
+
+    const existingLastColumn =
+      sheet.getLastColumn();
+
+
+    const existingLastRow =
+      sheet.getLastRow();
+
+
+    let headers = [];
+
+
+    if (
+      existingLastRow > 0 &&
+      existingLastColumn > 0
+    ) {
+
+      headers =
+        sheet
+          .getRange(
+            1,
+            1,
+            1,
+            existingLastColumn
+          )
+          .getValues()[0]
+          .map(
+            value =>
+              String(value)
+          )
+          .filter(
+            value =>
+              value.trim() !== ""
+          );
+
+    }
+
+
+    /* --------------------------------------------------------
+       ADD NEW HEADERS
+       -------------------------------------------------------- */
+
+    const incomingHeaders = [];
+
+
+    rows.forEach(row => {
+
+      Object.keys(row).forEach(key => {
+
+        if (
+          !incomingHeaders.includes(key)
+        ) {
+
+          incomingHeaders.push(key);
+
+        }
+
+      });
+
+    });
+
+
+    incomingHeaders.forEach(header => {
+
+      if (
+        !headers.includes(header)
+      ) {
+
+        headers.push(header);
+
+      }
+
+    });
+
+
+    if (headers.length === 0) {
+
+      return jsonResponse({
+
+        ok: false,
+
+        error:
+          "No columns found."
+
+      });
+
+    }
+
+
+    /* --------------------------------------------------------
+       WRITE HEADERS
+       -------------------------------------------------------- */
+
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        headers.length
+      )
+      .setValues([
+        headers
+      ]);
+
+
+    /* --------------------------------------------------------
+       PREPARE VALUES
+       -------------------------------------------------------- */
+
+    const values =
+      rows.map(row => {
+
+        return headers.map(
+          header => {
+
+            const value =
+              row[header];
+
+            if (
+              value === null ||
+              value === undefined
+            ) {
+
+              return "";
+
+            }
+
+            return value;
+
+          }
+        );
+
+      });
+
+
+    /* --------------------------------------------------------
+       APPEND
+       -------------------------------------------------------- */
+
+    const startRow =
+      Math.max(
+        sheet.getLastRow() + 1,
+        2
+      );
+
+
+    sheet
+      .getRange(
+        startRow,
+        1,
+        values.length,
+        headers.length
+      )
+      .setValues(values);
+
+
+    /* --------------------------------------------------------
+       FORMATTING
+       -------------------------------------------------------- */
+
+    sheet
+      .getRange(
+        1,
+        1,
+        1,
+        headers.length
+      )
+      .setFontWeight("bold");
+
+
+    sheet.setFrozenRows(1);
+
 
     return jsonResponse({
 
-      success: false,
+      ok: true,
 
-      error:
-        "Unknown action"
+      count:
+        values.length,
+
+      sheet:
+        sheetName,
+
+      message:
+        "R.C PAY report saved successfully."
 
     });
+
 
   } catch (error) {
 
     return jsonResponse({
 
-      success: false,
+      ok: false,
 
       error:
         String(error)
@@ -131,397 +378,7 @@ function doPost(e) {
 
 
 /* ============================================================
-   SAVE REPORT
-   ============================================================ */
-
-function saveReport(data) {
-
-  const spreadsheet =
-    getSpreadsheet(
-      data.sheetId
-    );
-
-  const worker =
-    data.worker || {};
-
-  const reportRows =
-    data.rows || [];
-
-  const kmlRows =
-    data.kmlRows || [];
-
-  const reportSheet =
-    getOrCreateSheet(
-      spreadsheet,
-      CONFIG.REPORT_SHEET
-    );
-
-  const kmlSheet =
-    getOrCreateSheet(
-      spreadsheet,
-      CONFIG.KML_SHEET
-    );
-
-  const now =
-    new Date();
-
-  /*
-     REPORT HEADER
-  */
-
-  ensureReportHeader(
-    reportSheet
-  );
-
-  /*
-     FINAL PAY ROWS
-  */
-
-  reportRows.forEach(row => {
-
-    reportSheet.appendRow([
-
-      now,
-
-      worker.name || "",
-
-      worker.id || "",
-
-      row.Source || "",
-
-      row.Block || "",
-
-      row.Location || "",
-
-      row.Annotation || "",
-
-      row.Quantity || 0,
-
-      row.Rate || "",
-
-      row.Assigned || "",
-
-      row.Pay || 0
-
-    ]);
-
-  });
-
-
-  /*
-     KML BLOCK REPORT
-
-     IMPORTANT:
-     One row per block.
-
-     Bus Stop, Bus Lane, Bike Lane,
-     R0 and L0 stay on the SAME row.
-  */
-
-  ensureKmlHeader(
-    kmlSheet
-  );
-
-  kmlRows.forEach(row => {
-
-    kmlSheet.appendRow([
-
-      now,
-
-      worker.name || "",
-
-      worker.id || "",
-
-      row.Block || "",
-
-      row.Location || "",
-
-      row.BusStop || 0,
-
-      row.BusLane || 0,
-
-      row.BikeLane || 0,
-
-      row.R0 || 0,
-
-      row.L0 || 0,
-
-      row.LocationDescription || 0,
-
-      row.Additional || 0,
-
-      row.AdditionalNames || "",
-
-      row.BusStopPay || 0,
-
-      row.BusLanePay || 0,
-
-      row.BikeLanePay || 0,
-
-      row.R0Pay || 0,
-
-      row.L0Pay || 0,
-
-      row.LocationPay || 0,
-
-      row.AdditionalPay || 0,
-
-      row.Pay || 0
-
-    ]);
-
-  });
-
-
-  /*
-     SUMMARY
-  */
-
-  writeSummary(
-    spreadsheet,
-    data,
-    worker
-  );
-
-
-  /*
-     LOG
-  */
-
-  writeLog(
-    "REPORT SAVED",
-    worker.name || ""
-  );
-
-}
-
-
-/* ============================================================
-   SUMMARY
-   ============================================================ */
-
-function writeSummary(
-  spreadsheet,
-  data,
-  worker
-) {
-
-  const sheet =
-    getOrCreateSheet(
-      spreadsheet,
-      CONFIG.PAY_LOG
-    );
-
-  if (
-    sheet.getLastRow() === 0
-  ) {
-
-    sheet.appendRow([
-
-      "Timestamp",
-      "Worker",
-      "Worker ID",
-      "Annotation Pay",
-      "KML Pay",
-      "Final Pay"
-
-    ]);
-
-  }
-
-  sheet.appendRow([
-
-    new Date(),
-
-    worker.name || "",
-
-    worker.id || "",
-
-    data.annotationTotal || 0,
-
-    data.kmlTotal || 0,
-
-    data.finalTotal || 0
-
-  ]);
-
-}
-
-
-/* ============================================================
-   REPORT HEADER
-   ============================================================ */
-
-function ensureReportHeader(sheet) {
-
-  if (
-    sheet.getLastRow() > 0
-  ) {
-
-    return;
-
-  }
-
-  sheet.appendRow([
-
-    "Timestamp",
-    "Worker",
-    "Worker ID",
-    "Source",
-    "Block",
-    "Location",
-    "Annotation",
-    "Quantity",
-    "Rate",
-    "Assigned",
-    "Pay"
-
-  ]);
-
-}
-
-
-/* ============================================================
-   KML HEADER
-   ============================================================ */
-
-function ensureKmlHeader(sheet) {
-
-  if (
-    sheet.getLastRow() > 0
-  ) {
-
-    return;
-
-  }
-
-  sheet.appendRow([
-
-    "Timestamp",
-    "Worker",
-    "Worker ID",
-    "Block",
-    "Location",
-
-    "Bus Stop",
-    "Bus Lane",
-    "Bike Lane",
-    "R0",
-    "L0",
-
-    "Location Description",
-    "Additional",
-    "Additional Names",
-
-    "Bus Stop Pay",
-    "Bus Lane Pay",
-    "Bike Lane Pay",
-    "R0 Pay",
-    "L0 Pay",
-    "Location Pay",
-    "Additional Pay",
-
-    "Block Total Pay"
-
-  ]);
-
-}
-
-
-/* ============================================================
-   LOG
-   ============================================================ */
-
-function writeLog(
-  action,
-  worker
-) {
-
-  const spreadsheet =
-    getSpreadsheet("");
-
-  const sheet =
-    getOrCreateSheet(
-      spreadsheet,
-      CONFIG.PAY_LOG
-    );
-
-  if (
-    sheet.getLastRow() === 0
-  ) {
-
-    sheet.appendRow([
-      "Timestamp",
-      "Action",
-      "Worker"
-    ]);
-
-  }
-
-  sheet.appendRow([
-
-    new Date(),
-
-    action,
-
-    worker
-
-  ]);
-
-}
-
-
-/* ============================================================
-   SPREADSHEET
-   ============================================================ */
-
-function getSpreadsheet(
-  suppliedId
-) {
-
-  const id =
-    suppliedId ||
-    CONFIG.SHEET_ID;
-
-  if (id) {
-
-    return SpreadsheetApp
-      .openById(id);
-
-  }
-
-  return SpreadsheetApp
-    .getActiveSpreadsheet();
-
-}
-
-
-/* ============================================================
-   SHEET
-   ============================================================ */
-
-function getOrCreateSheet(
-  spreadsheet,
-  name
-) {
-
-  let sheet =
-    spreadsheet.getSheetByName(name);
-
-  if (!sheet) {
-
-    sheet =
-      spreadsheet.insertSheet(name);
-
-  }
-
-  return sheet;
-
-}
-
-
-/* ============================================================
-   JSON
+   JSON RESPONSE
    ============================================================ */
 
 function jsonResponse(data) {
