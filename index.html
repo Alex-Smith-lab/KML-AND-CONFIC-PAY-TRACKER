@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>R.C Pay | Annotation & KML Payroll</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #111827;
+    --muted: #6b7280;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background: #111827;
+    color: white;
+    padding: 22px 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px 25px;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.brand h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.brand small {
+    color: #9ca3af;
+}
+
+.nav-title {
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 15px 12px 7px;
+    letter-spacing: .08em;
+}
+
+.nav-btn {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #d1d5db;
+    text-align: left;
+    padding: 12px;
+    border-radius: 9px;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.nav-btn:hover {
+    background: #1f2937;
+    color: white;
+}
+
+.nav-btn.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sidebar-profile {
+    position: absolute;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    padding: 12px;
+    background: #1f2937;
+    border-radius: 10px;
+}
+
+.profile-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.profile-role {
+    color: #9ca3af;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 68px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.page-title {
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-chip {
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.content {
+    padding: 28px;
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* DASHBOARD */
+
+.hero {
+    background: linear-gradient(135deg, #172554, #2563eb);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    margin: 0 0 8px;
+    font-size: 29px;
+}
+
+.hero p {
+    margin: 0;
+    color: #dbeafe;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 19px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.stat-value {
+    margin-top: 7px;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+/* FORMS */
+
+.section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 20px;
+}
+
+.section h3 {
+    margin: 0 0 5px;
+}
+
+.section-description {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    padding: 10px 12px;
+    outline: none;
+    background: white;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* BUTTONS */
+
+.btn {
+    border: 0;
+    padding: 10px 16px;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #eef2f7;
+    color: #374151;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+.button-row {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+/* DROPZONE */
+
+.dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 13px;
+    padding: 30px;
+    text-align: center;
+    background: #f8fafc;
+    transition: .2s;
+}
+
+.dropzone:hover {
+    border-color: var(--primary);
+    background: #eff6ff;
+}
+
+.dropzone-icon {
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+.dropzone-title {
+    font-weight: 750;
+}
+
+.dropzone-description {
+    color: var(--muted);
+    font-size: 12px;
+    margin: 5px 0 15px;
+}
+
+/* TABLE */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th,
+td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+}
+
+th {
+    font-weight: 750;
+    color: #374151;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+.money {
+    font-weight: 750;
+}
+
+.badge {
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 750;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* ALERT */
+
+.alert {
+    padding: 12px 14px;
+    border-radius: 9px;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+.alert-info {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.alert-warning {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.alert-danger {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+/* PAY SUMMARY */
+
+.pay-total {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: white;
+    padding: 25px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pay-total-label {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.pay-total-value {
+    font-size: 34px;
+    font-weight: 850;
+    margin-top: 5px;
+}
+
+/* CHECKBOX */
+
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.check-row input {
+    width: 16px;
+    height: 16px;
+}
+
+/* KML MAP-LIKE PREVIEW */
+
+.kml-preview {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.block-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 13px;
+}
+
+.block-title {
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.annotation-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.annotation-pill {
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 1000px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid,
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 700px) {
+    .sidebar {
+        width: 70px;
+        padding: 12px 7px;
+    }
+
+    .brand h2,
+    .brand small,
+    .nav-title,
+    .nav-btn span,
+    .sidebar-profile {
+        display: none;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">RC</div>
+            <div>
+                <h2>R.C PAY</h2>
+                <small>Annotation Payroll</small>
+            </div>
+        </div>
+
+        <div class="nav-title">Workspace</div>
+
+        <button class="nav-btn active" data-page="dashboard">
+            📊 <span>Dashboard</span>
+        </button>
+
+        <button class="nav-btn" data-page="annotation">
+            🏷️ <span>Annotation Pay</span>
+        </button>
+
+        <button class="nav-btn" data-page="kml">
+            🗺️ <span>KML Pay</span>
+        </button>
+
+        <button class="nav-btn" data-page="final">
+            💰 <span>Final Pay</span>
+        </button>
+
+        <div class="nav-title">Settings</div>
+
+        <button class="nav-btn" data-page="profile">
+            👤 <span>Profile</span>
+        </button>
+
+        <button class="nav-btn" data-page="google">
+            📗 <span>Google Sheets</span>
+        </button>
+
+        <div class="sidebar-profile">
+            <div class="profile-name" id="sidebarProfileName">
+                Worker
+            </div>
+            <div class="profile-role">
+                Annotation Worker
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="page-title" id="pageTitle">
+                Dashboard
+            </div>
+
+            <div class="topbar-right">
+                <div class="profile-chip" id="topProfile">
+                    Worker
+                </div>
+            </div>
+
+        </header>
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <section class="page active" id="page-dashboard">
+
+                <div class="hero">
+                    <h1>R.C Pay Workspace</h1>
+                    <p>
+                        Calculate annotation and KML-based pay accurately,
+                        review additional annotations, and export the final report.
+                    </p>
+                </div>
+
+                <div class="cards">
+
+                    <div class="card">
+                        <div class="stat-label">Current Worker</div>
+                        <div class="stat-value" id="dashWorker">—</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-label">Annotation Items</div>
+                        <div class="stat-value" id="dashAnnotations">0</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-label">KML Blocks</div>
+                        <div class="stat-value" id="dashBlocks">0</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="stat-label">Final Pay</div>
+                        <div class="stat-value" id="dashPay">0.00</div>
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>How it works</h3>
+
+                    <div class="section-description">
+                        Upload your configuration/pay sheet, select the worker,
+                        upload the KML when required, enter the applicable pay rates,
+                        then generate the final report.
+                    </div>
+
+                    <div class="grid-3">
+
+                        <div class="card">
+                            <h3>01</h3>
+                            <p>Configure</p>
+                            <small>
+                                Upload the configuration sheet and define rates.
+                            </small>
+                        </div>
+
+                        <div class="card">
+                            <h3>02</h3>
+                            <p>Calculate</p>
+                            <small>
+                                Process annotations and KML blocks.
+                            </small>
+                        </div>
+
+                        <div class="card">
+                            <h3>03</h3>
+                            <p>Export</p>
+                            <small>
+                                Download CSV or send the report to Google Sheets.
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PROFILE -->
+            <section class="page" id="page-profile">
+
+                <div class="section">
+
+                    <h3>Worker Profile</h3>
+
+                    <div class="section-description">
+                        The profile is used to identify the person whose work is being calculated.
+                    </div>
+
+                    <div class="grid">
+
+                        <div class="field">
+                            <label>Worker Name</label>
+                            <input id="profileName" placeholder="Enter worker name">
+                        </div>
+
+                        <div class="field">
+                            <label>Worker ID</label>
+                            <input id="profileId" placeholder="Enter worker ID">
+                        </div>
+
+                    </div>
+
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="saveProfile">
+                            Save Profile
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- GOOGLE SHEETS -->
+            <section class="page" id="page-google">
+
+                <div class="section">
+
+                    <h3>Google Sheets Integration</h3>
+
+                    <div class="section-description">
+                        Connect the application to a Google Apps Script Web App.
+                        The generated reports will be written directly into your Google Sheet.
+                    </div>
+
+                    <div class="field">
+                        <label>Google Apps Script Web App URL</label>
+                        <input
+                            id="googleScriptUrl"
+                            placeholder="https://script.google.com/macros/s/..."
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Google Sheet ID</label>
+                        <input
+                            id="googleSheetId"
+                            placeholder="Paste your Google Sheet ID"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Security Token</label>
+                        <input
+                            id="googleToken"
+                            type="password"
+                            placeholder="Your Apps Script token"
+                        >
+                    </div>
+
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="saveGoogle">
+                            Save Google Settings
+                        </button>
+
+                        <button class="btn btn-secondary" id="testGoogle">
+                            Test Connection
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="alert alert-info">
+
+                    <strong>Google Sheets setup:</strong>
+
+                    Create the Apps Script shown later in this answer,
+                    deploy it as a Web App, then paste the Web App URL here.
+
+                </div>
+
+            </section>
+
+            <!-- ANNOTATION PAY -->
+            <section class="page" id="page-annotation">
+
+                <div class="section">
+
+                    <h3>Annotation Pay</h3>
+
+                    <div class="section-description">
+                        Upload your configuration/pay spreadsheet.
+                        The system reads worker assignments, annotation flags and rates.
+                    </div>
+
+                    <div class="dropzone">
+
+                        <div class="dropzone-icon">📊</div>
+
+                        <div class="dropzone-title">
+                            Upload configuration sheet
+                        </div>
+
+                        <div class="dropzone-description">
+                            XLSX, XLS or CSV
+                        </div>
+
+                        <input
+                            type="file"
+                            id="configFile"
+                            accept=".xlsx,.xls,.csv"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Worker</h3>
+
+                    <div class="grid">
+
+                        <div class="field">
+                            <label>Select Worker</label>
+                            <select id="annotationWorker">
+                                <option value="">Upload configuration first</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Calculation Name</label>
+                            <input
+                                id="annotationCalculationName"
+                                placeholder="e.g. September Week 2"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Pay Rates</h3>
+
+                    <div class="section-description">
+                        Rates can be automatically read from the configuration sheet
+                        or manually changed before calculation.
+                    </div>
+
+                    <div id="annotationRates" class="grid-3"></div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-primary"
+                            id="calculateAnnotation"
+                        >
+                            Calculate Annotation Pay
+                        </button>
+
+                        <button
+                            class="btn btn-secondary"
+                            id="clearAnnotation"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div id="annotationResult"></div>
+
+            </section>
+
+            <!-- KML PAY -->
+            <section class="page" id="page-kml">
+
+                <div class="section">
+
+                    <h3>KML Pay</h3>
+
+                    <div class="section-description">
+                        Upload a KML/KMZ file. The application groups annotations
+                        into blocks and keeps Bus Stop, Bus Lane, Bike Lane, L0 and R0
+                        on the <strong>same row for each block</strong>.
+                    </div>
+
+                    <div class="dropzone">
+
+                        <div class="dropzone-icon">🗺️</div>
+
+                        <div class="dropzone-title">
+                            Upload KML / KMZ
+                        </div>
+
+                        <div class="dropzone-description">
+                            The system will inspect Placemark names,
+                            descriptions, folders and ExtendedData.
+                        </div>
+
+                        <input
+                            type="file"
+                            id="kmlFile"
+                            accept=".kml,.kmz"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Worker & Pay</h3>
+
+                    <div class="grid-3">
+
+                        <div class="field">
+                            <label>Select Worker</label>
+
+                            <select id="kmlWorker">
+                                <option value="">
+                                    Select worker
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="field">
+                            <label>Bus Stop Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateBusStop"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>Bus Lane Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateBusLane"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>Bike Lane Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateBikeLane"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>R0 Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateR0"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>L0 Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateL0"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>Location Description Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateLocation"
+                                value="0"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>Other / Unknown Rate</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="rateOther"
+                                value="0"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Additional Annotation Rules</h3>
+
+                    <div class="alert alert-warning">
+
+                        Any KML annotation that cannot be matched to the known
+                        categories will be shown as <strong>ADDITIONAL / UNKNOWN</strong>
+                        and will not automatically receive pay unless you enter an
+                        Other / Unknown rate.
+
+                    </div>
+
+                    <div class="check-row">
+                        <input type="checkbox" id="payUnknown">
+                        <label for="payUnknown">
+                            Allow Other / Unknown annotations to receive pay
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-primary"
+                            id="calculateKml"
+                        >
+                            Calculate KML Pay
+                        </button>
+
+                        <button
+                            class="btn btn-secondary"
+                            id="clearKml"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div id="kmlResult"></div>
+
+            </section>
+
+            <!-- FINAL PAY -->
+            <section class="page" id="page-final">
+
+                <div class="section">
+
+                    <h3>Final Pay Summary</h3>
+
+                    <div class="section-description">
+                        This combines annotation pay and KML pay for the selected worker.
+                    </div>
+
+                    <div id="finalSummary"></div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Export</h3>
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-success"
+                            id="downloadCsv"
+                        >
+                            Download CSV
+                        </button>
+
+                        <button
+                            class="btn btn-primary"
+                            id="sendGoogle"
+                        >
+                            Send to Google Sheets
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
