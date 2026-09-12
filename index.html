@@ -1,738 +1,648 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>R.C Pay | Annotation & KML Payroll</title>
-
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-
-<style>
-* {
-    box-sizing: border-box;
-}
-
-:root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --bg: #f5f7fb;
-    --card: #ffffff;
-    --border: #e5e7eb;
-    --text: #111827;
-    --muted: #6b7280;
-    --success: #16a34a;
-    --danger: #dc2626;
-    --warning: #d97706;
-}
-
-body {
-    margin: 0;
-    font-family: Inter, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-button,
-input,
-select,
-textarea {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-.app {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* SIDEBAR */
-
-.sidebar {
-    width: 250px;
-    background: #111827;
-    color: white;
-    padding: 22px 15px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: auto;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 10px 25px;
-}
-
-.brand-logo {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-}
-
-.brand h2 {
-    margin: 0;
-    font-size: 18px;
-}
-
-.brand small {
-    color: #9ca3af;
-}
-
-.nav-title {
-    color: #6b7280;
-    font-size: 11px;
-    text-transform: uppercase;
-    padding: 15px 12px 7px;
-    letter-spacing: .08em;
-}
-
-.nav-btn {
-    width: 100%;
-    border: 0;
-    background: transparent;
-    color: #d1d5db;
-    text-align: left;
-    padding: 12px;
-    border-radius: 9px;
-    margin-bottom: 4px;
-    font-size: 14px;
-}
-
-.nav-btn:hover {
-    background: #1f2937;
-    color: white;
-}
-
-.nav-btn.active {
-    background: #2563eb;
-    color: white;
-}
-
-.sidebar-profile {
-    position: absolute;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    padding: 12px;
-    background: #1f2937;
-    border-radius: 10px;
-}
-
-.profile-name {
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.profile-role {
-    color: #9ca3af;
-    font-size: 11px;
-    margin-top: 3px;
-}
-
-/* MAIN */
-
-.main {
-    margin-left: 250px;
-    width: calc(100% - 250px);
-    min-height: 100vh;
-}
-
-.topbar {
-    height: 68px;
-    background: white;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
-    position: sticky;
-    top: 0;
-    z-index: 20;
-}
-
-.page-title {
-    font-size: 19px;
-    font-weight: 750;
-}
-
-.topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.profile-chip {
-    background: #eff6ff;
-    color: #1d4ed8;
-    padding: 8px 13px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 650;
-}
-
-.content {
-    padding: 28px;
-}
-
-/* PAGES */
-
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* DASHBOARD */
-
-.hero {
-    background: linear-gradient(135deg, #172554, #2563eb);
-    color: white;
-    padding: 30px;
-    border-radius: 18px;
-    margin-bottom: 22px;
-}
-
-.hero h1 {
-    margin: 0 0 8px;
-    font-size: 29px;
-}
-
-.hero p {
-    margin: 0;
-    color: #dbeafe;
-}
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 22px;
-}
-
-.card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 19px;
-}
-
-.stat-label {
-    font-size: 12px;
-    color: var(--muted);
-}
-
-.stat-value {
-    margin-top: 7px;
-    font-size: 27px;
-    font-weight: 800;
-}
-
-/* FORMS */
-
-.section {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    padding: 22px;
-    margin-bottom: 20px;
-}
-
-.section h3 {
-    margin: 0 0 5px;
-}
-
-.section-description {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 20px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.field {
-    margin-bottom: 14px;
-}
-
-.field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.field input,
-.field select,
-.field textarea {
-    width: 100%;
-    border: 1px solid #d1d5db;
-    border-radius: 9px;
-    padding: 10px 12px;
-    outline: none;
-    background: white;
-}
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-}
-
-textarea {
-    resize: vertical;
-}
-
-/* BUTTONS */
-
-.btn {
-    border: 0;
-    padding: 10px 16px;
-    border-radius: 9px;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
-.btn-secondary {
-    background: #eef2f7;
-    color: #374151;
-}
-
-.btn-success {
-    background: var(--success);
-    color: white;
-}
-
-.btn-danger {
-    background: var(--danger);
-    color: white;
-}
-
-.btn-warning {
-    background: #f59e0b;
-    color: white;
-}
-
-.button-row {
-    display: flex;
-    gap: 9px;
-    flex-wrap: wrap;
-}
-
-/* DROPZONE */
-
-.dropzone {
-    border: 2px dashed #cbd5e1;
-    border-radius: 13px;
-    padding: 30px;
-    text-align: center;
-    background: #f8fafc;
-    transition: .2s;
-}
-
-.dropzone:hover {
-    border-color: var(--primary);
-    background: #eff6ff;
-}
-
-.dropzone-icon {
-    font-size: 35px;
-    margin-bottom: 8px;
-}
-
-.dropzone-title {
-    font-weight: 750;
-}
-
-.dropzone-description {
-    color: var(--muted);
-    font-size: 12px;
-    margin: 5px 0 15px;
-}
-
-/* TABLE */
-
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-}
-
-thead {
-    background: #f8fafc;
-}
-
-th,
-td {
-    padding: 11px 12px;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-    white-space: nowrap;
-}
-
-th {
-    font-weight: 750;
-    color: #374151;
-}
-
-tr:last-child td {
-    border-bottom: 0;
-}
-
-.money {
-    font-weight: 750;
-}
-
-.badge {
-    display: inline-flex;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 750;
-}
-
-.badge-success {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.badge-danger {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.badge-warning {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-/* ALERT */
-
-.alert {
-    padding: 12px 14px;
-    border-radius: 9px;
-    margin-bottom: 15px;
-    font-size: 13px;
-}
-
-.alert-info {
-    background: #eff6ff;
-    color: #1e40af;
-}
-
-.alert-warning {
-    background: #fffbeb;
-    color: #92400e;
-}
-
-.alert-danger {
-    background: #fef2f2;
-    color: #991b1b;
-}
-
-.alert-success {
-    background: #f0fdf4;
-    color: #166534;
-}
-
-/* PAY SUMMARY */
-
-.pay-total {
-    background: linear-gradient(135deg, #111827, #1f2937);
-    color: white;
-    padding: 25px;
-    border-radius: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.pay-total-label {
-    color: #9ca3af;
-    font-size: 12px;
-}
-
-.pay-total-value {
-    font-size: 34px;
-    font-weight: 850;
-    margin-top: 5px;
-}
-
-/* CHECKBOX */
-
-.check-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-}
-
-.check-row input {
-    width: 16px;
-    height: 16px;
-}
-
-/* KML MAP-LIKE PREVIEW */
-
-.kml-preview {
-    max-height: 360px;
-    overflow-y: auto;
-}
-
-.block-card {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    padding: 13px;
-}
-
-.block-title {
-    font-weight: 800;
-    margin-bottom: 7px;
-}
-
-.annotation-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.annotation-pill {
-    padding: 5px 8px;
-    border-radius: 6px;
-    background: #f1f5f9;
-    font-size: 11px;
-}
-
-/* RESPONSIVE */
-
-@media(max-width: 1000px) {
-    .cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grid,
-    .grid-3 {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media(max-width: 700px) {
-    .sidebar {
-        width: 70px;
-        padding: 12px 7px;
-    }
-
-    .brand h2,
-    .brand small,
-    .nav-title,
-    .nav-btn span,
-    .sidebar-profile {
-        display: none;
-    }
-
-    .brand {
-        justify-content: center;
-    }
-
-    .main {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-    }
-
-    .content {
-        padding: 15px;
-    }
-
-    .cards {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>R.C PAY</title>
+
+    <!-- XLSX reader -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e3e8f0;
+            --primary: #3157d5;
+            --primary-dark: #2445b2;
+            --success: #14804a;
+            --danger: #c93636;
+            --warning: #a96b00;
+            --sidebar: #111827;
+            --sidebar2: #182235;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--sidebar), var(--sidebar2));
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 22px 15px;
+            z-index: 20;
+        }
+
+        .brand {
+            padding: 8px 12px 25px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            margin-bottom: 18px;
+        }
+
+        .brand-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-subtitle {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav button {
+            border: 0;
+            background: transparent;
+            color: #cbd5e1;
+            padding: 13px 14px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            background: rgba(255,255,255,.10);
+            color: white;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .page-title {
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .profile-chip {
+            background: #f0f3ff;
+            color: var(--primary);
+            padding: 9px 13px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 28px;
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* DASHBOARD */
+        .welcome {
+            margin-bottom: 22px;
+        }
+
+        .welcome h1 {
+            margin: 0 0 5px;
+            font-size: 28px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .card-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* FORM */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 17px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d6dce6;
+            border-radius: 9px;
+            padding: 11px 12px;
+            outline: none;
+            background: white;
+            color: var(--text);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(49,87,213,.09);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+            font-family: monospace;
+            line-height: 1.6;
+        }
+
+        .help {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* UPLOAD */
+        .upload {
+            border: 2px dashed #cdd5e1;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            background: #fafbfe;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .upload:hover {
+            border-color: var(--primary);
+            background: #f5f7ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .upload span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .upload input {
+            display: none;
+        }
+
+        /* BUTTONS */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            border: 0;
+            padding: 11px 16px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #eef1f6;
+            color: #263246;
+        }
+
+        .btn-success {
+            background: #e5f6ed;
+            color: var(--success);
+        }
+
+        .btn-danger {
+            background: #fdecec;
+            color: var(--danger);
+        }
+
+        /* CHECKBOX */
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .check-row input {
+            width: auto;
+        }
+
+        /* STATUS */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .status-success {
+            background: #e5f6ed;
+            color: var(--success);
+        }
+
+        .status-warning {
+            background: #fff4db;
+            color: var(--warning);
+        }
+
+        .status-danger {
+            background: #fdecec;
+            color: var(--danger);
+        }
+
+        /* REPORT */
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .summary-box span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .summary-box strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 20px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 900px;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        th {
+            background: #f7f9fc;
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .total-row {
+            background: #f1f4ff;
+            font-weight: 800;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 30px;
+        }
+
+        /* TOAST */
+        #toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 100;
+            max-width: 380px;
+        }
+
+        .toast {
+            background: #172033;
+            color: white;
+            padding: 14px 17px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 1100px) {
+            .stats,
+            .report-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 800px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 8px;
+            }
+
+            .brand-title,
+            .brand-subtitle,
+            .nav button span {
+                display: none;
+            }
+
+            .brand {
+                text-align: center;
+                border: 0;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .grid,
+            .stats,
+            .report-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 16px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
 
         <div class="brand">
-            <div class="brand-logo">RC</div>
-            <div>
-                <h2>R.C PAY</h2>
-                <small>Annotation Payroll</small>
-            </div>
+            <div class="brand-title">R.C PAY</div>
+            <div class="brand-subtitle">Annotation & KML Payment</div>
         </div>
 
-        <div class="nav-title">Workspace</div>
+        <nav class="nav">
+            <button class="active" data-page="dashboard">
+                <span>Dashboard</span>
+            </button>
 
-        <button class="nav-btn active" data-page="dashboard">
-            📊 <span>Dashboard</span>
-        </button>
+            <button data-page="annotation">
+                <span>Annotation Pay</span>
+            </button>
 
-        <button class="nav-btn" data-page="annotation">
-            🏷️ <span>Annotation Pay</span>
-        </button>
+            <button data-page="kml">
+                <span>KML Pay</span>
+            </button>
 
-        <button class="nav-btn" data-page="kml">
-            🗺️ <span>KML Pay</span>
-        </button>
+            <button data-page="reports">
+                <span>Reports</span>
+            </button>
 
-        <button class="nav-btn" data-page="final">
-            💰 <span>Final Pay</span>
-        </button>
-
-        <div class="nav-title">Settings</div>
-
-        <button class="nav-btn" data-page="profile">
-            👤 <span>Profile</span>
-        </button>
-
-        <button class="nav-btn" data-page="google">
-            📗 <span>Google Sheets</span>
-        </button>
-
-        <div class="sidebar-profile">
-            <div class="profile-name" id="sidebarProfileName">
-                Worker
-            </div>
-            <div class="profile-role">
-                Annotation Worker
-            </div>
-        </div>
+            <button data-page="settings">
+                <span>Settings</span>
+            </button>
+        </nav>
 
     </aside>
 
-    <!-- MAIN -->
+
     <main class="main">
 
         <header class="topbar">
+            <div class="page-title" id="pageTitle">Dashboard</div>
 
-            <div class="page-title" id="pageTitle">
-                Dashboard
+            <div class="profile-chip" id="profileChip">
+                Worker not configured
             </div>
-
-            <div class="topbar-right">
-                <div class="profile-chip" id="topProfile">
-                    Worker
-                </div>
-            </div>
-
         </header>
+
 
         <div class="content">
 
-            <!-- DASHBOARD -->
-            <section class="page active" id="page-dashboard">
+            <!-- ================= DASHBOARD ================= -->
 
-                <div class="hero">
-                    <h1>R.C Pay Workspace</h1>
-                    <p>
-                        Calculate annotation and KML-based pay accurately,
-                        review additional annotations, and export the final report.
-                    </p>
+            <section id="page-dashboard" class="page active">
+
+                <div class="welcome">
+                    <h1>R.C PAY</h1>
+                    <p>Calculate annotation and KML payments accurately from your own rates.</p>
                 </div>
 
-                <div class="cards">
+                <div class="stats">
 
-                    <div class="card">
+                    <div class="stat">
                         <div class="stat-label">Current Worker</div>
                         <div class="stat-value" id="dashWorker">—</div>
                     </div>
 
-                    <div class="card">
-                        <div class="stat-label">Annotation Items</div>
-                        <div class="stat-value" id="dashAnnotations">0</div>
+                    <div class="stat">
+                        <div class="stat-label">Annotation Pay</div>
+                        <div class="stat-value" id="dashAnnotationPay">0.00</div>
                     </div>
 
-                    <div class="card">
-                        <div class="stat-label">KML Blocks</div>
-                        <div class="stat-value" id="dashBlocks">0</div>
+                    <div class="stat">
+                        <div class="stat-label">KML Pay</div>
+                        <div class="stat-value" id="dashKmlPay">0.00</div>
                     </div>
 
-                    <div class="card">
-                        <div class="stat-label">Final Pay</div>
-                        <div class="stat-value" id="dashPay">0.00</div>
+                    <div class="stat">
+                        <div class="stat-label">Unknown / Additional</div>
+                        <div class="stat-value" id="dashUnknown">0</div>
                     </div>
 
                 </div>
 
-                <div class="section">
 
-                    <h3>How it works</h3>
+                <div class="card">
 
-                    <div class="section-description">
-                        Upload your configuration/pay sheet, select the worker,
-                        upload the KML when required, enter the applicable pay rates,
-                        then generate the final report.
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">How R.C PAY works</div>
+                            <div class="card-subtitle">
+                                Upload your data, select the worker, paste your own rates and calculate.
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid-3">
 
-                        <div class="card">
-                            <h3>01</h3>
-                            <p>Configure</p>
-                            <small>
-                                Upload the configuration sheet and define rates.
-                            </small>
+                        <div class="summary-box">
+                            <span>1</span>
+                            <strong>Upload</strong>
+                            <p class="help">
+                                Upload your annotation configuration sheet or KML.
+                            </p>
                         </div>
 
-                        <div class="card">
-                            <h3>02</h3>
-                            <p>Calculate</p>
-                            <small>
-                                Process annotations and KML blocks.
-                            </small>
+                        <div class="summary-box">
+                            <span>2</span>
+                            <strong>Select Worker</strong>
+                            <p class="help">
+                                Choose the person whose work should be calculated.
+                            </p>
                         </div>
 
-                        <div class="card">
-                            <h3>03</h3>
-                            <p>Export</p>
-                            <small>
-                                Download CSV or send the report to Google Sheets.
-                            </small>
+                        <div class="summary-box">
+                            <span>3</span>
+                            <strong>Paste Rates</strong>
+                            <p class="help">
+                                Paste whatever rates you want. R.C PAY does not hard-code payment values.
+                            </p>
                         </div>
 
                     </div>
@@ -741,187 +651,171 @@ tr:last-child td {
 
             </section>
 
-            <!-- PROFILE -->
-            <section class="page" id="page-profile">
 
-                <div class="section">
+            <!-- ================= ANNOTATION PAY ================= -->
 
-                    <h3>Worker Profile</h3>
+            <section id="page-annotation" class="page">
 
-                    <div class="section-description">
-                        The profile is used to identify the person whose work is being calculated.
-                    </div>
+                <div class="card">
 
-                    <div class="grid">
-
-                        <div class="field">
-                            <label>Worker Name</label>
-                            <input id="profileName" placeholder="Enter worker name">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Annotation Pay</div>
+                            <div class="card-subtitle">
+                                Upload the configuration/annotation sheet and calculate payment for one worker.
+                            </div>
                         </div>
-
-                        <div class="field">
-                            <label>Worker ID</label>
-                            <input id="profileId" placeholder="Enter worker ID">
-                        </div>
-
                     </div>
 
-                    <div class="button-row">
-                        <button class="btn btn-primary" id="saveProfile">
-                            Save Profile
-                        </button>
-                    </div>
 
-                </div>
-
-            </section>
-
-            <!-- GOOGLE SHEETS -->
-            <section class="page" id="page-google">
-
-                <div class="section">
-
-                    <h3>Google Sheets Integration</h3>
-
-                    <div class="section-description">
-                        Connect the application to a Google Apps Script Web App.
-                        The generated reports will be written directly into your Google Sheet.
-                    </div>
-
-                    <div class="field">
-                        <label>Google Apps Script Web App URL</label>
-                        <input
-                            id="googleScriptUrl"
-                            placeholder="https://script.google.com/macros/s/..."
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label>Google Sheet ID</label>
-                        <input
-                            id="googleSheetId"
-                            placeholder="Paste your Google Sheet ID"
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label>Security Token</label>
-                        <input
-                            id="googleToken"
-                            type="password"
-                            placeholder="Your Apps Script token"
-                        >
-                    </div>
-
-                    <div class="button-row">
-                        <button class="btn btn-primary" id="saveGoogle">
-                            Save Google Settings
-                        </button>
-
-                        <button class="btn btn-secondary" id="testGoogle">
-                            Test Connection
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="alert alert-info">
-
-                    <strong>Google Sheets setup:</strong>
-
-                    Create the Apps Script shown later in this answer,
-                    deploy it as a Web App, then paste the Web App URL here.
-
-                </div>
-
-            </section>
-
-            <!-- ANNOTATION PAY -->
-            <section class="page" id="page-annotation">
-
-                <div class="section">
-
-                    <h3>Annotation Pay</h3>
-
-                    <div class="section-description">
-                        Upload your configuration/pay spreadsheet.
-                        The system reads worker assignments, annotation flags and rates.
-                    </div>
-
-                    <div class="dropzone">
-
-                        <div class="dropzone-icon">📊</div>
-
-                        <div class="dropzone-title">
-                            Upload configuration sheet
-                        </div>
-
-                        <div class="dropzone-description">
-                            XLSX, XLS or CSV
-                        </div>
+                    <label class="upload">
 
                         <input
                             type="file"
-                            id="configFile"
-                            accept=".xlsx,.xls,.csv"
+                            id="annotationFile"
+                            accept=".csv,.xlsx,.xls"
                         >
 
+                        <strong>Upload Annotation Configuration</strong>
+
+                        <span>
+                            CSV, XLSX or XLS
+                        </span>
+
+                    </label>
+
+
+                    <div id="annotationFileInfo" class="help" style="margin-top:10px;">
+                        No file uploaded.
                     </div>
 
                 </div>
 
-                <div class="section">
 
-                    <h3>Worker</h3>
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">Calculation Setup</div>
+
+                            <div class="card-subtitle">
+                                Assignment is detected automatically from columns such as
+                                Assignee, Annotator Assigned, Annotator, Assigned To, Worker, etc.
+                            </div>
+                        </div>
+
+                    </div>
+
 
                     <div class="grid">
 
                         <div class="field">
-                            <label>Select Worker</label>
+
+                            <label for="annotationWorker">
+                                Worker / Annotator
+                            </label>
+
                             <select id="annotationWorker">
-                                <option value="">Upload configuration first</option>
+                                <option value="">Select worker</option>
                             </select>
+
                         </div>
+
 
                         <div class="field">
-                            <label>Calculation Name</label>
+
+                            <label for="annotationMode">
+                                What should be calculated?
+                            </label>
+
+                            <select id="annotationMode">
+
+                                <option value="all">
+                                    All annotations assigned to worker
+                                </option>
+
+                                <option value="selected">
+                                    Only selected annotation types
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="field full" id="selectedAnnotationField" style="display:none;">
+
+                            <label>
+                                Annotation types to calculate
+                            </label>
+
                             <input
-                                id="annotationCalculationName"
-                                placeholder="e.g. September Week 2"
+                                id="selectedAnnotationTypes"
+                                placeholder="Example: Bus Stop, Bus Lane, Bike Lane"
                             >
+
+                        </div>
+
+
+                        <div class="field full">
+
+                            <label>
+                                Pay Rates — paste your own rates
+                            </label>
+
+                            <textarea
+                                id="annotationRates"
+                                placeholder="Paste rates here.
+
+Example only:
+Bus Stop=2
+Bus Lane=3
+Bike Lane=3
+R0=1.5
+L0=1.5
+Location Description=1
+
+You can use any annotation name and any rate."
+                            ></textarea>
+
+                            <div class="help">
+                                No payment amount is hard-coded. The rates entered here are used for the calculation.
+                                Accepted formats include <b>Name=Rate</b> or <b>Name,Rate</b>.
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
 
-                <div class="section">
+                    <div class="check-row">
 
-                    <h3>Pay Rates</h3>
+                        <input
+                            type="checkbox"
+                            id="requireAssignment"
+                            checked
+                        >
 
-                    <div class="section-description">
-                        Rates can be automatically read from the configuration sheet
-                        or manually changed before calculation.
+                        <label for="requireAssignment">
+                            Only count rows assigned to the selected worker
+                        </label>
+
                     </div>
 
-                    <div id="annotationRates" class="grid-3"></div>
 
-                </div>
-
-                <div class="section">
-
-                    <div class="button-row">
+                    <div class="actions">
 
                         <button
                             class="btn btn-primary"
-                            id="calculateAnnotation"
+                            id="calculateAnnotationBtn"
                         >
                             Calculate Annotation Pay
                         </button>
 
                         <button
                             class="btn btn-secondary"
-                            id="clearAnnotation"
+                            id="clearAnnotationBtn"
                         >
                             Clear
                         </button>
@@ -930,173 +824,178 @@ tr:last-child td {
 
                 </div>
 
+
                 <div id="annotationResult"></div>
 
             </section>
 
-            <!-- KML PAY -->
-            <section class="page" id="page-kml">
 
-                <div class="section">
+            <!-- ================= KML PAY ================= -->
 
-                    <h3>KML Pay</h3>
+            <section id="page-kml" class="page">
 
-                    <div class="section-description">
-                        Upload a KML/KMZ file. The application groups annotations
-                        into blocks and keeps Bus Stop, Bus Lane, Bike Lane, L0 and R0
-                        on the <strong>same row for each block</strong>.
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">KML Pay</div>
+
+                            <div class="card-subtitle">
+                                Upload KML and calculate all selected annotation categories per block.
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="dropzone">
 
-                        <div class="dropzone-icon">🗺️</div>
-
-                        <div class="dropzone-title">
-                            Upload KML / KMZ
-                        </div>
-
-                        <div class="dropzone-description">
-                            The system will inspect Placemark names,
-                            descriptions, folders and ExtendedData.
-                        </div>
+                    <label class="upload">
 
                         <input
                             type="file"
                             id="kmlFile"
-                            accept=".kml,.kmz"
+                            accept=".kml"
                         >
 
+                        <strong>Upload KML</strong>
+
+                        <span>
+                            KML files
+                        </span>
+
+                    </label>
+
+
+                    <div id="kmlFileInfo" class="help" style="margin-top:10px;">
+                        No KML uploaded.
                     </div>
 
                 </div>
 
-                <div class="section">
 
-                    <h3>Worker & Pay</h3>
+                <div class="card">
 
-                    <div class="grid-3">
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">KML Calculation</div>
+
+                            <div class="card-subtitle">
+                                All payment categories for the same block are kept on one report row.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid">
 
                         <div class="field">
-                            <label>Select Worker</label>
+
+                            <label for="kmlWorker">
+                                Worker / Annotator
+                            </label>
 
                             <select id="kmlWorker">
-                                <option value="">
-                                    Select worker
-                                </option>
+                                <option value="">Select worker</option>
                             </select>
 
                         </div>
 
-                        <div class="field">
-                            <label>Bus Stop Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateBusStop"
-                                value="0"
-                            >
-                        </div>
 
                         <div class="field">
-                            <label>Bus Lane Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateBusLane"
-                                value="0"
-                            >
+
+                            <label for="kmlMode">
+                                What should be calculated?
+                            </label>
+
+                            <select id="kmlMode">
+
+                                <option value="all">
+                                    All recognized annotations
+                                </option>
+
+                                <option value="selected">
+                                    Only selected annotations
+                                </option>
+
+                            </select>
+
                         </div>
 
-                        <div class="field">
-                            <label>Bike Lane Rate</label>
+
+                        <div class="field full" id="selectedKmlField" style="display:none;">
+
+                            <label>
+                                Selected KML annotations
+                            </label>
+
                             <input
-                                type="number"
-                                step="0.01"
-                                id="rateBikeLane"
-                                value="0"
+                                id="selectedKmlTypes"
+                                placeholder="Bus Stop, Bus Lane, Bike Lane, R0, L0, Location Description"
                             >
+
                         </div>
 
-                        <div class="field">
-                            <label>R0 Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateR0"
-                                value="0"
-                            >
-                        </div>
 
-                        <div class="field">
-                            <label>L0 Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateL0"
-                                value="0"
-                            >
-                        </div>
+                        <div class="field full">
 
-                        <div class="field">
-                            <label>Location Description Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateLocation"
-                                value="0"
-                            >
-                        </div>
+                            <label>
+                                KML Pay Rates — paste your own rates
+                            </label>
 
-                        <div class="field">
-                            <label>Other / Unknown Rate</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                id="rateOther"
-                                value="0"
-                            >
+                            <textarea
+                                id="kmlRates"
+                                placeholder="Paste your own rates.
+
+Example only:
+Bus Stop=2
+Bus Lane=3
+Bike Lane=3
+R0=1.5
+L0=1.5
+Location Description=1
+
+The example values are NOT hard-coded."
+                            ></textarea>
+
+                            <div class="help">
+                                Every recognized annotation category uses the rate you paste here.
+                                Missing rates produce zero pay and are shown in the report.
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
-
-                <div class="section">
-
-                    <h3>Additional Annotation Rules</h3>
-
-                    <div class="alert alert-warning">
-
-                        Any KML annotation that cannot be matched to the known
-                        categories will be shown as <strong>ADDITIONAL / UNKNOWN</strong>
-                        and will not automatically receive pay unless you enter an
-                        Other / Unknown rate.
-
-                    </div>
 
                     <div class="check-row">
-                        <input type="checkbox" id="payUnknown">
-                        <label for="payUnknown">
-                            Allow Other / Unknown annotations to receive pay
+
+                        <input
+                            type="checkbox"
+                            id="kmlRequireAssignment"
+                            checked
+                        >
+
+                        <label for="kmlRequireAssignment">
+                            Only count KML features assigned to the selected worker
                         </label>
+
                     </div>
 
-                </div>
 
-                <div class="section">
-
-                    <div class="button-row">
+                    <div class="actions">
 
                         <button
                             class="btn btn-primary"
-                            id="calculateKml"
+                            id="calculateKmlBtn"
                         >
                             Calculate KML Pay
                         </button>
 
                         <button
                             class="btn btn-secondary"
-                            id="clearKml"
+                            id="clearKmlBtn"
                         >
                             Clear
                         </button>
@@ -1105,43 +1004,220 @@ tr:last-child td {
 
                 </div>
 
+
                 <div id="kmlResult"></div>
 
             </section>
 
-            <!-- FINAL PAY -->
-            <section class="page" id="page-final">
 
-                <div class="section">
+            <!-- ================= REPORTS ================= -->
 
-                    <h3>Final Pay Summary</h3>
+            <section id="page-reports" class="page">
 
-                    <div class="section-description">
-                        This combines annotation pay and KML pay for the selected worker.
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">Reports</div>
+
+                            <div class="card-subtitle">
+                                Your calculated reports are stored locally in this browser.
+                            </div>
+                        </div>
+
+                        <div class="actions" style="margin:0;">
+
+                            <button
+                                class="btn btn-secondary"
+                                id="exportHistoryBtn"
+                            >
+                                Export CSV
+                            </button>
+
+                            <button
+                                class="btn btn-danger"
+                                id="clearHistoryBtn"
+                            >
+                                Clear History
+                            </button>
+
+                        </div>
+
                     </div>
 
-                    <div id="finalSummary"></div>
+
+                    <div id="historyContainer"></div>
 
                 </div>
 
-                <div class="section">
+            </section>
 
-                    <h3>Export</h3>
 
-                    <div class="button-row">
+            <!-- ================= SETTINGS ================= -->
 
-                        <button
-                            class="btn btn-success"
-                            id="downloadCsv"
-                        >
-                            Download CSV
-                        </button>
+            <section id="page-settings" class="page">
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">User Profile</div>
+
+                            <div class="card-subtitle">
+                                Used to identify the worker when calculating payment.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div class="field">
+
+                            <label>Worker Name</label>
+
+                            <input
+                                id="profileName"
+                                placeholder="Your worker / annotator name"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>Worker ID</label>
+
+                            <input
+                                id="profileId"
+                                placeholder="Worker ID"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>Team</label>
+
+                            <input
+                                id="profileTeam"
+                                placeholder="Team"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>Currency</label>
+
+                            <input
+                                id="currency"
+                                value="KES"
+                                placeholder="KES"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <div class="card-title">Google Sheets Integration</div>
+
+                            <div class="card-subtitle">
+                                Send calculated reports directly to a Google Sheet through Google Apps Script.
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div class="field full">
+
+                            <label>
+                                Google Apps Script Web App URL
+                            </label>
+
+                            <input
+                                id="googleScriptUrl"
+                                placeholder="https://script.google.com/macros/s/....../exec"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Spreadsheet ID
+                            </label>
+
+                            <input
+                                id="spreadsheetId"
+                                placeholder="Google Spreadsheet ID"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Sheet / Tab Name
+                            </label>
+
+                            <input
+                                id="sheetName"
+                                value="RC_PAY_REPORTS"
+                            >
+
+                        </div>
+
+
+                        <div class="field full">
+
+                            <label>
+                                Shared Secret
+                            </label>
+
+                            <input
+                                type="password"
+                                id="googleSecret"
+                                placeholder="Your private Apps Script secret"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
 
                         <button
                             class="btn btn-primary"
-                            id="sendGoogle"
+                            id="saveSettingsBtn"
                         >
-                            Send to Google Sheets
+                            Save Settings
+                        </button>
+
+                        <button
+                            class="btn btn-secondary"
+                            id="testGoogleBtn"
+                        >
+                            Test Google Sheets
                         </button>
 
                     </div>
@@ -1156,7 +1232,4027 @@ tr:last-child td {
 
 </div>
 
-<script src="app.js"></script>
+
+<div id="toast"></div>
+
+
+<script>
+
+/* ============================================================
+   R.C PAY
+   Complete Frontend Application
+   ============================================================ */
+
+const state = {
+
+    annotationRows: [],
+
+    kmlFeatures: [],
+
+    currentAnnotationReport: null,
+
+    currentKmlReport: null,
+
+    history: JSON.parse(
+        localStorage.getItem("rcpay_history") || "[]"
+    ),
+
+    settings: JSON.parse(
+        localStorage.getItem("rcpay_settings") || "{}"
+    )
+
+};
+
+
+/* ============================================================
+   GENERAL HELPERS
+   ============================================================ */
+
+function normalize(value) {
+
+    return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/[\s_\-\/]+/g, "");
+
+}
+
+
+function cleanText(value) {
+
+    return String(value ?? "")
+        .replace(/<[^>]*>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+
+
+function money(value) {
+
+    const n = Number(value) || 0;
+
+    return n.toFixed(2);
+
+}
+
+
+function number(value) {
+
+    const n = parseFloat(
+        String(value ?? "")
+            .replace(/,/g, "")
+            .trim()
+    );
+
+    return Number.isFinite(n) ? n : 0;
+
+}
+
+
+function showToast(message) {
+
+    const holder = document.getElementById("toast");
+
+    const div = document.createElement("div");
+
+    div.className = "toast";
+
+    div.textContent = message;
+
+    holder.appendChild(div);
+
+    setTimeout(() => {
+
+        div.remove();
+
+    }, 3500);
+
+}
+
+
+function today() {
+
+    return new Date().toISOString();
+
+}
+
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+
+function loadSettings() {
+
+    const s = state.settings;
+
+    document.getElementById("profileName").value =
+        s.profileName || "";
+
+    document.getElementById("profileId").value =
+        s.profileId || "";
+
+    document.getElementById("profileTeam").value =
+        s.profileTeam || "";
+
+    document.getElementById("currency").value =
+        s.currency || "KES";
+
+    document.getElementById("googleScriptUrl").value =
+        s.googleScriptUrl || "";
+
+    document.getElementById("spreadsheetId").value =
+        s.spreadsheetId || "";
+
+    document.getElementById("sheetName").value =
+        s.sheetName || "RC_PAY_REPORTS";
+
+    document.getElementById("googleSecret").value =
+        s.googleSecret || "";
+
+    updateProfileDisplay();
+
+}
+
+
+function saveSettings() {
+
+    state.settings = {
+
+        profileName:
+            document.getElementById("profileName").value.trim(),
+
+        profileId:
+            document.getElementById("profileId").value.trim(),
+
+        profileTeam:
+            document.getElementById("profileTeam").value.trim(),
+
+        currency:
+            document.getElementById("currency").value.trim() || "KES",
+
+        googleScriptUrl:
+            document.getElementById("googleScriptUrl").value.trim(),
+
+        spreadsheetId:
+            document.getElementById("spreadsheetId").value.trim(),
+
+        sheetName:
+            document.getElementById("sheetName").value.trim() ||
+            "RC_PAY_REPORTS",
+
+        googleSecret:
+            document.getElementById("googleSecret").value.trim()
+
+    };
+
+    localStorage.setItem(
+        "rcpay_settings",
+        JSON.stringify(state.settings)
+    );
+
+    updateProfileDisplay();
+
+    showToast("Settings saved.");
+
+}
+
+
+function updateProfileDisplay() {
+
+    const name =
+        state.settings.profileName || "Worker not configured";
+
+    document.getElementById("profileChip").textContent = name;
+
+    document.getElementById("dashWorker").textContent =
+        state.settings.profileName || "—";
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+const pageNames = {
+
+    dashboard: "Dashboard",
+
+    annotation: "Annotation Pay",
+
+    kml: "KML Pay",
+
+    reports: "Reports",
+
+    settings: "Settings"
+
+};
+
+
+document.querySelectorAll(".nav button").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const page = button.dataset.page;
+
+        document.querySelectorAll(".nav button")
+            .forEach(b => b.classList.remove("active"));
+
+        button.classList.add("active");
+
+        document.querySelectorAll(".page")
+            .forEach(p => p.classList.remove("active"));
+
+        document
+            .getElementById("page-" + page)
+            .classList.add("active");
+
+        document.getElementById("pageTitle").textContent =
+            pageNames[page];
+
+        if (page === "reports") {
+
+            renderHistory();
+
+        }
+
+    });
+
+});
+
+
+/* ============================================================
+   PAY RATE PARSER
+   ============================================================ */
+
+function parseRates(text) {
+
+    const rates = {};
+
+    const lines = String(text || "")
+        .split(/\r?\n/);
+
+    lines.forEach(line => {
+
+        let clean = line.trim();
+
+        if (!clean) return;
+
+        if (
+            clean.startsWith("#") ||
+            clean.startsWith("//")
+        ) return;
+
+        let parts;
+
+        if (clean.includes("=")) {
+
+            parts = clean.split("=");
+
+        } else if (clean.includes(",")) {
+
+            parts = clean.split(",");
+
+        } else if (clean.includes(":")) {
+
+            parts = clean.split(":");
+
+        } else {
+
+            return;
+
+        }
+
+        if (parts.length < 2) return;
+
+        const name = parts
+            .slice(0, -1)
+            .join("=")
+            .trim();
+
+        const rate = number(
+            parts[parts.length - 1]
+        );
+
+        if (name) {
+
+            rates[normalize(name)] = {
+
+                name,
+
+                rate
+
+            };
+
+        }
+
+    });
+
+    return rates;
+
+}
+
+
+function getRate(rates, category) {
+
+    const key = normalize(category);
+
+    return rates[key]
+        ? rates[key].rate
+        : 0;
+
+}
+
+
+/* ============================================================
+   CATEGORY NORMALIZATION
+   ============================================================ */
+
+function detectCategory(text) {
+
+    const s = normalize(text);
+
+    if (
+        s.includes("busstop") ||
+        /\bbus\s*stop\b/i.test(text)
+    ) {
+
+        return "Bus Stop";
+
+    }
+
+    if (
+        s.includes("buslane") ||
+        /\bbus\s*lane\b/i.test(text)
+    ) {
+
+        return "Bus Lane";
+
+    }
+
+    if (
+        s.includes("bikelane") ||
+        s.includes("cyclelane") ||
+        /\bbike\s*lane\b/i.test(text)
+    ) {
+
+        return "Bike Lane";
+
+    }
+
+    if (
+        s === "r0" ||
+        s.includes("r0") ||
+        /\broad\s*0\b/i.test(text)
+    ) {
+
+        return "R0";
+
+    }
+
+    if (
+        s === "l0" ||
+        s.includes("l0") ||
+        /\blane\s*0\b/i.test(text)
+    ) {
+
+        return "L0";
+
+    }
+
+    if (
+        s.includes("locationdescription") ||
+        s.includes("locationdesc") ||
+        s.includes("location")
+    ) {
+
+        return "Location Description";
+
+    }
+
+    return "Additional / Unknown";
+
+}
+
+
+/* ============================================================
+   ASSIGNMENT COLUMN DETECTION
+   ============================================================ */
+
+const assignmentHeaders = [
+
+    "assignee",
+
+    "annotatorassigned",
+
+    "annotator",
+
+    "annotatorname",
+
+    "assignedto",
+
+    "assigned",
+
+    "assignedworker",
+
+    "worker",
+
+    "workername",
+
+    "username",
+
+    "user"
+
+];
+
+
+function findColumn(row, candidates) {
+
+    const keys = Object.keys(row);
+
+    for (const candidate of candidates) {
+
+        const wanted = normalize(candidate);
+
+        const exact = keys.find(
+            key => normalize(key) === wanted
+        );
+
+        if (exact) return exact;
+
+    }
+
+    return null;
+
+}
+
+
+function findAssignmentColumn(rows) {
+
+    if (!rows.length) return null;
+
+    const keys = Object.keys(rows[0]);
+
+    for (const wanted of assignmentHeaders) {
+
+        const exact = keys.find(
+            key => normalize(key) === wanted
+        );
+
+        if (exact) return exact;
+
+    }
+
+    /* Flexible partial matching */
+
+    const partial = keys.find(key => {
+
+        const k = normalize(key);
+
+        return (
+            k.includes("assignee") ||
+            k.includes("annotatorassigned") ||
+            k.includes("assignedto") ||
+            k === "annotator" ||
+            k === "worker" ||
+            k.includes("workername")
+        );
+
+    });
+
+    return partial || null;
+
+}
+
+
+function findAnnotationColumn(rows) {
+
+    if (!rows.length) return null;
+
+    const keys = Object.keys(rows[0]);
+
+    const candidates = [
+
+        "flag",
+        "annotation",
+        "annotationtype",
+        "type",
+        "category",
+        "label",
+        "class",
+        "feature",
+        "name"
+
+    ];
+
+    for (const candidate of candidates) {
+
+        const wanted = normalize(candidate);
+
+        const found = keys.find(
+            key => normalize(key) === wanted
+        );
+
+        if (found) return found;
+
+    }
+
+    return null;
+
+}
+
+
+function findQuantityColumn(rows) {
+
+    if (!rows.length) return null;
+
+    const keys = Object.keys(rows[0]);
+
+    const candidates = [
+
+        "quantity",
+        "qty",
+        "count",
+        "number",
+        "total",
+        "units"
+
+    ];
+
+    for (const candidate of candidates) {
+
+        const wanted = normalize(candidate);
+
+        const found = keys.find(
+            key => normalize(key) === wanted
+        );
+
+        if (found) return found;
+
+    }
+
+    return null;
+
+}
+
+
+/* ============================================================
+   CSV PARSER
+   ============================================================ */
+
+function parseCSV(text) {
+
+    const rows = [];
+
+    let row = [];
+
+    let cell = "";
+
+    let quoted = false;
+
+    for (let i = 0; i < text.length; i++) {
+
+        const char = text[i];
+
+        const next = text[i + 1];
+
+        if (char === '"' && quoted && next === '"') {
+
+            cell += '"';
+
+            i++;
+
+        } else if (char === '"') {
+
+            quoted = !quoted;
+
+        } else if (char === "," && !quoted) {
+
+            row.push(cell);
+
+            cell = "";
+
+        } else if (
+            (char === "\n" || char === "\r") &&
+            !quoted
+        ) {
+
+            if (char === "\r" && next === "\n") {
+
+                i++;
+
+            }
+
+            row.push(cell);
+
+            rows.push(row);
+
+            row = [];
+
+            cell = "";
+
+        } else {
+
+            cell += char;
+
+        }
+
+    }
+
+    if (cell.length || row.length) {
+
+        row.push(cell);
+
+        rows.push(row);
+
+    }
+
+    if (!rows.length) return [];
+
+    const headers = rows[0].map(
+        h => String(h).trim()
+    );
+
+    return rows
+        .slice(1)
+        .filter(r =>
+            r.some(v => String(v).trim() !== "")
+        )
+        .map(r => {
+
+            const obj = {};
+
+            headers.forEach((header, i) => {
+
+                obj[header || `Column ${i + 1}`] =
+                    r[i] ?? "";
+
+            });
+
+            return obj;
+
+        });
+
+}
+
+
+/* ============================================================
+   ANNOTATION FILE UPLOAD
+   ============================================================ */
+
+document
+    .getElementById("annotationFile")
+    .addEventListener("change", async event => {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        try {
+
+            let rows = [];
+
+            if (
+                file.name.toLowerCase().endsWith(".xlsx") ||
+                file.name.toLowerCase().endsWith(".xls")
+            ) {
+
+                const buffer =
+                    await file.arrayBuffer();
+
+                const workbook =
+                    XLSX.read(buffer, {
+                        type: "array"
+                    });
+
+                const firstSheet =
+                    workbook.Sheets[
+                        workbook.SheetNames[0]
+                    ];
+
+                rows =
+                    XLSX.utils.sheet_to_json(
+                        firstSheet,
+                        {
+                            defval: ""
+                        }
+                    );
+
+            } else {
+
+                const text =
+                    await file.text();
+
+                rows = parseCSV(text);
+
+            }
+
+            state.annotationRows = rows;
+
+            document.getElementById(
+                "annotationFileInfo"
+            ).textContent =
+                `${file.name} — ${rows.length} rows loaded.`;
+
+            populateAnnotationWorkers();
+
+            showToast(
+                `${rows.length} annotation rows loaded.`
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not read annotation file."
+            );
+
+        }
+
+    });
+
+
+/* ============================================================
+   POPULATE WORKERS
+   ============================================================ */
+
+function getUniqueWorkers(rows) {
+
+    const workers = new Set();
+
+    const assignmentColumn =
+        findAssignmentColumn(rows);
+
+    if (assignmentColumn) {
+
+        rows.forEach(row => {
+
+            const value =
+                String(row[assignmentColumn] || "")
+                    .trim();
+
+            if (value) workers.add(value);
+
+        });
+
+    }
+
+    /* Also add profile worker */
+
+    if (state.settings.profileName) {
+
+        workers.add(
+            state.settings.profileName
+        );
+
+    }
+
+    return Array.from(workers)
+        .sort((a, b) =>
+            a.localeCompare(b)
+        );
+
+}
+
+
+function fillWorkerSelect(selectId, workers) {
+
+    const select =
+        document.getElementById(selectId);
+
+    const current =
+        select.value;
+
+    select.innerHTML =
+        `<option value="">Select worker</option>`;
+
+    workers.forEach(worker => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = worker;
+
+        option.textContent = worker;
+
+        select.appendChild(option);
+
+    });
+
+    const profile =
+        state.settings.profileName;
+
+    if (
+        profile &&
+        workers.some(
+            w =>
+                normalize(w) ===
+                normalize(profile)
+        )
+    ) {
+
+        const matched =
+            workers.find(
+                w =>
+                    normalize(w) ===
+                    normalize(profile)
+            );
+
+        select.value = matched;
+
+    } else if (current) {
+
+        select.value = current;
+
+    }
+
+}
+
+
+function populateAnnotationWorkers() {
+
+    const workers =
+        getUniqueWorkers(
+            state.annotationRows
+        );
+
+    fillWorkerSelect(
+        "annotationWorker",
+        workers
+    );
+
+}
+
+
+/* ============================================================
+   ANNOTATION CALCULATION
+   ============================================================ */
+
+function calculateAnnotationPay() {
+
+    if (!state.annotationRows.length) {
+
+        showToast(
+            "Upload an annotation configuration first."
+        );
+
+        return;
+
+    }
+
+    const worker =
+        document.getElementById(
+            "annotationWorker"
+        ).value.trim();
+
+    if (!worker) {
+
+        showToast("Select a worker.");
+
+        return;
+
+    }
+
+    const rates =
+        parseRates(
+            document.getElementById(
+                "annotationRates"
+            ).value
+        );
+
+    const mode =
+        document.getElementById(
+            "annotationMode"
+        ).value;
+
+    const requireAssignment =
+        document.getElementById(
+            "requireAssignment"
+        ).checked;
+
+    const assignmentColumn =
+        findAssignmentColumn(
+            state.annotationRows
+        );
+
+    const annotationColumn =
+        findAnnotationColumn(
+            state.annotationRows
+        );
+
+    const quantityColumn =
+        findQuantityColumn(
+            state.annotationRows
+        );
+
+    if (!annotationColumn) {
+
+        showToast(
+            "Could not find an annotation/flag/type column."
+        );
+
+        return;
+
+    }
+
+    if (
+        requireAssignment &&
+        !assignmentColumn
+    ) {
+
+        showToast(
+            "Could not find an assignment column. Expected something like Assignee or Annotator Assigned."
+        );
+
+        return;
+
+    }
+
+    let selectedTypes = [];
+
+    if (mode === "selected") {
+
+        selectedTypes =
+            document.getElementById(
+                "selectedAnnotationTypes"
+            ).value
+            .split(",")
+            .map(x => normalize(x))
+            .filter(Boolean);
+
+    }
+
+    const totals = {};
+
+    let totalQuantity = 0;
+
+    let unknownQuantity = 0;
+
+    let assignedRows = 0;
+
+    let unassignedRows = 0;
+
+    state.annotationRows.forEach(row => {
+
+        const annotationName =
+            String(
+                row[annotationColumn] || ""
+            ).trim();
+
+        if (!annotationName) return;
+
+        const assignmentValue =
+            assignmentColumn
+                ? String(
+                    row[assignmentColumn] || ""
+                ).trim()
+                : "";
+
+        let assigned = true;
+
+        if (requireAssignment) {
+
+            assigned =
+                normalize(assignmentValue) ===
+                normalize(worker);
+
+        }
+
+        if (!assigned) {
+
+            unassignedRows++;
+
+            return;
+
+        }
+
+        assignedRows++;
+
+        const category =
+            detectCategory(
+                annotationName
+            );
+
+        if (
+            mode === "selected" &&
+            !selectedTypes.includes(
+                normalize(category)
+            ) &&
+            !selectedTypes.includes(
+                normalize(annotationName)
+            )
+        ) {
+
+            return;
+
+        }
+
+        let qty = 1;
+
+        if (quantityColumn) {
+
+            const parsed =
+                number(
+                    row[quantityColumn]
+                );
+
+            if (parsed > 0) qty = parsed;
+
+        }
+
+        if (!totals[category]) {
+
+            totals[category] = {
+
+                category,
+
+                quantity: 0,
+
+                rate: getRate(
+                    rates,
+                    category
+                ),
+
+                pay: 0
+
+            };
+
+        }
+
+        totals[category].quantity += qty;
+
+        totals[category].pay =
+            totals[category].quantity *
+            totals[category].rate;
+
+        totalQuantity += qty;
+
+        if (
+            category ===
+            "Additional / Unknown"
+        ) {
+
+            unknownQuantity += qty;
+
+        }
+
+    });
+
+
+    const rows =
+        Object.values(totals);
+
+    let totalPay = 0;
+
+    rows.forEach(row => {
+
+        totalPay += row.pay;
+
+    });
+
+
+    const report = {
+
+        reportType: "Annotation Pay",
+
+        date: today(),
+
+        worker,
+
+        workerId:
+            state.settings.profileId || "",
+
+        team:
+            state.settings.profileTeam || "",
+
+        assignmentColumn:
+            assignmentColumn || "",
+
+        annotationColumn,
+
+        totalQuantity,
+
+        unknownQuantity,
+
+        assignedRows,
+
+        unassignedRows,
+
+        totalPay,
+
+        currency:
+            state.settings.currency || "KES",
+
+        rows
+
+    };
+
+    state.currentAnnotationReport =
+        report;
+
+    state.history.unshift(report);
+
+    saveHistory();
+
+    renderAnnotationReport(report);
+
+    updateDashboard();
+
+}
+
+
+/* ============================================================
+   RENDER ANNOTATION REPORT
+   ============================================================ */
+
+function renderAnnotationReport(report) {
+
+    const currency =
+        report.currency;
+
+    let html = `
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <div class="card-title">
+                        Annotation Pay Result
+                    </div>
+
+                    <div class="card-subtitle">
+                        Worker: ${escapeHtml(report.worker)}
+                        &nbsp; | &nbsp;
+                        Assignment column:
+                        ${escapeHtml(
+                            report.assignmentColumn || "Not found"
+                        )}
+                    </div>
+
+                </div>
+
+                <span class="status ${
+                    report.unknownQuantity > 0
+                        ? "status-warning"
+                        : "status-success"
+                }">
+
+                    ${
+                        report.unknownQuantity > 0
+                            ? "Additional annotations found"
+                            : "All recognized"
+                    }
+
+                </span>
+
+            </div>
+
+
+            <div class="report-summary">
+
+                <div class="summary-box">
+                    <span>Total Quantity</span>
+                    <strong>${report.totalQuantity}</strong>
+                </div>
+
+                <div class="summary-box">
+                    <span>Assigned Rows</span>
+                    <strong>${report.assignedRows}</strong>
+                </div>
+
+                <div class="summary-box">
+                    <span>Unknown</span>
+                    <strong>${report.unknownQuantity}</strong>
+                </div>
+
+                <div class="summary-box">
+                    <span>Total Pay</span>
+                    <strong>${currency} ${money(report.totalPay)}</strong>
+                </div>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Annotation</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Pay</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+    `;
+
+
+    if (!report.rows.length) {
+
+        html += `
+
+            <tr>
+                <td colspan="4" class="empty">
+                    No assigned annotations found.
+                </td>
+            </tr>
+
+        `;
+
+    } else {
+
+        report.rows.forEach(row => {
+
+            const unknown =
+                row.category ===
+                "Additional / Unknown";
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(row.category)}
+
+                        ${
+                            unknown
+                            ? `
+                                <span class="status status-warning">
+                                    CHECK
+                                </span>
+                            `
+                            : ""
+                        }
+
+                    </td>
+
+                    <td>${row.quantity}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.rate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.pay)}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+    html += `
+
+                    <tr class="total-row">
+
+                        <td>TOTAL</td>
+
+                        <td>${report.totalQuantity}</td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(report.totalPay)}
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="exportCurrentAnnotationCSV()"
+                >
+                    Export CSV
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    onclick="sendCurrentAnnotationToGoogle()"
+                >
+                    Send to Google Sheets
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "annotationResult"
+    ).innerHTML = html;
+
+}
+
+
+/* ============================================================
+   KML PARSER
+   ============================================================ */
+
+document
+    .getElementById("kmlFile")
+    .addEventListener("change", async event => {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) return;
+
+        try {
+
+            const text =
+                await file.text();
+
+            state.kmlFeatures =
+                parseKML(text);
+
+            document.getElementById(
+                "kmlFileInfo"
+            ).textContent =
+                `${file.name} — ${state.kmlFeatures.length} Placemark(s) loaded.`;
+
+            populateKmlWorkers();
+
+            showToast(
+                `${state.kmlFeatures.length} KML features loaded.`
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            showToast(
+                "Could not read KML."
+            );
+
+        }
+
+    });
+
+
+function parseKML(text) {
+
+    const parser =
+        new DOMParser();
+
+    const xml =
+        parser.parseFromString(
+            text,
+            "application/xml"
+        );
+
+    const placemarks =
+        Array.from(
+            xml.getElementsByTagName("Placemark")
+        );
+
+    return placemarks.map(
+        (placemark, index) => {
+
+            const data = {};
+
+            Array.from(
+                placemark.querySelectorAll(
+                    "ExtendedData Data"
+                )
+            ).forEach(item => {
+
+                const name =
+                    item.getAttribute("name") || "";
+
+                const valueNode =
+                    item.querySelector("value");
+
+                data[name] =
+                    valueNode
+                        ? cleanText(
+                            valueNode.textContent
+                        )
+                        : "";
+
+            });
+
+
+            Array.from(
+                placemark.querySelectorAll(
+                    "ExtendedData SchemaData SimpleData"
+                )
+            ).forEach(item => {
+
+                const name =
+                    item.getAttribute("name") || "";
+
+                data[name] =
+                    cleanText(
+                        item.textContent
+                    );
+
+            });
+
+
+            const nameNode =
+                placemark.querySelector(":scope > name");
+
+            const descriptionNode =
+                placemark.querySelector(
+                    ":scope > description"
+                );
+
+
+            const name =
+                nameNode
+                    ? cleanText(
+                        nameNode.textContent
+                    )
+                    : `Feature ${index + 1}`;
+
+
+            const description =
+                descriptionNode
+                    ? cleanText(
+                        descriptionNode.textContent
+                    )
+                    : "";
+
+
+            const folderName =
+                getParentFolderName(
+                    placemark
+                );
+
+
+            const allDataText =
+                Object.entries(data)
+                    .map(
+                        ([k, v]) =>
+                            `${k}: ${v}`
+                    )
+                    .join(" | ");
+
+
+            const combinedText =
+                [
+                    name,
+                    description,
+                    folderName,
+                    allDataText
+                ]
+                .join(" | ");
+
+
+            const category =
+                detectCategory(
+                    combinedText
+                );
+
+
+            const worker =
+                findKmlWorker(
+                    data,
+                    combinedText
+                );
+
+
+            const block =
+                findKmlBlock(
+                    data,
+                    name,
+                    description,
+                    folderName
+                );
+
+
+            const locationDescription =
+                findLocationDescription(
+                    data,
+                    description,
+                    name
+                );
+
+
+            const quantity =
+                findKmlQuantity(
+                    data
+                );
+
+
+            return {
+
+                index: index + 1,
+
+                name,
+
+                description,
+
+                folderName,
+
+                data,
+
+                category,
+
+                worker,
+
+                block,
+
+                locationDescription,
+
+                quantity
+
+            };
+
+        }
+    );
+
+}
+
+
+function getParentFolderName(node) {
+
+    let parent =
+        node.parentElement;
+
+    while (parent) {
+
+        if (
+            parent.tagName &&
+            parent.tagName.toLowerCase() ===
+            "folder"
+        ) {
+
+            const nameNode =
+                parent.querySelector(":scope > name");
+
+            if (nameNode) {
+
+                return cleanText(
+                    nameNode.textContent
+                );
+
+            }
+
+        }
+
+        parent = parent.parentElement;
+
+    }
+
+    return "";
+
+}
+
+
+/* ============================================================
+   KML WORKER DETECTION
+   ============================================================ */
+
+function findKmlWorker(data, combinedText) {
+
+    const keys =
+        Object.keys(data);
+
+    const candidates = [
+
+        "assignee",
+        "annotatorassigned",
+        "annotator",
+        "assignedto",
+        "assigned",
+        "worker",
+        "workername",
+        "username"
+
+    ];
+
+
+    for (const candidate of candidates) {
+
+        const found =
+            keys.find(
+                key =>
+                    normalize(key) ===
+                    normalize(candidate)
+            );
+
+        if (
+            found &&
+            String(data[found]).trim()
+        ) {
+
+            return String(
+                data[found]
+            ).trim();
+
+        }
+
+    }
+
+
+    /*
+       Some KMLs put assignment inside
+       description/name text.
+    */
+
+    const patterns = [
+
+        /assignee\s*[:=-]\s*([^|;,<]+)/i,
+
+        /annotator\s*(?:assigned)?\s*[:=-]\s*([^|;,<]+)/i,
+
+        /assigned\s*(?:to)?\s*[:=-]\s*([^|;,<]+)/i,
+
+        /worker\s*[:=-]\s*([^|;,<]+)/i
+
+    ];
+
+
+    for (const pattern of patterns) {
+
+        const match =
+            combinedText.match(pattern);
+
+        if (match && match[1]) {
+
+            return match[1].trim();
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ============================================================
+   KML BLOCK DETECTION
+   ============================================================ */
+
+function findKmlBlock(
+    data,
+    name,
+    description,
+    folderName
+) {
+
+    const keys =
+        Object.keys(data);
+
+    const candidates = [
+
+        "block",
+        "blockid",
+        "block_id",
+        "blockname",
+        "segment",
+        "segmentid",
+        "segment_id"
+
+    ];
+
+
+    for (const candidate of candidates) {
+
+        const found =
+            keys.find(
+                key =>
+                    normalize(key) ===
+                    normalize(candidate)
+            );
+
+        if (
+            found &&
+            String(data[found]).trim()
+        ) {
+
+            return String(
+                data[found]
+            ).trim();
+
+        }
+
+    }
+
+
+    const combined =
+        [
+            name,
+            description,
+            folderName
+        ].join(" | ");
+
+
+    const match =
+        combined.match(
+            /(?:block|blk|segment|seg)\s*[:#_\-]?\s*([a-z0-9._\/-]+)/i
+        );
+
+
+    if (match && match[1]) {
+
+        return match[1].trim();
+
+    }
+
+
+    if (
+        folderName &&
+        ![
+            "kml",
+            "documents",
+            "document",
+            "blocks"
+        ].includes(
+            normalize(folderName)
+        )
+    ) {
+
+        return folderName;
+
+    }
+
+
+    return name || "Unspecified Block";
+
+}
+
+
+/* ============================================================
+   KML LOCATION DESCRIPTION
+   ============================================================ */
+
+function findLocationDescription(
+    data,
+    description,
+    name
+) {
+
+    const keys =
+        Object.keys(data);
+
+    const candidates = [
+
+        "locationdescription",
+        "location_description",
+        "locationdesc",
+        "location",
+        "address",
+        "place"
+
+    ];
+
+
+    for (const candidate of candidates) {
+
+        const found =
+            keys.find(
+                key =>
+                    normalize(key) ===
+                    normalize(candidate)
+            );
+
+        if (
+            found &&
+            String(data[found]).trim()
+        ) {
+
+            return cleanText(
+                data[found]
+            );
+
+        }
+
+    }
+
+
+    return description || name || "";
+
+}
+
+
+/* ============================================================
+   KML QUANTITY
+   ============================================================ */
+
+function findKmlQuantity(data) {
+
+    const keys =
+        Object.keys(data);
+
+    const candidates = [
+
+        "quantity",
+        "qty",
+        "count",
+        "number",
+        "total",
+        "units"
+
+    ];
+
+
+    for (const candidate of candidates) {
+
+        const found =
+            keys.find(
+                key =>
+                    normalize(key) ===
+                    normalize(candidate)
+            );
+
+
+        if (found) {
+
+            const q =
+                number(data[found]);
+
+            if (q > 0) return q;
+
+        }
+
+    }
+
+
+    return 1;
+
+}
+
+
+/* ============================================================
+   KML WORKERS
+   ============================================================ */
+
+function populateKmlWorkers() {
+
+    const workers =
+        getUniqueKmlWorkers();
+
+    fillWorkerSelect(
+        "kmlWorker",
+        workers
+    );
+
+}
+
+
+function getUniqueKmlWorkers() {
+
+    const workers =
+        new Set();
+
+    state.kmlFeatures.forEach(feature => {
+
+        if (feature.worker) {
+
+            workers.add(
+                feature.worker
+            );
+
+        }
+
+    });
+
+
+    if (state.settings.profileName) {
+
+        workers.add(
+            state.settings.profileName
+        );
+
+    }
+
+
+    return Array.from(workers)
+        .sort(
+            (a, b) =>
+                a.localeCompare(b)
+        );
+
+}
+
+
+/* ============================================================
+   KML CALCULATION
+   ============================================================ */
+
+function calculateKmlPay() {
+
+    if (!state.kmlFeatures.length) {
+
+        showToast(
+            "Upload a KML first."
+        );
+
+        return;
+
+    }
+
+
+    const worker =
+        document.getElementById(
+            "kmlWorker"
+        ).value.trim();
+
+
+    if (!worker) {
+
+        showToast(
+            "Select a worker."
+        );
+
+        return;
+
+    }
+
+
+    const rates =
+        parseRates(
+            document.getElementById(
+                "kmlRates"
+            ).value
+        );
+
+
+    const mode =
+        document.getElementById(
+            "kmlMode"
+        ).value;
+
+
+    const requireAssignment =
+        document.getElementById(
+            "kmlRequireAssignment"
+        ).checked;
+
+
+    let selectedTypes = [];
+
+    if (mode === "selected") {
+
+        selectedTypes =
+            document.getElementById(
+                "selectedKmlTypes"
+            ).value
+            .split(",")
+            .map(x => normalize(x))
+            .filter(Boolean);
+
+    }
+
+
+    /*
+       Categories are kept on ONE ROW per block.
+    */
+
+    const blockMap =
+        new Map();
+
+
+    let unknownTotal = 0;
+
+    let skippedUnassigned = 0;
+
+
+    state.kmlFeatures.forEach(feature => {
+
+        if (
+            requireAssignment &&
+            normalize(feature.worker) !==
+            normalize(worker)
+        ) {
+
+            skippedUnassigned +=
+                feature.quantity || 1;
+
+            return;
+
+        }
+
+
+        let category =
+            feature.category;
+
+
+        if (
+            mode === "selected" &&
+            !selectedTypes.includes(
+                normalize(category)
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const block =
+            feature.block ||
+            "Unspecified Block";
+
+
+        if (!blockMap.has(block)) {
+
+            blockMap.set(block, {
+
+                block,
+
+                locationDescription: "",
+
+                locationDescriptionQty: 0,
+
+                busStopQty: 0,
+
+                busLaneQty: 0,
+
+                bikeLaneQty: 0,
+
+                r0Qty: 0,
+
+                l0Qty: 0,
+
+                unknownQty: 0,
+
+                unknownDetails: [],
+
+                locationDescriptionRate:
+                    getRate(
+                        rates,
+                        "Location Description"
+                    ),
+
+                busStopRate:
+                    getRate(
+                        rates,
+                        "Bus Stop"
+                    ),
+
+                busLaneRate:
+                    getRate(
+                        rates,
+                        "Bus Lane"
+                    ),
+
+                bikeLaneRate:
+                    getRate(
+                        rates,
+                        "Bike Lane"
+                    ),
+
+                r0Rate:
+                    getRate(
+                        rates,
+                        "R0"
+                    ),
+
+                l0Rate:
+                    getRate(
+                        rates,
+                        "L0"
+                    )
+
+            });
+
+        }
+
+
+        const row =
+            blockMap.get(block);
+
+
+        const qty =
+            feature.quantity || 1;
+
+
+        if (
+            feature.locationDescription &&
+            !row.locationDescription
+        ) {
+
+            row.locationDescription =
+                feature.locationDescription;
+
+        }
+
+
+        switch (category) {
+
+            case "Bus Stop":
+
+                row.busStopQty += qty;
+
+                break;
+
+
+            case "Bus Lane":
+
+                row.busLaneQty += qty;
+
+                break;
+
+
+            case "Bike Lane":
+
+                row.bikeLaneQty += qty;
+
+                break;
+
+
+            case "R0":
+
+                row.r0Qty += qty;
+
+                break;
+
+
+            case "L0":
+
+                row.l0Qty += qty;
+
+                break;
+
+
+            case "Location Description":
+
+                row.locationDescriptionQty += qty;
+
+                break;
+
+
+            default:
+
+                row.unknownQty += qty;
+
+                row.unknownDetails.push(
+                    feature.name ||
+                    feature.description ||
+                    "Unknown annotation"
+                );
+
+                unknownTotal += qty;
+
+                break;
+
+        }
+
+    });
+
+
+    /*
+       If a block has a location description,
+       count it as one paid location description
+       when the KML explicitly contains a location.
+    */
+
+    blockMap.forEach(row => {
+
+        if (
+            row.locationDescription &&
+            row.locationDescriptionQty === 0
+        ) {
+
+            row.locationDescriptionQty = 1;
+
+        }
+
+    });
+
+
+    const rows =
+        Array.from(
+            blockMap.values()
+        );
+
+
+    let totalPay = 0;
+
+
+    rows.forEach(row => {
+
+        row.locationDescriptionPay =
+            row.locationDescriptionQty *
+            row.locationDescriptionRate;
+
+
+        row.busStopPay =
+            row.busStopQty *
+            row.busStopRate;
+
+
+        row.busLanePay =
+            row.busLaneQty *
+            row.busLaneRate;
+
+
+        row.bikeLanePay =
+            row.bikeLaneQty *
+            row.bikeLaneRate;
+
+
+        row.r0Pay =
+            row.r0Qty *
+            row.r0Rate;
+
+
+        row.l0Pay =
+            row.l0Qty *
+            row.l0Rate;
+
+
+        row.totalPay =
+            row.locationDescriptionPay +
+            row.busStopPay +
+            row.busLanePay +
+            row.bikeLanePay +
+            row.r0Pay +
+            row.l0Pay;
+
+
+        totalPay +=
+            row.totalPay;
+
+    });
+
+
+    const totalFeatures =
+        rows.reduce(
+            (sum, row) =>
+                sum +
+                row.locationDescriptionQty +
+                row.busStopQty +
+                row.busLaneQty +
+                row.bikeLaneQty +
+                row.r0Qty +
+                row.l0Qty +
+                row.unknownQty,
+            0
+        );
+
+
+    const report = {
+
+        reportType: "KML Pay",
+
+        date: today(),
+
+        worker,
+
+        workerId:
+            state.settings.profileId || "",
+
+        team:
+            state.settings.profileTeam || "",
+
+        totalFeatures,
+
+        unknownTotal,
+
+        skippedUnassigned,
+
+        totalPay,
+
+        currency:
+            state.settings.currency || "KES",
+
+        rows
+
+    };
+
+
+    state.currentKmlReport =
+        report;
+
+
+    state.history.unshift(report);
+
+    saveHistory();
+
+    renderKmlReport(report);
+
+    updateDashboard();
+
+}
+
+
+/* ============================================================
+   KML REPORT
+   ============================================================ */
+
+function renderKmlReport(report) {
+
+    const currency =
+        report.currency;
+
+
+    let html = `
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <div class="card-title">
+                        KML Pay Result
+                    </div>
+
+                    <div class="card-subtitle">
+                        One row per block — all annotation categories stay together.
+                    </div>
+
+                </div>
+
+
+                <span class="status ${
+                    report.unknownTotal > 0
+                        ? "status-warning"
+                        : "status-success"
+                }">
+
+                    ${
+                        report.unknownTotal > 0
+                            ? "Additional / Unknown found"
+                            : "All recognized"
+                    }
+
+                </span>
+
+            </div>
+
+
+            <div class="report-summary">
+
+                <div class="summary-box">
+
+                    <span>Blocks</span>
+
+                    <strong>
+                        ${report.rows.length}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <span>Features</span>
+
+                    <strong>
+                        ${report.totalFeatures}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <span>Unknown</span>
+
+                    <strong>
+                        ${report.unknownTotal}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-box">
+
+                    <span>Total Pay</span>
+
+                    <strong>
+                        ${currency}
+                        ${money(report.totalPay)}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Block</th>
+
+                            <th>Location Description</th>
+
+                            <th>Location Qty</th>
+                            <th>Location Rate</th>
+                            <th>Location Pay</th>
+
+                            <th>Bus Stop Qty</th>
+                            <th>Bus Stop Rate</th>
+                            <th>Bus Stop Pay</th>
+
+                            <th>Bus Lane Qty</th>
+                            <th>Bus Lane Rate</th>
+                            <th>Bus Lane Pay</th>
+
+                            <th>Bike Lane Qty</th>
+                            <th>Bike Lane Rate</th>
+                            <th>Bike Lane Pay</th>
+
+                            <th>R0 Qty</th>
+                            <th>R0 Rate</th>
+                            <th>R0 Pay</th>
+
+                            <th>L0 Qty</th>
+                            <th>L0 Rate</th>
+                            <th>L0 Pay</th>
+
+                            <th>Additional / Unknown</th>
+                            <th>Unknown Details</th>
+
+                            <th>Total Pay</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+    `;
+
+
+    if (!report.rows.length) {
+
+        html += `
+
+            <tr>
+
+                <td
+                    colspan="23"
+                    class="empty"
+                >
+                    No assigned KML annotations found.
+                </td>
+
+            </tr>
+
+        `;
+
+    } else {
+
+        report.rows.forEach(row => {
+
+            html += `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(row.block)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            row.locationDescription
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${row.locationDescriptionQty}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(
+                            row.locationDescriptionRate
+                        )}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(
+                            row.locationDescriptionPay
+                        )}
+                    </td>
+
+
+                    <td>${row.busStopQty}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.busStopRate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.busStopPay)}
+                    </td>
+
+
+                    <td>${row.busLaneQty}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.busLaneRate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.busLanePay)}
+                    </td>
+
+
+                    <td>${row.bikeLaneQty}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.bikeLaneRate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.bikeLanePay)}
+                    </td>
+
+
+                    <td>${row.r0Qty}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.r0Rate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.r0Pay)}
+                    </td>
+
+
+                    <td>${row.l0Qty}</td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.l0Rate)}
+                    </td>
+
+                    <td>
+                        ${currency}
+                        ${money(row.l0Pay)}
+                    </td>
+
+
+                    <td>
+
+                        ${
+                            row.unknownQty > 0
+                                ? `
+                                    <span class="status status-warning">
+                                        ${row.unknownQty} CHECK
+                                    </span>
+                                `
+                                : "0"
+                        }
+
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(
+                            row.unknownDetails.join(" | ")
+                        )}
+                    </td>
+
+
+                    <td>
+                        <strong>
+                            ${currency}
+                            ${money(row.totalPay)}
+                        </strong>
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+    html += `
+
+                    <tr class="total-row">
+
+                        <td>TOTAL</td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "locationDescriptionQty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "locationDescriptionPay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "busStopQty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "busStopPay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "busLaneQty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "busLanePay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "bikeLaneQty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "bikeLanePay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "r0Qty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "r0Pay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${sumRows(
+                                report.rows,
+                                "l0Qty"
+                            )}
+                        </td>
+
+                        <td>—</td>
+
+                        <td>
+                            ${currency}
+                            ${money(
+                                sumRows(
+                                    report.rows,
+                                    "l0Pay"
+                                )
+                            )}
+                        </td>
+
+
+                        <td>
+                            ${report.unknownTotal}
+                        </td>
+
+                        <td>—</td>
+
+
+                        <td>
+                            ${currency}
+                            ${money(report.totalPay)}
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            ${
+                report.skippedUnassigned > 0
+                ? `
+                    <div class="help" style="margin-top:12px;">
+                        ${report.skippedUnassigned}
+                        feature quantity was excluded because its KML assignment
+                        did not match the selected worker.
+                    </div>
+                `
+                : ""
+            }
+
+
+            <div class="actions">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="exportCurrentKmlCSV()"
+                >
+                    Export CSV
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    onclick="sendCurrentKmlToGoogle()"
+                >
+                    Send to Google Sheets
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "kmlResult"
+    ).innerHTML = html;
+
+}
+
+
+/* ============================================================
+   SUM
+   ============================================================ */
+
+function sumRows(rows, property) {
+
+    return rows.reduce(
+        (sum, row) =>
+            sum + (Number(row[property]) || 0),
+        0
+    );
+
+}
+
+
+/* ============================================================
+   CSV EXPORT
+   ============================================================ */
+
+function downloadCSV(
+    filename,
+    rows
+) {
+
+    if (!rows.length) {
+
+        showToast(
+            "Nothing to export."
+        );
+
+        return;
+
+    }
+
+
+    const headers =
+        Object.keys(rows[0]);
+
+
+    const csv = [
+
+        headers.map(csvEscape).join(","),
+
+        ...rows.map(row =>
+            headers
+                .map(header =>
+                    csvEscape(
+                        row[header]
+                    )
+                )
+                .join(",")
+        )
+
+    ].join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type: "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+    a.download = filename;
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+function csvEscape(value) {
+
+    const text =
+        String(value ?? "");
+
+
+    if (
+        text.includes(",") ||
+        text.includes('"') ||
+        text.includes("\n")
+    ) {
+
+        return `"${text.replace(
+            /"/g,
+            '""'
+        )}"`;
+
+    }
+
+
+    return text;
+
+}
+
+
+/* ============================================================
+   ANNOTATION CSV
+   ============================================================ */
+
+function exportCurrentAnnotationCSV() {
+
+    const report =
+        state.currentAnnotationReport;
+
+    if (!report) return;
+
+
+    const rows =
+        report.rows.map(row => ({
+
+            Date: report.date,
+
+            Worker: report.worker,
+
+            "Worker ID": report.workerId,
+
+            Team: report.team,
+
+            Type: "Annotation Pay",
+
+            Annotation: row.category,
+
+            Quantity: row.quantity,
+
+            Rate: row.rate,
+
+            Pay: row.pay,
+
+            Currency: report.currency
+
+        }));
+
+
+    rows.push({
+
+        Date: report.date,
+
+        Worker: report.worker,
+
+        "Worker ID": report.workerId,
+
+        Team: report.team,
+
+        Type: "Annotation Pay Total",
+
+        Annotation: "TOTAL",
+
+        Quantity: report.totalQuantity,
+
+        Rate: "",
+
+        Pay: report.totalPay,
+
+        Currency: report.currency
+
+    });
+
+
+    downloadCSV(
+        "rc_pay_annotation.csv",
+        rows
+    );
+
+}
+
+
+/* ============================================================
+   KML CSV
+   ============================================================ */
+
+function exportCurrentKmlCSV() {
+
+    const report =
+        state.currentKmlReport;
+
+    if (!report) return;
+
+
+    const rows =
+        report.rows.map(row => ({
+
+            Date: report.date,
+
+            Worker: report.worker,
+
+            "Worker ID": report.workerId,
+
+            Team: report.team,
+
+            Type: "KML Pay",
+
+            Block: row.block,
+
+            "Location Description":
+                row.locationDescription,
+
+            "Location Qty":
+                row.locationDescriptionQty,
+
+            "Location Rate":
+                row.locationDescriptionRate,
+
+            "Location Pay":
+                row.locationDescriptionPay,
+
+            "Bus Stop Qty":
+                row.busStopQty,
+
+            "Bus Stop Rate":
+                row.busStopRate,
+
+            "Bus Stop Pay":
+                row.busStopPay,
+
+            "Bus Lane Qty":
+                row.busLaneQty,
+
+            "Bus Lane Rate":
+                row.busLaneRate,
+
+            "Bus Lane Pay":
+                row.busLanePay,
+
+            "Bike Lane Qty":
+                row.bikeLaneQty,
+
+            "Bike Lane Rate":
+                row.bikeLaneRate,
+
+            "Bike Lane Pay":
+                row.bikeLanePay,
+
+            "R0 Qty":
+                row.r0Qty,
+
+            "R0 Rate":
+                row.r0Rate,
+
+            "R0 Pay":
+                row.r0Pay,
+
+            "L0 Qty":
+                row.l0Qty,
+
+            "L0 Rate":
+                row.l0Rate,
+
+            "L0 Pay":
+                row.l0Pay,
+
+            "Additional / Unknown":
+                row.unknownQty,
+
+            "Unknown Details":
+                row.unknownDetails.join(" | "),
+
+            "Total Pay":
+                row.totalPay,
+
+            Currency:
+                report.currency
+
+        }));
+
+
+    downloadCSV(
+        "rc_pay_kml.csv",
+        rows
+    );
+
+}
+
+
+/* ============================================================
+   GOOGLE SHEETS
+   ============================================================ */
+
+function reportToGoogleRows(report) {
+
+    if (
+        report.reportType ===
+        "Annotation Pay"
+    ) {
+
+        return report.rows.map(row => ({
+
+            Date: report.date,
+
+            Worker: report.worker,
+
+            "Worker ID":
+                report.workerId,
+
+            Team:
+                report.team,
+
+            Report_Type:
+                "Annotation Pay",
+
+            Annotation:
+                row.category,
+
+            Quantity:
+                row.quantity,
+
+            Rate:
+                row.rate,
+
+            Pay:
+                row.pay,
+
+            Currency:
+                report.currency,
+
+            Total_Report_Pay:
+                report.totalPay,
+
+            Unknown:
+                report.unknownQuantity,
+
+            Status:
+                row.category ===
+                "Additional / Unknown"
+                    ? "CHECK"
+                    : "PAID"
+
+        }));
+
+    }
+
+
+    if (
+        report.reportType ===
+        "KML Pay"
+    ) {
+
+        return report.rows.map(row => ({
+
+            Date: report.date,
+
+            Worker: report.worker,
+
+            "Worker ID":
+                report.workerId,
+
+            Team:
+                report.team,
+
+            Report_Type:
+                "KML Pay",
+
+            Block:
+                row.block,
+
+            Location_Description:
+                row.locationDescription,
+
+            Location_Qty:
+                row.locationDescriptionQty,
+
+            Location_Rate:
+                row.locationDescriptionRate,
+
+            Location_Pay:
+                row.locationDescriptionPay,
+
+            Bus_Stop_Qty:
+                row.busStopQty,
+
+            Bus_Stop_Rate:
+                row.busStopRate,
+
+            Bus_Stop_Pay:
+                row.busStopPay,
+
+            Bus_Lane_Qty:
+                row.busLaneQty,
+
+            Bus_Lane_Rate:
+                row.busLaneRate,
+
+            Bus_Lane_Pay:
+                row.busLanePay,
+
+            Bike_Lane_Qty:
+                row.bikeLaneQty,
+
+            Bike_Lane_Rate:
+                row.bikeLaneRate,
+
+            Bike_Lane_Pay:
+                row.bikeLanePay,
+
+            R0_Qty:
+                row.r0Qty,
+
+            R0_Rate:
+                row.r0Rate,
+
+            R0_Pay:
+                row.r0Pay,
+
+            L0_Qty:
+                row.l0Qty,
+
+            L0_Rate:
+                row.l0Rate,
+
+            L0_Pay:
+                row.l0Pay,
+
+            Additional_Unknown:
+                row.unknownQty,
+
+            Unknown_Details:
+                row.unknownDetails.join(" | "),
+
+            Total_Pay:
+                row.totalPay,
+
+            Currency:
+                report.currency,
+
+            Status:
+                row.unknownQty > 0
+                    ? "CHECK"
+                    : "PAID"
+
+        }));
+
+    }
+
+    return [];
+
+}
+
+
+async function sendReportToGoogle(
+    report
+) {
+
+    const url =
+        state.settings.googleScriptUrl;
+
+    const secret =
+        state.settings.googleSecret;
+
+    const spreadsheetId =
+        state.settings.spreadsheetId;
+
+    const sheetName =
+        state.settings.sheetName ||
+        "RC_PAY_REPORTS";
+
+
+    if (!url) {
+
+        showToast(
+            "Enter the Google Apps Script Web App URL in Settings."
+        );
+
+        return;
+
+    }
+
+
+    if (!secret) {
+
+        showToast(
+            "Enter the Google Sheets shared secret."
+        );
+
+        return;
+
+    }
+
+
+    if (!spreadsheetId) {
+
+        showToast(
+            "Enter the Google Spreadsheet ID."
+        );
+
+        return;
+
+    }
+
+
+    const rows =
+        reportToGoogleRows(
+            report
+        );
+
+
+    if (!rows.length) {
+
+        showToast(
+            "There are no report rows to send."
+        );
+
+        return;
+
+    }
+
+
+    const payload = {
+
+        secret,
+
+        spreadsheetId,
+
+        sheetName,
+
+        rows
+
+    };
+
+
+    try {
+
+        /*
+           no-cors is intentional for a static
+           frontend talking to Apps Script.
+
+           The Apps Script receives the POST,
+           while the browser does not try to
+           read the cross-origin response.
+        */
+
+        await fetch(
+            url,
+            {
+
+                method: "POST",
+
+                mode: "no-cors",
+
+                headers: {
+
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+
+                },
+
+                body:
+                    JSON.stringify(payload)
+
+            }
+        );
+
+
+        showToast(
+            "Report submitted to Google Sheets."
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast(
+            "Google Sheets submission failed."
+        );
+
+    }
+
+}
+
+
+function sendCurrentAnnotationToGoogle() {
+
+    if (
+        !state.currentAnnotationReport
+    ) {
+
+        showToast(
+            "Calculate a report first."
+        );
+
+        return;
+
+    }
+
+
+    sendReportToGoogle(
+        state.currentAnnotationReport
+    );
+
+}
+
+
+function sendCurrentKmlToGoogle() {
+
+    if (
+        !state.currentKmlReport
+    ) {
+
+        showToast(
+            "Calculate a KML report first."
+        );
+
+        return;
+
+    }
+
+
+    sendReportToGoogle(
+        state.currentKmlReport
+    );
+
+}
+
+
+/* ============================================================
+   GOOGLE TEST
+   ============================================================ */
+
+async function testGoogleSheets() {
+
+    const fakeReport = {
+
+        reportType:
+            "Annotation Pay",
+
+        date:
+            today(),
+
+        worker:
+            state.settings.profileName ||
+            "TEST",
+
+        workerId:
+            state.settings.profileId ||
+            "",
+
+        team:
+            state.settings.profileTeam ||
+            "",
+
+        totalPay:
+            0,
+
+        unknownQuantity:
+            0,
+
+        currency:
+            state.settings.currency ||
+            "KES",
+
+        rows: [
+
+            {
+
+                category:
+                    "R.C PAY TEST",
+
+                quantity:
+                    0,
+
+                rate:
+                    0,
+
+                pay:
+                    0
+
+            }
+
+        ]
+
+    };
+
+
+    await sendReportToGoogle(
+        fakeReport
+    );
+
+}
+
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+
+function saveHistory() {
+
+    localStorage.setItem(
+        "rcpay_history",
+        JSON.stringify(
+            state.history
+        )
+    );
+
+}
+
+
+function renderHistory() {
+
+    const container =
+        document.getElementById(
+            "historyContainer"
+        );
+
+
+    if (!state.history.length) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No calculations yet.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Date</th>
+
+                        <th>Type</th>
+
+                        <th>Worker</th>
+
+                        <th>Items</th>
+
+                        <th>Unknown</th>
+
+                        <th>Total Pay</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    state.history.forEach(report => {
+
+        const itemCount =
+            report.reportType ===
+            "KML Pay"
+                ? report.rows.length
+                : report.totalQuantity;
+
+
+        const unknown =
+            report.reportType ===
+            "KML Pay"
+                ? report.unknownTotal
+                : report.unknownQuantity;
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${new Date(
+                        report.date
+                    ).toLocaleString()}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        report.reportType
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        report.worker
+                    )}
+                </td>
+
+                <td>
+                    ${itemCount}
+                </td>
+
+                <td>
+                    ${unknown}
+                </td>
+
+                <td>
+                    ${report.currency}
+                    ${money(report.totalPay)}
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+function exportHistory() {
+
+    if (!state.history.length) {
+
+        showToast(
+            "No report history."
+        );
+
+        return;
+
+    }
+
+
+    const rows = [];
+
+
+    state.history.forEach(report => {
+
+        const googleRows =
+            reportToGoogleRows(
+                report
+            );
+
+        googleRows.forEach(row =>
+            rows.push(row)
+        );
+
+    });
+
+
+    downloadCSV(
+        "rc_pay_history.csv",
+        rows
+    );
+
+}
+
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+function updateDashboard() {
+
+    let annotationPay = 0;
+
+    let kmlPay = 0;
+
+    let unknown = 0;
+
+
+    state.history.forEach(report => {
+
+        if (
+            report.reportType ===
+            "Annotation Pay"
+        ) {
+
+            annotationPay +=
+                Number(
+                    report.totalPay
+                ) || 0;
+
+            unknown +=
+                Number(
+                    report.unknownQuantity
+                ) || 0;
+
+        }
+
+
+        if (
+            report.reportType ===
+            "KML Pay"
+        ) {
+
+            kmlPay +=
+                Number(
+                    report.totalPay
+                ) || 0;
+
+            unknown +=
+                Number(
+                    report.unknownTotal
+                ) || 0;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "dashAnnotationPay"
+    ).textContent =
+        money(annotationPay);
+
+
+    document.getElementById(
+        "dashKmlPay"
+    ).textContent =
+        money(kmlPay);
+
+
+    document.getElementById(
+        "dashUnknown"
+    ).textContent =
+        unknown;
+
+
+    document.getElementById(
+        "dashWorker"
+    ).textContent =
+        state.settings.profileName ||
+        "—";
+
+}
+
+
+/* ============================================================
+   CLEAR
+   ============================================================ */
+
+document
+    .getElementById("clearAnnotationBtn")
+    .addEventListener("click", () => {
+
+        state.annotationRows = [];
+
+        state.currentAnnotationReport =
+            null;
+
+        document.getElementById(
+            "annotationFile"
+        ).value = "";
+
+        document.getElementById(
+            "annotationFileInfo"
+        ).textContent =
+            "No file uploaded.";
+
+        document.getElementById(
+            "annotationResult"
+        ).innerHTML = "";
+
+        populateAnnotationWorkers();
+
+    });
+
+
+document
+    .getElementById("clearKmlBtn")
+    .addEventListener("click", () => {
+
+        state.kmlFeatures = [];
+
+        state.currentKmlReport =
+            null;
+
+        document.getElementById(
+            "kmlFile"
+        ).value = "";
+
+        document.getElementById(
+            "kmlFileInfo"
+        ).textContent =
+            "No KML uploaded.";
+
+        document.getElementById(
+            "kmlResult"
+        ).innerHTML = "";
+
+        populateKmlWorkers();
+
+    });
+
+
+/* ============================================================
+   CALCULATE BUTTONS
+   ============================================================ */
+
+document
+    .getElementById(
+        "calculateAnnotationBtn"
+    )
+    .addEventListener(
+        "click",
+        calculateAnnotationPay
+    );
+
+
+document
+    .getElementById(
+        "calculateKmlBtn"
+    )
+    .addEventListener(
+        "click",
+        calculateKmlPay
+    );
+
+
+/* ============================================================
+   MODE SELECTORS
+   ============================================================ */
+
+document
+    .getElementById(
+        "annotationMode"
+    )
+    .addEventListener("change", event => {
+
+        document.getElementById(
+            "selectedAnnotationField"
+        ).style.display =
+            event.target.value ===
+            "selected"
+                ? "block"
+                : "none";
+
+    });
+
+
+document
+    .getElementById(
+        "kmlMode"
+    )
+    .addEventListener("change", event => {
+
+        document.getElementById(
+            "selectedKmlField"
+        ).style.display =
+            event.target.value ===
+            "selected"
+                ? "block"
+                : "none";
+
+    });
+
+
+/* ============================================================
+   SETTINGS BUTTONS
+   ============================================================ */
+
+document
+    .getElementById(
+        "saveSettingsBtn"
+    )
+    .addEventListener(
+        "click",
+        saveSettings
+    );
+
+
+document
+    .getElementById(
+        "testGoogleBtn"
+    )
+    .addEventListener(
+        "click",
+        async () => {
+
+            saveSettings();
+
+            await testGoogleSheets();
+
+        }
+    );
+
+
+/* ============================================================
+   HISTORY BUTTONS
+   ============================================================ */
+
+document
+    .getElementById(
+        "exportHistoryBtn"
+    )
+    .addEventListener(
+        "click",
+        exportHistory
+    );
+
+
+document
+    .getElementById(
+        "clearHistoryBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            if (
+                !confirm(
+                    "Clear all local R.C PAY history?"
+                )
+            ) {
+
+                return;
+
+            }
+
+            state.history = [];
+
+            saveHistory();
+
+            renderHistory();
+
+            updateDashboard();
+
+            showToast(
+                "History cleared."
+            );
+
+        }
+    );
+
+
+/* ============================================================
+   ESCAPE HTML
+   ============================================================ */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ============================================================
+   STARTUP
+   ============================================================ */
+
+loadSettings();
+
+updateDashboard();
+
+renderHistory();
+
+</script>
 
 </body>
 </html>
