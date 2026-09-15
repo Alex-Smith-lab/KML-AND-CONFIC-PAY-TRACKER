@@ -7,6 +7,7 @@
 <title>Annotation Pay Studio</title>
 
 <style>
+
 :root{
   --bg:#f4f7fb;
   --panel:#ffffff;
@@ -72,7 +73,9 @@ button:disabled{
   padding:24px;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .top{
   display:flex;
@@ -117,7 +120,9 @@ button:disabled{
   flex-wrap:wrap;
 }
 
-/* BUTTONS */
+/* =========================
+   BUTTONS
+========================= */
 
 .btn{
   border:1px solid var(--line);
@@ -149,7 +154,9 @@ button:disabled{
   color:var(--danger);
 }
 
-/* PANELS */
+/* =========================
+   PANELS
+========================= */
 
 .panel{
   background:var(--panel);
@@ -165,7 +172,9 @@ button:disabled{
   font-size:16px;
 }
 
-/* PAYMENT CONTROLS */
+/* =========================
+   CONTROLS
+========================= */
 
 .controls{
   display:grid;
@@ -199,7 +208,9 @@ button:disabled{
   box-shadow:0 0 0 3px rgba(37,99,235,.08);
 }
 
-/* UPLOADS */
+/* =========================
+   UPLOADS
+========================= */
 
 .uploads{
   display:grid;
@@ -235,7 +246,25 @@ button:disabled{
   max-width:100%;
 }
 
-/* STATUS */
+.file-status{
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:8px;
+  background:var(--bg);
+  color:var(--muted);
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.file-status.loaded{
+  color:var(--accent2);
+}
+
+/* =========================
+   STATUS
+========================= */
 
 .status{
   padding:10px 12px;
@@ -261,7 +290,35 @@ button:disabled{
   border-color:rgba(217,119,6,.2);
 }
 
-/* METRICS */
+/* =========================
+   ASSIGNEE DETECTION
+========================= */
+
+.assignment-info{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  font-size:12px;
+  color:var(--muted);
+}
+
+.assignment-info strong{
+  color:var(--text);
+}
+
+.assignment-good{
+  color:var(--accent2);
+}
+
+.assignment-bad{
+  color:var(--danger);
+}
+
+/* =========================
+   METRICS
+========================= */
 
 .grid{
   display:grid;
@@ -295,7 +352,9 @@ button:disabled{
   margin-top:3px;
 }
 
-/* TABS */
+/* =========================
+   TABS
+========================= */
 
 .tabs{
   display:flex;
@@ -323,7 +382,9 @@ button:disabled{
   border-bottom-color:var(--accent);
 }
 
-/* TABLES */
+/* =========================
+   TABLES
+========================= */
 
 .tablewrap{
   overflow:auto;
@@ -373,7 +434,9 @@ td.num{
   color:var(--danger);
 }
 
-/* NOTE */
+/* =========================
+   NOTE
+========================= */
 
 .note{
   white-space:pre-wrap;
@@ -383,7 +446,9 @@ td.num{
   padding:13px;
 }
 
-/* EMPTY */
+/* =========================
+   EMPTY
+========================= */
 
 .empty{
   padding:35px;
@@ -391,34 +456,9 @@ td.num{
   color:var(--muted);
 }
 
-/* FOOTER */
-
-.footer{
-  color:var(--muted);
-  text-align:center;
-  font-size:12px;
-  padding:12px;
-}
-
-/* FILE STATUS */
-
-.file-status{
-  margin-top:10px;
-  padding:8px 10px;
-  border-radius:8px;
-  background:var(--bg);
-  color:var(--muted);
-  font-size:12px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.file-status.loaded{
-  color:var(--accent2);
-}
-
-/* ERROR BOX */
+/* =========================
+   ERROR
+========================= */
 
 .error-box{
   background:rgba(220,38,38,.08);
@@ -430,9 +470,23 @@ td.num{
   white-space:pre-wrap;
 }
 
-/* RESPONSIVE */
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+  padding:12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:1050px){
+
   .grid{
     grid-template-columns:repeat(2,1fr);
   }
@@ -440,9 +494,11 @@ td.num{
   .controls{
     grid-template-columns:repeat(3,1fr);
   }
+
 }
 
 @media(max-width:700px){
+
   .app{
     padding:12px;
   }
@@ -457,15 +513,20 @@ td.num{
     align-items:flex-start;
     flex-direction:column;
   }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-<!-- HEADER -->
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="top">
 
@@ -474,11 +535,17 @@ td.num{
     <div class="logo">K</div>
 
     <div>
+
       <h1>Annotation Pay Studio</h1>
-      <p>CSV + KML matching, annotation audit and grant calculator</p>
+
+      <p>
+        CSV + KML matching, annotation audit and grant calculator
+      </p>
+
     </div>
 
   </div>
+
 
   <div class="actions">
 
@@ -501,7 +568,9 @@ td.num{
 </header>
 
 
-<!-- PAYMENT SETTINGS -->
+<!-- =========================
+     PAYMENT SETTINGS
+========================= -->
 
 <section class="panel">
 
@@ -510,81 +579,124 @@ td.num{
   <div class="controls">
 
     <div class="field">
+
       <label>Worker email</label>
+
       <input
         id="worker"
         type="email"
         value="antonymbali96@gmail.com">
+
     </div>
 
+
     <div class="field">
+
       <label>KML pay / hour ($)</label>
+
       <input
         id="hourly"
         type="number"
         min="0"
         step="0.01"
         placeholder="Paste pay">
+
     </div>
 
+
     <div class="field">
+
       <label>Minutes per KML block / row</label>
+
       <input
         id="minutes"
         type="number"
         min="0"
         step="0.1"
         value="6">
+
     </div>
 
+
     <div class="field">
+
       <label>CSV full annotation pay ($)</label>
+
       <input
         id="fullPay"
         type="number"
         min="0"
         step="0.01"
         value="0.25">
+
     </div>
 
+
     <div class="field">
+
       <label>CSV low annotation pay ($)</label>
+
       <input
         id="lowPay"
         type="number"
         min="0"
         step="0.01"
         value="0.05">
+
     </div>
 
+
     <div class="field">
-      <label>CSV assignee column</label>
+
+      <label>Fallback assignee column</label>
+
       <input
         id="assigneeCol"
         type="number"
         min="1"
-        value="22"
-        title="1-based column number">
+        value="22">
+
     </div>
 
   </div>
 
+
   <div class="status">
-    Paste the KML hourly pay/rate above.
-    The calculator never hard-codes the KML pay rate.
+
+    The app automatically searches the CSV header for
+    <strong>Assignee</strong>, <strong>Assigned</strong>,
+    <strong>Annotator</strong>, <strong>Worker</strong>,
+    <strong>Reviewer</strong> and common spelling mistakes.
+
+    The fallback column is only used if no assignment header
+    can be detected.
 
     KML payment =
     matched blocks × minutes per block × hourly rate ÷ 60.
+
+  </div>
+
+
+  <div
+    id="assignmentInfo"
+    class="assignment-info">
+
+    Assignment column:
+    <strong>Not detected yet</strong>
+
   </div>
 
 </section>
 
 
-<!-- FILE UPLOAD -->
+<!-- =========================
+     UPLOAD FILES
+========================= -->
 
 <section class="panel">
 
   <h2>2. Upload the route files</h2>
+
 
   <div class="uploads">
 
@@ -594,6 +706,7 @@ td.num{
 
       <small>
         Used to identify rows assigned to the worker.
+        The assignment column is detected automatically.
       </small>
 
       <input
@@ -601,10 +714,13 @@ td.num{
         type="file"
         accept=".csv,text/csv">
 
+
       <div
         id="csvFileStatus"
         class="file-status">
+
         No CSV selected
+
       </div>
 
     </div>
@@ -615,8 +731,10 @@ td.num{
       <strong>KML file</strong>
 
       <small>
+
         Counts Location Description, R lines,
         BusStop, BusLane, BikeLane and other annotation labels.
+
       </small>
 
       <input
@@ -624,10 +742,13 @@ td.num{
         type="file"
         accept=".kml,.xml,application/vnd.google-earth.kml+xml">
 
+
       <div
         id="kmlFileStatus"
         class="file-status">
+
         No KML selected
+
       </div>
 
     </div>
@@ -643,14 +764,19 @@ td.num{
       type="button"
       class="btn primary"
       id="calculate">
+
       Calculate route
+
     </button>
+
 
     <button
       type="button"
       class="btn green"
       id="export">
+
       Export Google Sheets workbook
+
     </button>
 
   </div>
@@ -659,13 +785,17 @@ td.num{
   <div
     id="status"
     class="status">
+
     Waiting for CSV and KML.
+
   </div>
 
 </section>
 
 
-<!-- METRICS -->
+<!-- =========================
+     METRICS
+========================= -->
 
 <section class="grid">
 
@@ -747,7 +877,9 @@ td.num{
 </section>
 
 
-<!-- RESULTS -->
+<!-- =========================
+     RESULTS
+========================= -->
 
 <section class="panel">
 
@@ -757,35 +889,49 @@ td.num{
       type="button"
       class="tab active"
       data-tab="summary">
+
       Pay summary
+
     </button>
+
 
     <button
       type="button"
       class="tab"
       data-tab="paid">
+
       Antony paid rows
+
     </button>
+
 
     <button
       type="button"
       class="tab"
       data-tab="excluded">
+
       Excluded KML
+
     </button>
+
 
     <button
       type="button"
       class="tab"
       data-tab="csvmissing">
+
       CSV without KML
+
     </button>
+
 
     <button
       type="button"
       class="tab"
       data-tab="checks">
+
       Checks
+
     </button>
 
   </div>
@@ -827,7 +973,9 @@ td.num{
 </section>
 
 
-<!-- PAY NOTE -->
+<!-- =========================
+     PAY NOTE
+========================= -->
 
 <section class="panel">
 
@@ -836,16 +984,20 @@ td.num{
   <div
     id="payNote"
     class="note">
+
     Run the calculator to generate the pay note.
+
   </div>
 
 </section>
 
 
 <div class="footer">
+
   Professional route-pay audit • Dark/light theme •
   Local browser processing •
   No files are uploaded to a server by this page
+
 </div>
 
 </div>
@@ -864,16 +1016,25 @@ let result = null;
 let csvName = "";
 let kmlName = "";
 
+let detectedHeaderRow = -1;
+let detectedAssigneeColumns = [];
+
 
 /* ============================================================
-   HELPERS
+   DOM HELPER
 ============================================================ */
 
-const $ = id => document.getElementById(id);
+const $ = id =>
+  document.getElementById(id);
 
 
-const esc = value =>
-  String(value ?? "")
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function esc(value){
+
+  return String(value ?? "")
     .replace(
       /[&<>"']/g,
       char => ({
@@ -885,20 +1046,711 @@ const esc = value =>
       }[char])
     );
 
-
-const money = value =>
-  "$" + Number(value || 0).toFixed(2);
+}
 
 
-function setStatus(text, cls = ""){
+/* ============================================================
+   MONEY
+============================================================ */
 
-  const status = $("status");
+function money(value){
 
-  if(!status) return;
+  return "$" +
+    Number(value || 0).toFixed(2);
 
-  status.textContent = text;
+}
 
-  status.className = "status " + cls;
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+function setStatus(
+  text,
+  cls = ""
+){
+
+  const status =
+    $("status");
+
+  if(!status){
+
+    return;
+  }
+
+  status.textContent =
+    text;
+
+  status.className =
+    "status " + cls;
+
+}
+
+
+/* ============================================================
+   BASIC TEXT NORMALIZATION
+============================================================ */
+
+function normalizeText(value){
+
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[\r\n\t]+/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+
+/* ============================================================
+   HEADER NORMALIZATION
+============================================================ */
+
+function normalizeHeader(value){
+
+  return normalizeText(value)
+    .replace(/[_\-./\\]+/g," ")
+    .replace(/[^a-z0-9 ]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+
+/* ============================================================
+   COMMON HEADER TYPO CORRECTION
+============================================================ */
+
+function canonicalHeader(value){
+
+  let x =
+    normalizeHeader(value);
+
+
+  /*
+    Common spelling errors.
+  */
+
+  const replacements = [
+
+    [/\basignee\b/g,"assignee"],
+    [/\bassigne\b/g,"assignee"],
+    [/\bassinge\b/g,"assignee"],
+    [/\bassignee\b/g,"assignee"],
+    [/\bassingee\b/g,"assignee"],
+    [/\bassigneee\b/g,"assignee"],
+    [/\bassignee?e\b/g,"assignee"],
+
+    [/\bassinged\b/g,"assigned"],
+    [/\bassignned\b/g,"assigned"],
+    [/\bassignned\b/g,"assigned"],
+    [/\bassinged\b/g,"assigned"],
+    [/\bassignd\b/g,"assigned"],
+    [/\bassined\b/g,"assigned"],
+
+    [/\banotator\b/g,"annotator"],
+    [/\banntator\b/g,"annotator"],
+    [/\bannotater\b/g,"annotator"],
+    [/\banotater\b/g,"annotator"],
+    [/\bannnotator\b/g,"annotator"],
+    [/\bannotor\b/g,"annotator"],
+    [/\bannotaor\b/g,"annotator"],
+
+    [/\bworkr\b/g,"worker"],
+    [/\bwor ker\b/g,"worker"],
+
+    [/\brevewer\b/g,"reviewer"],
+    [/\breviwer\b/g,"reviewer"]
+
+  ];
+
+
+  replacements.forEach(
+    ([pattern,replacement]) => {
+
+      x =
+        x.replace(
+          pattern,
+          replacement
+        );
+
+    }
+  );
+
+
+  return x;
+
+}
+
+
+/* ============================================================
+   LEVENSHTEIN DISTANCE
+   Used to ignore small spelling errors.
+============================================================ */
+
+function levenshtein(a,b){
+
+  a = String(a);
+  b = String(b);
+
+
+  const matrix =
+    Array.from(
+      {length:a.length + 1},
+      () =>
+        Array(
+          b.length + 1
+        ).fill(0)
+    );
+
+
+  for(let i=0;i<=a.length;i++){
+
+    matrix[i][0] =
+      i;
+
+  }
+
+
+  for(let j=0;j<=b.length;j++){
+
+    matrix[0][j] =
+      j;
+
+  }
+
+
+  for(
+    let i=1;
+    i<=a.length;
+    i++
+  ){
+
+    for(
+      let j=1;
+      j<=b.length;
+      j++
+    ){
+
+      const cost =
+        a[i-1] === b[j-1]
+          ? 0
+          : 1;
+
+
+      matrix[i][j] =
+        Math.min(
+
+          matrix[i-1][j] + 1,
+
+          matrix[i][j-1] + 1,
+
+          matrix[i-1][j-1] + cost
+
+        );
+
+    }
+
+  }
+
+
+  return matrix[a.length][b.length];
+
+}
+
+
+/* ============================================================
+   STRING SIMILARITY
+============================================================ */
+
+function similarity(a,b){
+
+  a =
+    normalizeHeader(a);
+
+  b =
+    normalizeHeader(b);
+
+
+  if(!a || !b){
+
+    return 0;
+  }
+
+
+  if(a === b){
+
+    return 1;
+  }
+
+
+  const distance =
+    levenshtein(
+      a,
+      b
+    );
+
+
+  return Math.max(
+    0,
+    1 -
+      distance /
+      Math.max(
+        a.length,
+        b.length
+      )
+  );
+
+}
+
+
+/* ============================================================
+   IS THIS AN ASSIGNMENT HEADER?
+============================================================ */
+
+function assignmentHeaderScore(
+  header
+){
+
+  const original =
+    normalizeHeader(header);
+
+
+  const canonical =
+    canonicalHeader(
+      header
+    );
+
+
+  if(!canonical){
+
+    return 0;
+  }
+
+
+  /*
+    Strong exact/phrase matches.
+  */
+
+  const strongPatterns = [
+
+    "assignee",
+    "assigned",
+    "assigned to",
+    "assigned user",
+    "assigned worker",
+    "assigned annotator",
+    "assigned email",
+    "assignee email",
+    "assignee name",
+
+    "annotator",
+    "annotator email",
+    "annotator name",
+    "assigned annotator",
+
+    "worker",
+    "worker email",
+    "worker name",
+
+    "reviewer",
+    "reviewer email",
+    "reviewer name"
+
+  ];
+
+
+  if(
+    strongPatterns.includes(
+      canonical
+    )
+  ){
+
+    return 100;
+  }
+
+
+  /*
+    If it contains one of the strong words,
+    give it a high score.
+  */
+
+  const strongWords = [
+
+    "assignee",
+    "assigned",
+    "annotator",
+    "worker",
+    "reviewer"
+
+  ];
+
+
+  let score = 0;
+
+
+  strongWords.forEach(word => {
+
+    if(
+      canonical.includes(
+        word
+      )
+    ){
+
+      score =
+        Math.max(
+          score,
+          90
+        );
+
+    }
+
+  });
+
+
+  /*
+    Compare individual words for typos.
+  */
+
+  const words =
+    canonical.split(" ");
+
+
+  words.forEach(word => {
+
+    strongWords.forEach(target => {
+
+      const sim =
+        similarity(
+          word,
+          target
+        );
+
+
+      if(
+        sim >= 0.78
+      ){
+
+        score =
+          Math.max(
+            score,
+            75
+          );
+
+      }
+
+    });
+
+  });
+
+
+  /*
+    Also compare complete header
+    to the important names.
+  */
+
+  strongWords.forEach(target => {
+
+    const sim =
+      similarity(
+        canonical,
+        target
+      );
+
+
+    if(
+      sim >= 0.75
+    ){
+
+      score =
+        Math.max(
+          score,
+          70
+        );
+
+    }
+
+  });
+
+
+  /*
+    Avoid accidentally treating columns such as
+    "Assignment Date" as the actual worker column.
+  */
+
+  const negativeWords = [
+
+    "date",
+    "time",
+    "timestamp",
+    "status",
+    "count",
+    "number",
+    "id",
+    "url",
+    "note",
+    "comment"
+
+  ];
+
+
+  negativeWords.forEach(word => {
+
+    if(
+      canonical.includes(
+        word
+      ) &&
+      !canonical.includes(
+        "email"
+      ) &&
+      !canonical.includes(
+        "name"
+      )
+    ){
+
+      score -= 25;
+
+    }
+
+  });
+
+
+  return Math.max(
+    0,
+    score
+  );
+
+}
+
+
+/* ============================================================
+   DETECT CSV HEADER + ASSIGNMENT COLUMNS
+============================================================ */
+
+function detectAssignmentColumns(
+  rows
+){
+
+  detectedHeaderRow = -1;
+
+  detectedAssigneeColumns = [];
+
+
+  if(
+    !rows ||
+    !rows.length
+  ){
+
+    return {
+      headerRow:-1,
+      columns:[]
+    };
+  }
+
+
+  /*
+    Search first 12 rows.
+
+    This allows files where the real CSV header
+    is not row 1.
+  */
+
+  let bestRow = -1;
+  let bestColumns = [];
+  let bestScore = 0;
+
+
+  const maxHeaderRows =
+    Math.min(
+      rows.length,
+      12
+    );
+
+
+  for(
+    let r=0;
+    r<maxHeaderRows;
+    r++
+  ){
+
+    const row =
+      rows[r] || [];
+
+
+    const candidates = [];
+
+
+    row.forEach(
+      (header,col) => {
+
+        const score =
+          assignmentHeaderScore(
+            header
+          );
+
+
+        if(
+          score >= 70
+        ){
+
+          candidates.push({
+            col,
+            header:String(
+              header || ""
+            ),
+            score
+          });
+
+        }
+
+      }
+    );
+
+
+    if(!candidates.length){
+
+      continue;
+    }
+
+
+    /*
+      A row with multiple good assignment
+      columns is more likely to be the header.
+    */
+
+    const rowScore =
+      candidates.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          item.score,
+        0
+      );
+
+
+    if(
+      rowScore >
+      bestScore
+    ){
+
+      bestScore =
+        rowScore;
+
+      bestRow =
+        r;
+
+      bestColumns =
+        candidates;
+
+    }
+
+  }
+
+
+  if(
+    bestRow >= 0
+  ){
+
+    detectedHeaderRow =
+      bestRow;
+
+    /*
+      Keep all strong candidates.
+    */
+
+    detectedAssigneeColumns =
+      bestColumns
+        .sort(
+          (a,b) =>
+            b.score -
+            a.score
+        )
+        .map(
+          item =>
+            item.col
+        );
+
+  }
+
+
+  updateAssignmentInfo();
+
+
+  return {
+
+    headerRow:
+      detectedHeaderRow,
+
+    columns:
+      detectedAssigneeColumns
+
+  };
+
+}
+
+
+/* ============================================================
+   DISPLAY ASSIGNMENT DETECTION
+============================================================ */
+
+function updateAssignmentInfo(){
+
+  const box =
+    $("assignmentInfo");
+
+
+  if(!box){
+
+    return;
+  }
+
+
+  if(
+    detectedHeaderRow < 0 ||
+    !detectedAssigneeColumns.length
+  ){
+
+    box.innerHTML =
+      'Assignment column: ' +
+      '<strong>Not automatically detected</strong>' +
+      ' • fallback column will be used.';
+
+    return;
+  }
+
+
+  const headers =
+    detectedAssigneeColumns.map(
+      col =>
+        csvRows[
+          detectedHeaderRow
+        ]?.[col] ||
+        "Column " +
+        (col + 1)
+    );
+
+
+  box.innerHTML =
+    'Assignment header detected: ' +
+    '<strong>' +
+    esc(
+      headers.join(", ")
+    ) +
+    '</strong>' +
+    ' • header row ' +
+    (detectedHeaderRow + 1) +
+    ' • column(s) ' +
+    detectedAssigneeColumns
+      .map(
+        col =>
+          col + 1
+      )
+      .join(", ");
+
 }
 
 
@@ -914,134 +1766,426 @@ function parseCSV(text){
   let cell = "";
   let quoted = false;
 
-  for(let i = 0; i < text.length; i++){
 
-    const c = text[i];
-    const n = text[i + 1];
+  for(
+    let i=0;
+    i<text.length;
+    i++
+  ){
 
-    /* escaped quote */
+    const c =
+      text[i];
 
-    if(c === '"' && quoted && n === '"'){
+    const n =
+      text[i+1];
+
+
+    /*
+      Escaped quote.
+    */
+
+    if(
+      c === '"' &&
+      quoted &&
+      n === '"'
+    ){
 
       cell += '"';
 
       i++;
 
       continue;
+
     }
 
 
-    /* quote start/end */
-
-    if(c === '"'){
-
-      quoted = !quoted;
-
-      continue;
-    }
-
-
-    /* comma */
-
-    if(c === "," && !quoted){
-
-      row.push(cell);
-
-      cell = "";
-
-      continue;
-    }
-
-
-    /* newline */
+    /*
+      Start/end quote.
+    */
 
     if(
-      (c === "\n" || c === "\r") &&
+      c === '"'
+    ){
+
+      quoted =
+        !quoted;
+
+      continue;
+
+    }
+
+
+    /*
+      Comma.
+    */
+
+    if(
+      c === "," &&
       !quoted
     ){
 
-      if(c === "\r" && n === "\n"){
-        i++;
-      }
-
-      row.push(cell);
+      row.push(
+        cell
+      );
 
       cell = "";
+
+      continue;
+
+    }
+
+
+    /*
+      Newline.
+    */
+
+    if(
+      (
+        c === "\n" ||
+        c === "\r"
+      ) &&
+      !quoted
+    ){
+
+      if(
+        c === "\r" &&
+        n === "\n"
+      ){
+
+        i++;
+
+      }
+
+
+      row.push(
+        cell
+      );
+
+      cell = "";
+
 
       if(
         row.some(
           value =>
-            String(value).trim() !== ""
+            String(
+              value
+            ).trim() !== ""
         )
       ){
 
-        rows.push(row);
+        rows.push(
+          row
+        );
+
       }
+
 
       row = [];
 
       continue;
+
     }
 
 
     cell += c;
+
   }
 
 
-  /* final row */
+  /*
+    Last row.
+  */
 
-  row.push(cell);
+  row.push(
+    cell
+  );
+
 
   if(
     row.some(
       value =>
-        String(value).trim() !== ""
+        String(
+          value
+        ).trim() !== ""
     )
   ){
 
-    rows.push(row);
+    rows.push(
+      row
+    );
+
   }
 
 
   return rows;
+
 }
 
 
 /* ============================================================
-   NORMALIZATION
+   WORKER VALUE NORMALIZATION
 ============================================================ */
 
-function norm(value){
+function normalizeWorkerValue(
+  value
+){
 
-  return String(value || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/^#/, "");
+  return normalizeText(
+    value
+  )
+    .replace(
+      /^mailto:/,
+      ""
+    )
+    .trim();
+
 }
 
 
-function routeKey(value){
+/* ============================================================
+   WORKER VALUE MATCHING
+============================================================ */
 
-  return norm(value)
-    .replace(/^#?/, "")
-    .replace(/\|/g, " ");
+function workerValueMatches(
+  value,
+  worker
+){
+
+  const cell =
+    normalizeWorkerValue(
+      value
+    );
+
+
+  const target =
+    normalizeWorkerValue(
+      worker
+    );
+
+
+  if(
+    !cell ||
+    !target
+  ){
+
+    return false;
+  }
+
+
+  /*
+    Exact match.
+  */
+
+  if(
+    cell === target
+  ){
+
+    return true;
+  }
+
+
+  /*
+    Sometimes the cell contains extra information:
+
+    Antony <email>
+    email - Antony
+    email (worker)
+  */
+
+  if(
+    cell.includes(
+      target
+    )
+  ){
+
+    return true;
+  }
+
+
+  /*
+    Remove spaces around @ and compare again.
+  */
+
+  const compactCell =
+    cell.replace(
+      /\s+/g,
+      ""
+    );
+
+  const compactTarget =
+    target.replace(
+      /\s+/g,
+      ""
+    );
+
+
+  if(
+    compactCell ===
+    compactTarget
+  ){
+
+    return true;
+  }
+
+
+  if(
+    compactCell.includes(
+      compactTarget
+    )
+  ){
+
+    return true;
+  }
+
+
+  return false;
+
 }
 
 
-function directionLocation(value){
+/* ============================================================
+   DETERMINE WHETHER CSV ROW BELONGS TO WORKER
+============================================================ */
 
-  return routeKey(value);
-}
+function rowAssigned(
+  row,
+  rowIndex
+){
+
+  const worker =
+    $("worker")
+      .value
+      .trim();
 
 
-function kmlLocation(block){
+  if(!worker){
 
-  return norm(
-    block
-      .replace(/^#/, "")
-      .replace(/\|/g, " ")
+    return false;
+  }
+
+
+  /*
+    If we found Assignee / Assigned /
+    Annotator / Worker / Reviewer headers,
+    use those columns.
+
+    This is the NEW important logic.
+  */
+
+  if(
+    detectedHeaderRow >= 0 &&
+    detectedAssigneeColumns.length
+  ){
+
+    /*
+      Do not accidentally treat the header itself
+      as worker data.
+    */
+
+    if(
+      rowIndex ===
+      detectedHeaderRow
+    ){
+
+      return false;
+    }
+
+
+    for(
+      const column of
+      detectedAssigneeColumns
+    ){
+
+      if(
+        workerValueMatches(
+          row[column],
+          worker
+        )
+      ){
+
+        return true;
+      }
+
+    }
+
+
+    return false;
+
+  }
+
+
+  /*
+    FALLBACK ONLY:
+    If no recognizable assignment header exists,
+    use the manually supplied fallback column.
+  */
+
+  const fallbackColumn =
+    Math.max(
+      1,
+      Number(
+        $("assigneeCol").value
+      ) || 22
+    ) - 1;
+
+
+  return workerValueMatches(
+    row[fallbackColumn],
+    worker
   );
+
+}
+
+
+/* ============================================================
+   KML LOCATION NORMALIZATION
+============================================================ */
+
+function directionLocation(
+  value
+){
+
+  return normalizeText(
+    value
+  )
+    .replace(
+      /^#/,
+      ""
+    )
+    .replace(
+      /\|/g,
+      " "
+    )
+    .replace(
+      /\s+/g,
+      " "
+    )
+    .trim();
+
+}
+
+
+function kmlLocation(
+  value
+){
+
+  return normalizeText(
+    value
+  )
+    .replace(
+      /^#/,
+      ""
+    )
+    .replace(
+      /\|/g,
+      " "
+    )
+    .replace(
+      /\s+/g,
+      " "
+    )
+    .trim();
+
 }
 
 
@@ -1049,9 +2193,13 @@ function kmlLocation(block){
    KML PARSER
 ============================================================ */
 
-function parseKML(text){
+function parseKML(
+  text
+){
 
-  const parser = new DOMParser();
+  const parser =
+    new DOMParser();
+
 
   const xml =
     parser.parseFromString(
@@ -1060,16 +2208,18 @@ function parseKML(text){
     );
 
 
-  /* Detect XML parser errors */
-
   const parserError =
-    xml.getElementsByTagName("parsererror")[0];
+    xml.getElementsByTagName(
+      "parsererror"
+    )[0];
+
 
   if(parserError){
 
     throw new Error(
       "The KML file could not be read as valid XML."
     );
+
   }
 
 
@@ -1087,295 +2237,384 @@ function parseKML(text){
   let current = null;
 
 
-  placemarks.forEach(placemark => {
+  placemarks.forEach(
+    placemark => {
 
-    const name =
-      (
-        placemark
-          .getElementsByTagNameNS(
-            "*",
-            "name"
-          )[0]
-          ?.textContent || ""
-      ).trim();
+      const name =
+        (
+          placemark
+            .getElementsByTagNameNS(
+              "*",
+              "name"
+            )[0]
+            ?.textContent ||
+          ""
+        ).trim();
 
 
-    if(!name){
+      if(!name){
 
-      return;
+        return;
+      }
+
+
+      /*
+        # starts a new block.
+      */
+
+      if(
+        name.startsWith("#")
+      ){
+
+        current = {
+
+          block:name,
+
+          items:[]
+
+        };
+
+
+        groups.push(
+          current
+        );
+
+
+        return;
+
+      }
+
+
+      /*
+        Other placemarks belong to
+        current KML block.
+      */
+
+      if(current){
+
+        current.items.push(
+          name
+        );
+
+      }
+
     }
-
-
-    /*
-      A # block starts a new KML block.
-    */
-
-    if(name.startsWith("#")){
-
-      current = {
-        block:name,
-        items:[]
-      };
-
-      groups.push(current);
-
-      return;
-    }
-
-
-    /*
-      Every following annotation belongs
-      to the current block.
-    */
-
-    if(current){
-
-      current.items.push(name);
-    }
-
-  });
+  );
 
 
   return groups;
+
 }
 
 
 /* ============================================================
-   ANNOTATION LABEL DETECTION
+   KML ANNOTATION TYPE
 ============================================================ */
 
-function labelType(name){
+function labelType(
+  name
+){
 
-  const x = norm(name);
+  const x =
+    normalizeText(
+      name
+    );
 
 
   /*
-    R0, R1, R2 ... R20 ... R100 etc.
-    No maximum.
+    R0, R1, R2 ... R20 ... R500
   */
 
   if(
-    x === "r0" ||
-    /^r\d+$/.test(x)
+    /^r\d+$/.test(
+      x
+    )
   ){
 
     return x.toUpperCase();
+
   }
 
 
   if(
-    x.includes("location description") ||
-    x === "locationdescription"
+    x.includes(
+      "location description"
+    ) ||
+    x ===
+      "locationdescription"
   ){
 
     return "Location Description";
+
   }
 
 
   if(
-    x.includes("busstop") ||
-    x.includes("bus stop")
+    x.includes(
+      "busstop"
+    ) ||
+    x.includes(
+      "bus stop"
+    )
   ){
 
     return "BusStop";
+
   }
 
 
   if(
-    x.includes("buslane") ||
-    x.includes("bus lane")
+    x.includes(
+      "buslane"
+    ) ||
+    x.includes(
+      "bus lane"
+    )
   ){
 
     return "BusLane";
+
   }
 
 
   if(
-    x.includes("bikelane") ||
-    x.includes("bike lane") ||
-    x.includes("bike_lane")
+    x.includes(
+      "bikelane"
+    ) ||
+    x.includes(
+      "bike lane"
+    ) ||
+    x.includes(
+      "bike_lane"
+    )
   ){
 
     return "BikeLane";
+
   }
 
 
   return null;
+
 }
 
 
 /* ============================================================
-   COUNT KML ANNOTATIONS
+   KML COUNTS
 ============================================================ */
 
-function counts(items){
+function counts(
+  items
+){
 
-  const counts = {};
-
-
-  items.forEach(item => {
-
-    const type =
-      labelType(item);
+  const output = {};
 
 
-    if(type){
+  items.forEach(
+    item => {
 
-      counts[type] =
-        (counts[type] || 0) + 1;
+      const type =
+        labelType(
+          item
+        );
+
+
+      if(type){
+
+        output[type] =
+          (
+            output[type] ||
+            0
+          ) + 1;
+
+      }
+
     }
+  );
 
-  });
 
+  return output;
 
-  return counts;
 }
 
 
 /* ============================================================
-   ASSIGNEE CHECK
-============================================================ */
-
-function rowAssigned(row){
-
-  const email =
-    $("worker")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  const column =
-    Math.max(
-      1,
-      Number(
-        $("assigneeCol").value
-      ) || 22
-    ) - 1;
-
-
-  return String(
-    row[column] || ""
-  )
-    .trim()
-    .toLowerCase() === email;
-}
-
-
-/* ============================================================
-   FIND CSV → KML MATCHES
+   MATCH CSV TO KML
 ============================================================ */
 
 function findMatches(){
 
-  const used = new Set();
+  const used =
+    new Set();
+
 
   const paid = [];
 
   const missing = [];
 
 
-  csvRows.forEach((row, index) => {
+  csvRows.forEach(
+    (
+      row,
+      index
+    ) => {
 
-    /*
-      Existing CSV format has two initial
-      non-data/header rows.
-    */
-
-    if(index < 2){
-
-      return;
-    }
-
-
-    if(!rowAssigned(row)){
-
-      return;
-    }
-
-
-    const location =
-      directionLocation(
-        row[0]
-      );
-
-
-    let matchIndex = -1;
-
-
-    for(
-      let j = 0;
-      j < kmlGroups.length;
-      j++
-    ){
+      /*
+        Skip the detected header row.
+      */
 
       if(
-        used.has(j)
+        index ===
+        detectedHeaderRow
       ){
 
-        continue;
+        return;
+      }
+
+
+      /*
+        Ignore completely empty rows.
+      */
+
+      if(
+        !row.some(
+          value =>
+            String(
+              value || ""
+            ).trim()
+        )
+      ){
+
+        return;
+      }
+
+
+      /*
+        Only rows assigned to selected worker.
+      */
+
+      if(
+        !rowAssigned(
+          row,
+          index
+        )
+      ){
+
+        return;
+      }
+
+
+      const location =
+        directionLocation(
+          row[0]
+        );
+
+
+      let matchIndex =
+        -1;
+
+
+      /*
+        Match in order and consume
+        each KML block once.
+      */
+
+      for(
+        let j=0;
+        j<kmlGroups.length;
+        j++
+      ){
+
+        if(
+          used.has(j)
+        ){
+
+          continue;
+        }
+
+
+        if(
+          kmlLocation(
+            kmlGroups[j].block
+          ) ===
+          location
+        ){
+
+          matchIndex =
+            j;
+
+          break;
+
+        }
+
       }
 
 
       if(
-        kmlLocation(
-          kmlGroups[j].block
-        ) === location
+        matchIndex < 0
       ){
 
-        matchIndex = j;
+        missing.push({
 
-        break;
+          row:
+            index + 1,
+
+          location:
+            row[0] || ""
+
+        });
+
       }
+      else{
 
-    }
-
-
-    if(matchIndex < 0){
-
-      missing.push({
-
-        row:index + 1,
-
-        location:row[0] || ""
-
-      });
-
-    }
-    else{
-
-      used.add(matchIndex);
+        used.add(
+          matchIndex
+        );
 
 
-      paid.push({
+        paid.push({
 
-        csvIndex:index,
+          csvIndex:
+            index,
 
-        kmlIndex:matchIndex,
+          kmlIndex:
+            matchIndex,
 
-        row:row,
+          row:
 
-        g:kmlGroups[matchIndex],
+            row,
 
-        counts:
-          counts(
+          g:
             kmlGroups[
               matchIndex
-            ].items
-          )
+            ],
 
-      });
+          counts:
+
+            counts(
+              kmlGroups[
+                matchIndex
+              ].items
+            )
+
+        });
+
+      }
 
     }
-
-  });
+  );
 
 
   return {
+
     paid,
+
     missing,
+
     used
+
   };
+
 }
 
 
@@ -1383,24 +2622,43 @@ function findMatches(){
    SORT ANNOTATION TYPES
 ============================================================ */
 
-function sortAnnotationTypes(types){
+function sortAnnotationTypes(
+  types
+){
 
-  return [...types].sort(
-    (a,b) => {
+  return [
+    ...types
+  ].sort(
+    (
+      a,
+      b
+    ) => {
 
       const ra =
-        a.match(/^R(\d+)$/);
+        a.match(
+          /^R(\d+)$/
+        );
 
       const rb =
-        b.match(/^R(\d+)$/);
+        b.match(
+          /^R(\d+)$/
+        );
 
 
-      if(ra && rb){
+      if(
+        ra &&
+        rb
+      ){
 
         return (
-          Number(ra[1]) -
-          Number(rb[1])
+          Number(
+            ra[1]
+          ) -
+          Number(
+            rb[1]
+          )
         );
+
       }
 
 
@@ -1416,10 +2674,13 @@ function sortAnnotationTypes(types){
       }
 
 
-      return a.localeCompare(b);
+      return a.localeCompare(
+        b
+      );
 
     }
   );
+
 }
 
 
@@ -1439,7 +2700,9 @@ function renderTable(
   }
 
 
-  if(!rows.length){
+  if(
+    !rows.length
+  ){
 
     container.innerHTML =
       '<div class="empty">No records.</div>';
@@ -1455,14 +2718,18 @@ function renderTable(
     '<tr>';
 
 
-  columns.forEach(column => {
+  columns.forEach(
+    column => {
 
-    html +=
-      "<th>" +
-      esc(column) +
-      "</th>";
+      html +=
+        "<th>" +
+        esc(
+          column
+        ) +
+        "</th>";
 
-  });
+    }
+  );
 
 
   html +=
@@ -1471,26 +2738,33 @@ function renderTable(
     "<tbody>";
 
 
-  rows.forEach(row => {
-
-    html += "<tr>";
-
-
-    columns.forEach(column => {
+  rows.forEach(
+    row => {
 
       html +=
-        "<td>" +
-        esc(
-          row[column] ?? ""
-        ) +
-        "</td>";
-
-    });
+        "<tr>";
 
 
-    html += "</tr>";
+      columns.forEach(
+        column => {
 
-  });
+          html +=
+            "<td>" +
+            esc(
+              row[column] ??
+              ""
+            ) +
+            "</td>";
+
+        }
+      );
+
+
+      html +=
+        "</tr>";
+
+    }
+  );
 
 
   html +=
@@ -1499,19 +2773,23 @@ function renderTable(
     "</div>";
 
 
-  container.innerHTML = html;
+  container.innerHTML =
+    html;
+
 }
 
 
 /* ============================================================
-   MAIN CALCULATION
+   CALCULATE
 ============================================================ */
 
 function calculate(){
 
   try{
 
-    if(!csvRows.length){
+    if(
+      !csvRows.length
+    ){
 
       setStatus(
         "Please select the CSV file first.",
@@ -1522,7 +2800,9 @@ function calculate(){
     }
 
 
-    if(!kmlGroups.length){
+    if(
+      !kmlGroups.length
+    ){
 
       setStatus(
         "Please select the KML file first.",
@@ -1540,7 +2820,9 @@ function calculate(){
 
 
     if(
-      !Number.isFinite(rate) ||
+      !Number.isFinite(
+        rate
+      ) ||
       rate < 0
     ){
 
@@ -1562,7 +2844,9 @@ function calculate(){
 
 
     if(
-      !Number.isFinite(minutes) ||
+      !Number.isFinite(
+        minutes
+      ) ||
       minutes < 0
     ){
 
@@ -1577,6 +2861,16 @@ function calculate(){
     }
 
 
+    /*
+      Re-detect assignment headers every time
+      so changing the CSV or worker is safe.
+    */
+
+    detectAssignmentColumns(
+      csvRows
+    );
+
+
     const matching =
       findMatches();
 
@@ -1584,15 +2878,17 @@ function calculate(){
     const paid =
       matching.paid;
 
+
     const missing =
       matching.missing;
+
 
     const used =
       matching.used;
 
 
     /*
-      Always support these.
+      Supported fixed labels.
     */
 
     const annotationTypes =
@@ -1605,21 +2901,26 @@ function calculate(){
 
 
     /*
-      Add every R label found.
-      R0, R1 ... R20 ... R100 ...
+      Add EVERY R label found.
     */
 
-    paid.forEach(item => {
+    paid.forEach(
+      item => {
 
-      Object.keys(
-        item.counts
-      ).forEach(type => {
+        Object.keys(
+          item.counts
+        ).forEach(
+          type => {
 
-        annotationTypes.add(type);
+            annotationTypes.add(
+              type
+            );
 
-      });
+          }
+        );
 
-    });
+      }
+    );
 
 
     const typeList =
@@ -1628,76 +2929,101 @@ function calculate(){
       );
 
 
-    /* ========================================================
+    /* =========================
        PAID ROWS
-    ======================================================== */
+    ========================= */
 
     const lineRows =
-      paid.map(item => {
+      paid.map(
+        item => {
 
-        const output = {
+          const output = {
 
-          Location:
-            item.row[0] || "",
+            Location:
+              item.row[0] ||
+              "",
 
-          "CSV Note":
-            item.row[39] || "",
+            "CSV Note":
+              item.row[39] ||
+              "",
 
-          "CSV Bus Lane":
-            item.row[31] || ""
+            "CSV Bus Lane":
+              item.row[31] ||
+              ""
 
-        };
-
-
-        typeList.forEach(type => {
-
-          output[type] =
-            item.counts[type] || 0;
-
-        });
+          };
 
 
-        output["Total KML lines"] =
-          1 +
-          typeList.reduce(
-            (sum,type) =>
-              sum +
+          typeList.forEach(
+            type => {
+
+              output[type] =
+                item.counts[type] ||
+                0;
+
+            }
+          );
+
+
+          output[
+            "Total KML lines"
+          ] =
+            1 +
+            typeList.reduce(
               (
-                Number(
-                  item.counts[type]
-                ) || 0
-              ),
-            0
-          );
+                sum,
+                type
+              ) =>
+                sum +
+                (
+                  Number(
+                    item.counts[
+                      type
+                    ]
+                  ) || 0
+                ),
+              0
+            );
 
 
-        output["Grant minutes"] =
-          minutes;
+          output[
+            "Grant minutes"
+          ] =
+            minutes;
 
 
-        output["KML pay"] =
-          money(
-            minutes *
-            rate /
-            60
-          );
+          output[
+            "KML pay"
+          ] =
+            money(
+              minutes *
+              rate /
+              60
+            );
 
 
-        return output;
+          return output;
 
-      });
+        }
+      );
 
 
-    /* ========================================================
+    /* =========================
        EXCLUDED KML
-    ======================================================== */
+    ========================= */
 
     const excluded =
       kmlGroups
         .map(
-          (group,index) => ({
+          (
             group,
             index
+          ) => ({
+
+            group,
+
+            index
+
           })
         )
         .filter(
@@ -1706,95 +3032,112 @@ function calculate(){
               item.index
             )
         )
-        .map(item => {
+        .map(
+          item => {
 
-          const annotationCounts =
-            counts(
-              item.group.items
+            const annotationCounts =
+              counts(
+                item.group.items
+              );
+
+
+            const output = {
+
+              "KML Block":
+                item.group.block,
+
+              Location:
+                kmlLocation(
+                  item.group.block
+                )
+
+            };
+
+
+            typeList.forEach(
+              type => {
+
+                output[type] =
+                  annotationCounts[
+                    type
+                  ] || 0;
+
+              }
             );
 
 
-          /*
-            IMPORTANT:
-            "KML Block" is quoted because
-            the key contains a space.
-          */
-
-          const output = {
-
-            "KML Block":
-              item.group.block,
-
-            Location:
-              kmlLocation(
-                item.group.block
-              )
-
-          };
-
-
-          typeList.forEach(type => {
-
-            output[type] =
-              annotationCounts[type] || 0;
-
-          });
-
-
-          output["Total KML lines"] =
-            1 +
-            typeList.reduce(
-              (sum,type) =>
-                sum +
+            output[
+              "Total KML lines"
+            ] =
+              1 +
+              typeList.reduce(
                 (
-                  Number(
-                    annotationCounts[type]
-                  ) || 0
-                ),
-              0
-            );
+                  sum,
+                  type
+                ) =>
+                  sum +
+                  (
+                    Number(
+                      annotationCounts[
+                        type
+                      ]
+                    ) || 0
+                  ),
+                0
+              );
 
 
-          output.Reason =
-            "KML block is not represented by the selected worker's CSV row; excluded from worker pay";
+            output.Reason =
+              "KML block is not represented by the selected worker's CSV row; excluded from worker pay";
 
 
-          return output;
+            return output;
 
-        });
+          }
+        );
 
 
-    /* ========================================================
+    /* =========================
        TOTALS
-    ======================================================== */
+    ========================= */
 
     const totals = {};
 
 
-    typeList.forEach(type => {
+    typeList.forEach(
+      type => {
 
-      totals[type] =
-        lineRows.reduce(
-          (sum,row) =>
-            sum +
+        totals[type] =
+          lineRows.reduce(
             (
-              Number(
-                row[type]
-              ) || 0
-            ),
-          0
-        );
+              sum,
+              row
+            ) =>
+              sum +
+              (
+                Number(
+                  row[type]
+                ) || 0
+              ),
+            0
+          );
 
-    });
+      }
+    );
 
 
     const paidLines =
       lineRows.reduce(
-        (sum,row) =>
+        (
+          sum,
+          row
+        ) =>
           sum +
           (
             Number(
-              row["Total KML lines"]
+              row[
+                "Total KML lines"
+              ]
             ) || 0
           ),
         0
@@ -1818,52 +3161,57 @@ function calculate(){
 
     const excludedLines =
       excluded.reduce(
-        (sum,row) =>
+        (
+          sum,
+          row
+        ) =>
           sum +
           (
             Number(
-              row["Total KML lines"]
+              row[
+                "Total KML lines"
+              ]
             ) || 0
           ),
         0
       );
 
 
-    /* ========================================================
+    /* =========================
        BUS LANE WITHOUT BUS STOP
-    ======================================================== */
+    ========================= */
 
     const noBusStopLane =
       lineRows.filter(
         row =>
           Number(
-            row["BusLane"]
+            row.BusLane
           ) > 0 &&
           Number(
-            row["BusStop"]
+            row.BusStop
           ) === 0
       );
 
 
-    /* ========================================================
+    /* =========================
        BIKE LANE WITHOUT BUS STOP
-    ======================================================== */
+    ========================= */
 
     const noBusStopBike =
       lineRows.filter(
         row =>
           Number(
-            row["BikeLane"]
+            row.BikeLane
           ) > 0 &&
           Number(
-            row["BusStop"]
+            row.BusStop
           ) === 0
       );
 
 
-    /* ========================================================
+    /* =========================
        SAVE RESULT
-    ======================================================== */
+    ========================= */
 
     result = {
 
@@ -1883,7 +3231,8 @@ function calculate(){
 
       blocks,
 
-      totalMin:totalMinutes,
+      totalMin:
+        totalMinutes,
 
       pay,
 
@@ -1896,9 +3245,9 @@ function calculate(){
     };
 
 
-    /* ========================================================
-       UPDATE METRICS
-    ======================================================== */
+    /* =========================
+       METRICS
+    ========================= */
 
     $("mBlocks").textContent =
       blocks;
@@ -1914,88 +3263,194 @@ function calculate(){
 
 
     $("mPay").textContent =
-      money(pay);
+      money(
+        pay
+      );
 
 
-    /* ========================================================
-       SUMMARY
-    ======================================================== */
+    /* =========================
+       ASSIGNED COUNT
+    ========================= */
 
     const assignedCount =
       csvRows.filter(
-        (row,index) =>
-          index >= 2 &&
-          rowAssigned(row)
+        (
+          row,
+          index
+        ) =>
+          index !==
+            detectedHeaderRow &&
+          rowAssigned(
+            row,
+            index
+          )
       ).length;
 
+
+    /* =========================
+       SUMMARY
+    ========================= */
 
     const summaryRows = [
 
       {
-        Item:"Worker",
-        Value:$("worker").value
+        Item:
+          "Worker",
+
+        Value:
+          $("worker").value
+
       },
 
       {
-        Item:"CSV rows assigned to worker",
-        Value:assignedCount
+        Item:
+          "Assignment header row",
+
+        Value:
+          detectedHeaderRow >= 0
+            ? detectedHeaderRow + 1
+            : "Fallback column"
+
       },
 
       {
-        Item:"CSV rows matched to KML",
-        Value:blocks
+        Item:
+          "Assignment column(s)",
+
+        Value:
+          detectedAssigneeColumns.length
+            ? detectedAssigneeColumns
+                .map(
+                  col =>
+                    (
+                      csvRows[
+                        detectedHeaderRow
+                      ]?.[col] ||
+                      "Column " +
+                      (
+                        col + 1
+                      )
+                    )
+                )
+                .join(", ")
+            :
+              "Column " +
+              $("assigneeCol").value
+
       },
 
       {
-        Item:"CSV rows without matching KML",
-        Value:missing.length
+        Item:
+          "CSV rows assigned to worker",
+
+        Value:
+          assignedCount
+
       },
 
       {
-        Item:"KML blocks in file",
-        Value:kmlGroups.length
+        Item:
+          "CSV rows matched to KML",
+
+        Value:
+          blocks
+
       },
 
       {
-        Item:"KML blocks paid to worker",
-        Value:blocks
+        Item:
+          "CSV rows without matching KML",
+
+        Value:
+          missing.length
+
       },
 
       {
-        Item:"KML blocks excluded",
-        Value:excluded.length
+        Item:
+          "KML blocks in file",
+
+        Value:
+          kmlGroups.length
+
       },
 
       {
-        Item:"Total KML annotation lines paid",
-        Value:paidLines
+        Item:
+          "KML blocks paid to worker",
+
+        Value:
+          blocks
+
       },
 
       {
-        Item:"Grant rule",
+        Item:
+          "KML blocks excluded",
+
+        Value:
+          excluded.length
+
+      },
+
+      {
+        Item:
+          "Total KML annotation lines paid",
+
+        Value:
+          paidLines
+
+      },
+
+      {
+        Item:
+          "Grant rule",
+
         Value:
           minutes +
           " minutes per matched KML block/row"
+
       },
 
       {
-        Item:"Grant minutes",
-        Value:totalMinutes
+        Item:
+          "Grant minutes",
+
+        Value:
+          totalMinutes
+
       },
 
       {
-        Item:"KML pay rate",
-        Value:money(rate) + "/hour"
+        Item:
+          "KML pay rate",
+
+        Value:
+          money(
+            rate
+          ) +
+          "/hour"
+
       },
 
       {
-        Item:"KML grant pay",
-        Value:money(pay)
+        Item:
+          "KML grant pay",
+
+        Value:
+          money(
+            pay
+          )
+
       },
 
       {
-        Item:"Excluded KML annotation lines",
-        Value:excludedLines
+        Item:
+          "Excluded KML annotation lines",
+
+        Value:
+          excludedLines
+
       }
 
     ];
@@ -2003,14 +3458,17 @@ function calculate(){
 
     renderTable(
       $("summary"),
-      ["Item","Value"],
+      [
+        "Item",
+        "Value"
+      ],
       summaryRows
     );
 
 
-    /* ========================================================
-       PAID ROWS TABLE
-    ======================================================== */
+    /* =========================
+       PAID ROWS
+    ========================= */
 
     renderTable(
       $("paid"),
@@ -2027,9 +3485,9 @@ function calculate(){
     );
 
 
-    /* ========================================================
-       EXCLUDED TABLE
-    ======================================================== */
+    /* =========================
+       EXCLUDED
+    ========================= */
 
     renderTable(
       $("excluded"),
@@ -2044,9 +3502,9 @@ function calculate(){
     );
 
 
-    /* ========================================================
+    /* =========================
        CSV WITHOUT KML
-    ======================================================== */
+    ========================= */
 
     renderTable(
       $("csvmissing"),
@@ -2058,11 +3516,43 @@ function calculate(){
     );
 
 
-    /* ========================================================
+    /* =========================
        CHECKS
-    ======================================================== */
+    ========================= */
 
     const checkRows = [
+
+      {
+        Check:
+          "Assignment column detected",
+
+        Count:
+          detectedAssigneeColumns.length
+            ? "YES"
+            : "NO",
+
+        Details:
+          detectedAssigneeColumns.length
+            ?
+              csvRows[
+                detectedHeaderRow
+              ]
+              ?.filter(
+                (
+                  _,
+                  i
+                ) =>
+                  detectedAssigneeColumns.includes(
+                    i
+                  )
+              )
+              .join(", ")
+            :
+              "Fallback column " +
+              $("assigneeCol").value +
+              " is being used."
+      },
+
 
       {
         Check:
@@ -2073,13 +3563,16 @@ function calculate(){
 
         Details:
           noBusStopLane.length
-            ? noBusStopLane
+            ?
+              noBusStopLane
                 .map(
                   row =>
                     row.Location
                 )
                 .join(" | ")
-            : "None"
+            :
+              "None"
+
       },
 
 
@@ -2092,13 +3585,16 @@ function calculate(){
 
         Details:
           noBusStopBike.length
-            ? noBusStopBike
+            ?
+              noBusStopBike
                 .map(
                   row =>
                     row.Location
                 )
                 .join(" | ")
-            : "None"
+            :
+              "None"
+
       },
 
 
@@ -2111,6 +3607,7 @@ function calculate(){
 
         Details:
           "R0, R1, R2 … R20, R50, R100 and any other R-number are detected automatically."
+
       },
 
 
@@ -2126,8 +3623,11 @@ function calculate(){
           " minutes × " +
           blocks +
           " matched blocks at " +
-          money(rate) +
+          money(
+            rate
+          ) +
           "/hour"
+
       },
 
 
@@ -2140,18 +3640,20 @@ function calculate(){
 
         Details:
           "KML blocks not represented by the selected worker's CSV rows are excluded."
+
       },
 
 
       {
         Check:
-          "KML payment is based on lines",
+          "Payment based on individual lines",
 
         Count:
           "NO",
 
         Details:
           "Payment is based on matched KML blocks/rows. All annotations inside those blocks are audited and counted."
+
       }
 
     ];
@@ -2168,21 +3670,53 @@ function calculate(){
     );
 
 
-    /* ========================================================
+    /* =========================
        PAY NOTE
-    ======================================================== */
+    ========================= */
 
     const worker =
-      $("worker").value.trim();
+      $("worker")
+        .value
+        .trim();
+
+
+    const detectedHeaderText =
+      detectedAssigneeColumns.length
+        ?
+          csvRows[
+            detectedHeaderRow
+          ]
+            .filter(
+              (
+                _,
+                i
+              ) =>
+                detectedAssigneeColumns.includes(
+                  i
+                )
+            )
+            .join(", ")
+        :
+          "fallback column " +
+          $("assigneeCol").value;
 
 
     const note =
 
-`Only KML blocks represented by ${worker} in the CSV are paid. KML annotations/blocks that are not represented by this worker's CSV rows are excluded from this worker's pay.
+`Only KML blocks represented by ${worker} in the CSV are paid.
+
+Assignment detection:
+The calculator automatically searched the CSV headers for Assignee, Assigned, Annotator, Worker, Reviewer and common spelling variations.
+
+Detected assignment header(s): ${detectedHeaderText}.
+
+All matching rows belonging to ${worker} were used to identify the KML blocks that belong to this worker.
+
+KML annotations/blocks that are not represented by this worker's CSV rows are excluded from this worker's pay.
 
 All annotation types inside a matched KML block are counted for the audit, including Location Description, BusStop, BusLane, BikeLane and every R label found (R0, R1, R2 … R20+).
 
-There is no hard-coded maximum R number. R0, R1, R2, R3, R4, R5, R20, R50, R100 and higher R numbers are detected automatically.
+There is no hard-coded maximum R number.
 
 KML payment is based on matched blocks/rows, not individual annotation-line count:
 
@@ -2205,17 +3739,21 @@ CSV rows without matching KML: ${missing.length}.`;
       note;
 
 
-    /* ========================================================
+    /* =========================
        SUCCESS
-    ======================================================== */
+    ========================= */
 
     setStatus(
       "Calculation complete: " +
+      assignedCount +
+      " assigned CSV rows detected, " +
       blocks +
       " matched KML blocks, " +
       paidLines +
       " annotation lines, " +
-      money(pay) +
+      money(
+        pay
+      ) +
       " KML pay.",
       "ok"
     );
@@ -2258,204 +3796,278 @@ CSV rows without matching KML: ${missing.length}.`;
 
 
 /* ============================================================
-   CSV FILE BUTTON
+   CSV FILE
 ============================================================ */
 
-$("csvFile").addEventListener(
-  "change",
-  async function(event){
+$("csvFile")
+  .addEventListener(
+    "change",
+    async function(event){
 
-    const file =
-      event.target.files &&
-      event.target.files[0];
-
-
-    if(!file){
-
-      return;
-    }
+      const file =
+        event.target.files &&
+        event.target.files[0];
 
 
-    try{
+      if(!file){
 
-      csvName =
-        file.name;
-
-
-      const text =
-        await file.text();
-
-
-      csvRows =
-        parseCSV(text);
-
-
-      if(!csvRows.length){
-
-        throw new Error(
-          "The CSV file appears to be empty."
-        );
+        return;
       }
 
 
-      $("csvFileStatus").textContent =
-        file.name +
-        " • " +
-        csvRows.length +
-        " rows loaded";
+      try{
+
+        csvName =
+          file.name;
 
 
-      $("csvFileStatus")
-        .classList.add("loaded");
+        const text =
+          await file.text();
 
 
-      setStatus(
-        "CSV loaded: " +
-        file.name +
-        " (" +
-        csvRows.length +
-        " rows).",
-        "ok"
-      );
+        csvRows =
+          parseCSV(
+            text
+          );
 
+
+        if(
+          !csvRows.length
+        ){
+
+          throw new Error(
+            "The CSV file appears to be empty."
+          );
+
+        }
+
+
+        /*
+          Automatically find:
+          Assignee / Assigned / Annotator / Worker etc.
+        */
+
+        detectAssignmentColumns(
+          csvRows
+        );
+
+
+        $("csvFileStatus")
+          .textContent =
+          file.name +
+          " • " +
+          csvRows.length +
+          " rows loaded";
+
+
+        $("csvFileStatus")
+          .classList.add(
+            "loaded"
+          );
+
+
+        let assignmentText =
+          "No assignment header detected";
+
+
+        if(
+          detectedAssigneeColumns.length
+        ){
+
+          assignmentText =
+            detectedAssigneeColumns
+              .map(
+                col =>
+                  csvRows[
+                    detectedHeaderRow
+                  ]?.[col] ||
+                  "Column " +
+                  (
+                    col + 1
+                  )
+              )
+              .join(", ");
+
+        }
+
+
+        setStatus(
+          "CSV loaded: " +
+          file.name +
+          " (" +
+          csvRows.length +
+          " rows). Assignment field: " +
+          assignmentText +
+          ".",
+          "ok"
+        );
+
+
+      }
+      catch(error){
+
+        console.error(
+          "CSV loading error:",
+          error
+        );
+
+
+        csvRows = [];
+
+
+        detectedHeaderRow =
+          -1;
+
+
+        detectedAssigneeColumns =
+          [];
+
+
+        $("csvFileStatus")
+          .textContent =
+          "CSV could not be loaded";
+
+
+        $("csvFileStatus")
+          .classList.remove(
+            "loaded"
+          );
+
+
+        updateAssignmentInfo();
+
+
+        setStatus(
+          "CSV error: " +
+          error.message,
+          "err"
+        );
+
+      }
 
     }
-    catch(error){
-
-      console.error(
-        "CSV loading error:",
-        error
-      );
-
-
-      csvRows = [];
-
-
-      $("csvFileStatus").textContent =
-        "CSV could not be loaded";
-
-
-      $("csvFileStatus")
-        .classList.remove("loaded");
-
-
-      setStatus(
-        "CSV error: " +
-        error.message,
-        "err"
-      );
-
-    }
-
-  }
-);
+  );
 
 
 /* ============================================================
-   KML FILE BUTTON
+   KML FILE
 ============================================================ */
 
-$("kmlFile").addEventListener(
-  "change",
-  async function(event){
+$("kmlFile")
+  .addEventListener(
+    "change",
+    async function(event){
 
-    const file =
-      event.target.files &&
-      event.target.files[0];
-
-
-    if(!file){
-
-      return;
-    }
+      const file =
+        event.target.files &&
+        event.target.files[0];
 
 
-    try{
+      if(!file){
 
-      kmlName =
-        file.name;
-
-
-      const text =
-        await file.text();
-
-
-      kmlGroups =
-        parseKML(text);
-
-
-      if(!kmlGroups.length){
-
-        throw new Error(
-          "No KML blocks were found. The KML normally needs # block names."
-        );
+        return;
       }
 
 
-      $("kmlFileStatus").textContent =
-        file.name +
-        " • " +
-        kmlGroups.length +
-        " blocks loaded";
+      try{
+
+        kmlName =
+          file.name;
 
 
-      $("kmlFileStatus")
-        .classList.add("loaded");
+        const text =
+          await file.text();
 
 
-      setStatus(
-        "KML loaded: " +
-        file.name +
-        " (" +
-        kmlGroups.length +
-        " blocks).",
-        "ok"
-      );
+        kmlGroups =
+          parseKML(
+            text
+          );
+
+
+        if(
+          !kmlGroups.length
+        ){
+
+          throw new Error(
+            "No KML blocks were found. The KML normally needs # block names."
+          );
+
+        }
+
+
+        $("kmlFileStatus")
+          .textContent =
+          file.name +
+          " • " +
+          kmlGroups.length +
+          " blocks loaded";
+
+
+        $("kmlFileStatus")
+          .classList.add(
+            "loaded"
+          );
+
+
+        setStatus(
+          "KML loaded: " +
+          file.name +
+          " (" +
+          kmlGroups.length +
+          " blocks).",
+          "ok"
+        );
+
+
+      }
+      catch(error){
+
+        console.error(
+          "KML loading error:",
+          error
+        );
+
+
+        kmlGroups = [];
+
+
+        $("kmlFileStatus")
+          .textContent =
+          "KML could not be loaded";
+
+
+        $("kmlFileStatus")
+          .classList.remove(
+            "loaded"
+          );
+
+
+        setStatus(
+          "KML error: " +
+          error.message,
+          "err"
+        );
+
+      }
 
     }
-    catch(error){
-
-      console.error(
-        "KML loading error:",
-        error
-      );
-
-
-      kmlGroups = [];
-
-
-      $("kmlFileStatus").textContent =
-        "KML could not be loaded";
-
-
-      $("kmlFileStatus")
-        .classList.remove("loaded");
-
-
-      setStatus(
-        "KML error: " +
-        error.message,
-        "err"
-      );
-
-    }
-
-  }
-);
+  );
 
 
 /* ============================================================
    CALCULATE BUTTON
 ============================================================ */
 
-$("calculate").addEventListener(
-  "click",
-  function(){
+$("calculate")
+  .addEventListener(
+    "click",
+    function(){
 
-    calculate();
+      calculate();
 
-  }
-);
+    }
+  );
 
 
 /* ============================================================
@@ -2463,74 +4075,76 @@ $("calculate").addEventListener(
 ============================================================ */
 
 document
-  .querySelectorAll(".tab")
-  .forEach(button => {
+  .querySelectorAll(
+    ".tab"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      function(){
+      button.addEventListener(
+        "click",
+        function(){
 
-        const tabName =
-          button.dataset.tab;
+          const tabName =
+            button.dataset.tab;
 
 
-        /*
-          Deactivate every tab.
-        */
+          document
+            .querySelectorAll(
+              ".tab"
+            )
+            .forEach(
+              tab => {
 
-        document
-          .querySelectorAll(".tab")
-          .forEach(tab => {
+                tab.classList.remove(
+                  "active"
+                );
 
-            tab.classList.remove(
-              "active"
+              }
             );
 
-          });
+
+          document
+            .querySelectorAll(
+              ".tabcontent"
+            )
+            .forEach(
+              content => {
+
+                content.style.display =
+                  "none";
+
+              }
+            );
 
 
-        /*
-          Hide every content area.
-        */
-
-        document
-          .querySelectorAll(".tabcontent")
-          .forEach(content => {
-
-            content.style.display =
-              "none";
-
-          });
+          button.classList.add(
+            "active"
+          );
 
 
-        /*
-          Activate clicked tab.
-        */
-
-        button.classList.add(
-          "active"
-        );
+          const target =
+            $(
+              tabName
+            );
 
 
-        const target =
-          $(tabName);
+          if(target){
 
+            target.style.display =
+              "block";
 
-        if(target){
-
-          target.style.display =
-            "block";
+          }
 
         }
+      );
 
-      }
-    );
-
-  });
+    }
+  );
 
 
 /* ============================================================
-   DARK / LIGHT THEME
+   THEME
 ============================================================ */
 
 function updateThemeButton(){
@@ -2538,61 +4152,66 @@ function updateThemeButton(){
   const isDark =
     document.documentElement
       .dataset
-      .theme === "dark";
+      .theme ===
+    "dark";
 
 
-  $("themeBtn").textContent =
+  $("themeBtn")
+    .textContent =
     isDark
       ? "☀ Light theme"
       : "☾ Dark theme";
+
 }
 
 
-$("themeBtn").addEventListener(
-  "click",
-  function(){
+$("themeBtn")
+  .addEventListener(
+    "click",
+    function(){
 
-    const isDark =
-      document.documentElement
-        .dataset
-        .theme === "dark";
+      const isDark =
+        document.documentElement
+          .dataset
+          .theme ===
+        "dark";
 
 
-    if(isDark){
+      if(isDark){
 
-      document.documentElement
-        .removeAttribute(
-          "data-theme"
+        document.documentElement
+          .removeAttribute(
+            "data-theme"
+          );
+
+
+        localStorage.setItem(
+          "annotationPayTheme",
+          "light"
         );
 
+      }
+      else{
 
-      localStorage.setItem(
-        "annotationPayTheme",
-        "light"
-      );
+        document.documentElement
+          .setAttribute(
+            "data-theme",
+            "dark"
+          );
 
-    }
-    else{
 
-      document.documentElement
-        .setAttribute(
-          "data-theme",
+        localStorage.setItem(
+          "annotationPayTheme",
           "dark"
         );
 
+      }
 
-      localStorage.setItem(
-        "annotationPayTheme",
-        "dark"
-      );
+
+      updateThemeButton();
 
     }
-
-
-    updateThemeButton();
-
-  }
-);
+  );
 
 
 /* Restore theme */
@@ -2600,7 +4219,8 @@ $("themeBtn").addEventListener(
 if(
   localStorage.getItem(
     "annotationPayTheme"
-  ) === "dark"
+  ) ===
+  "dark"
 ){
 
   document.documentElement
@@ -2616,168 +4236,185 @@ updateThemeButton();
 
 
 /* ============================================================
-   RESET BUTTON
+   RESET
 ============================================================ */
 
-$("resetBtn").addEventListener(
-  "click",
-  function(){
+$("resetBtn")
+  .addEventListener(
+    "click",
+    function(){
 
-    /*
-      Fully reset the application
-      without needing to refresh the page.
-    */
+      csvRows = [];
 
-    csvRows = [];
+      kmlGroups = [];
 
-    kmlGroups = [];
+      result = null;
 
-    result = null;
+      csvName = "";
 
-    csvName = "";
+      kmlName = "";
 
-    kmlName = "";
+      detectedHeaderRow =
+        -1;
 
-
-    $("csvFile").value = "";
-
-    $("kmlFile").value = "";
+      detectedAssigneeColumns =
+        [];
 
 
-    $("csvFileStatus").textContent =
-      "No CSV selected";
+      $("csvFile").value =
+        "";
+
+      $("kmlFile").value =
+        "";
 
 
-    $("kmlFileStatus").textContent =
-      "No KML selected";
+      $("csvFileStatus")
+        .textContent =
+        "No CSV selected";
 
 
-    $("csvFileStatus")
-      .classList.remove(
-        "loaded"
-      );
+      $("kmlFileStatus")
+        .textContent =
+        "No KML selected";
 
 
-    $("kmlFileStatus")
-      .classList.remove(
-        "loaded"
-      );
+      $("csvFileStatus")
+        .classList.remove(
+          "loaded"
+        );
 
 
-    $("hourly").value = "";
-
-    $("minutes").value = "6";
-
-    $("fullPay").value = "0.25";
-
-    $("lowPay").value = "0.05";
-
-    $("assigneeCol").value = "22";
-
-    $("worker").value =
-      "antonymbali96@gmail.com";
+      $("kmlFileStatus")
+        .classList.remove(
+          "loaded"
+        );
 
 
-    $("mBlocks").textContent =
-      "0";
+      $("hourly").value =
+        "";
 
-    $("mLines").textContent =
-      "0";
+      $("minutes").value =
+        "6";
 
-    $("mMin").textContent =
-      "0 min";
+      $("fullPay").value =
+        "0.25";
 
-    $("mPay").textContent =
-      "$0.00";
+      $("lowPay").value =
+        "0.05";
 
+      $("assigneeCol").value =
+        "22";
 
-    $("summary").innerHTML =
-      "";
-
-
-    $("paid").innerHTML =
-      "";
+      $("worker").value =
+        "antonymbali96@gmail.com";
 
 
-    $("excluded").innerHTML =
-      "";
+      $("mBlocks").textContent =
+        "0";
+
+      $("mLines").textContent =
+        "0";
+
+      $("mMin").textContent =
+        "0 min";
+
+      $("mPay").textContent =
+        "$0.00";
 
 
-    $("csvmissing").innerHTML =
-      "";
+      $("summary").innerHTML =
+        "";
+
+      $("paid").innerHTML =
+        "";
+
+      $("excluded").innerHTML =
+        "";
+
+      $("csvmissing").innerHTML =
+        "";
+
+      $("checks").innerHTML =
+        "";
 
 
-    $("checks").innerHTML =
-      "";
+      $("payNote")
+        .textContent =
+        "Run the calculator to generate the pay note.";
 
 
-    $("payNote").textContent =
-      "Run the calculator to generate the pay note.";
+      updateAssignmentInfo();
 
 
-    /*
-      Return to first tab.
-    */
+      /*
+        Return to first tab.
+      */
 
-    document
-      .querySelectorAll(".tab")
-      .forEach(
-        tab =>
-          tab.classList.remove(
-            "active"
-          )
-      );
-
-
-    document
-      .querySelectorAll(".tabcontent")
-      .forEach(
-        content =>
-          content.style.display =
-            "none"
-      );
+      document
+        .querySelectorAll(
+          ".tab"
+        )
+        .forEach(
+          tab =>
+            tab.classList.remove(
+              "active"
+            )
+        );
 
 
-    const firstTab =
-      document.querySelector(
-        '.tab[data-tab="summary"]'
-      );
+      document
+        .querySelectorAll(
+          ".tabcontent"
+        )
+        .forEach(
+          content =>
+            content.style.display =
+              "none"
+        );
 
 
-    if(firstTab){
+      const firstTab =
+        document.querySelector(
+          '.tab[data-tab="summary"]'
+        );
 
-      firstTab.classList.add(
-        "active"
+
+      if(firstTab){
+
+        firstTab.classList.add(
+          "active"
+        );
+
+      }
+
+
+      $("summary")
+        .style.display =
+        "block";
+
+
+      setStatus(
+        "Calculator reset. Waiting for CSV and KML.",
+        ""
       );
 
     }
-
-
-    $("summary").style.display =
-      "block";
-
-
-    setStatus(
-      "Calculator reset. Waiting for CSV and KML.",
-      ""
-    );
-
-  }
-);
+  );
 
 
 /* ============================================================
-   GOOGLE SHEETS / EXCEL EXPORT
+   EXPORT
 ============================================================ */
 
-$("export").addEventListener(
-  "click",
-  function(){
+$("export")
+  .addEventListener(
+    "click",
+    function(){
 
-    exportWorkbook();
+      exportWorkbook();
 
-  }
-);
+    }
+  );
 
 
 function exportWorkbook(){
@@ -2795,45 +4432,6 @@ function exportWorkbook(){
     }
 
 
-    if(
-      !result.lineRows.length &&
-      !result.excluded.length
-    ){
-
-      setStatus(
-        "There is no calculation data to export.",
-        "err"
-      );
-
-      return;
-    }
-
-
-    /*
-      Safe Excel/Google Sheets cell escaping.
-    */
-
-    function escCSV(value){
-
-      return (
-        '"' +
-        String(
-          value ?? ""
-        )
-          .replaceAll(
-            '"',
-            '""'
-          ) +
-        '"'
-      );
-
-    }
-
-
-    /*
-      Convert array of arrays to HTML table.
-    */
-
     function makeSheet(
       sheetName,
       data
@@ -2841,11 +4439,17 @@ function exportWorkbook(){
 
       let html =
         '<section style="margin-bottom:35px;">' +
+
         "<h2>" +
-        esc(sheetName) +
+        esc(
+          sheetName
+        ) +
         "</h2>" +
+
         '<table border="1" cellspacing="0" cellpadding="6">' +
+
         "<thead>" +
+
         "<tr>";
 
 
@@ -2853,14 +4457,18 @@ function exportWorkbook(){
         data[0] || [];
 
 
-      headers.forEach(header => {
+      headers.forEach(
+        header => {
 
-        html +=
-          "<th>" +
-          esc(header) +
-          "</th>";
+          html +=
+            "<th>" +
+            esc(
+              header
+            ) +
+            "</th>";
 
-      });
+        }
+      );
 
 
       html +=
@@ -2871,28 +4479,36 @@ function exportWorkbook(){
 
       data
         .slice(1)
-        .forEach(row => {
+        .forEach(
+          row => {
 
-          html += "<tr>";
-
-
-          headers.forEach(
-            (_,index) => {
-
-              html +=
-                "<td>" +
-                esc(
-                  row[index] ?? ""
-                ) +
-                "</td>";
-
-            }
-          );
+            html +=
+              "<tr>";
 
 
-          html += "</tr>";
+            headers.forEach(
+              (
+                _,
+                index
+              ) => {
 
-        });
+                html +=
+                  "<td>" +
+                  esc(
+                    row[index] ??
+                    ""
+                  ) +
+                  "</td>";
+
+              }
+            );
+
+
+            html +=
+              "</tr>";
+
+          }
+        );
 
 
       html +=
@@ -2902,12 +4518,13 @@ function exportWorkbook(){
 
 
       return html;
+
     }
 
 
-    /* ========================================================
-       PAY SUMMARY SHEET
-    ======================================================== */
+    /* =========================
+       SUMMARY SHEET
+    ========================= */
 
     const summarySheet = [
 
@@ -2922,11 +4539,46 @@ function exportWorkbook(){
       ],
 
       [
+        "Assignment header row",
+        detectedHeaderRow >= 0
+          ? detectedHeaderRow + 1
+          : "Fallback column"
+      ],
+
+      [
+        "Assignment column(s)",
+        detectedAssigneeColumns.length
+          ?
+            detectedAssigneeColumns
+              .map(
+                col =>
+                  csvRows[
+                    detectedHeaderRow
+                  ]?.[col] ||
+                  "Column " +
+                  (
+                    col + 1
+                  )
+              )
+              .join(", ")
+          :
+            "Column " +
+            $("assigneeCol").value
+      ],
+
+      [
         "CSV rows assigned to worker",
         csvRows.filter(
-          (row,index) =>
-            index >= 2 &&
-            rowAssigned(row)
+          (
+            row,
+            index
+          ) =>
+            index !==
+              detectedHeaderRow &&
+            rowAssigned(
+              row,
+              index
+            )
         ).length
       ],
 
@@ -2982,7 +4634,9 @@ function exportWorkbook(){
 
       [
         "KML grant pay",
-        money(result.pay)
+        money(
+          result.pay
+        )
       ],
 
       [
@@ -2993,9 +4647,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       PAID ROWS SHEET
-    ======================================================== */
+    /* =========================
+       PAID SHEET
+    ========================= */
 
     const paidHeaders =
       Object.keys(
@@ -3013,16 +4667,17 @@ function exportWorkbook(){
         row =>
           paidHeaders.map(
             header =>
-              row[header] ?? ""
+              row[header] ??
+              ""
           )
       )
 
     ];
 
 
-    /* ========================================================
-       EXCLUDED KML SHEET
-    ======================================================== */
+    /* =========================
+       EXCLUDED SHEET
+    ========================= */
 
     const excludedHeaders =
       Object.keys(
@@ -3041,16 +4696,17 @@ function exportWorkbook(){
         row =>
           excludedHeaders.map(
             header =>
-              row[header] ?? ""
+              row[header] ??
+              ""
           )
       )
 
     ];
 
 
-    /* ========================================================
+    /* =========================
        CSV WITHOUT KML
-    ======================================================== */
+    ========================= */
 
     const missingSheet = [
 
@@ -3070,9 +4726,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       BUS LANE WITHOUT BUS STOP
-    ======================================================== */
+    /* =========================
+       BUS LANE
+    ========================= */
 
     const busLaneSheet = [
 
@@ -3094,9 +4750,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       BIKE LANE WITHOUT BUS STOP
-    ======================================================== */
+    /* =========================
+       BIKE LANE
+    ========================= */
 
     const bikeLaneSheet = [
 
@@ -3118,9 +4774,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       CHECKS SHEET
-    ======================================================== */
+    /* =========================
+       CHECKS
+    ========================= */
 
     const checksSheet = [
 
@@ -3128,6 +4784,31 @@ function exportWorkbook(){
         "Check",
         "Count",
         "Details"
+      ],
+
+      [
+        "Assignment column detected",
+        detectedAssigneeColumns.length
+          ? "YES"
+          : "NO",
+        detectedAssigneeColumns.length
+          ?
+            csvRows[
+              detectedHeaderRow
+            ]
+              .filter(
+                (
+                  _,
+                  i
+                ) =>
+                  detectedAssigneeColumns.includes(
+                    i
+                  )
+              )
+              .join(", ")
+          :
+            "Fallback column " +
+            $("assigneeCol").value
       ],
 
       [
@@ -3190,9 +4871,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       PAY NOTE SHEET
-    ======================================================== */
+    /* =========================
+       PAY NOTE
+    ========================= */
 
     const noteSheet = [
 
@@ -3207,9 +4888,9 @@ function exportWorkbook(){
     ];
 
 
-    /* ========================================================
-       BUILD COMPLETE WORKBOOK
-    ======================================================== */
+    /* =========================
+       WORKBOOK
+    ========================= */
 
     const workbookHTML = `
 
@@ -3341,14 +5022,14 @@ ${makeSheet(
         kmlName ||
         "Annotation_Pay"
       )
-      .replace(
-        /\.[^.]+$/,
-        ""
-      )
-      .replace(
-        /[^\w.-]+/g,
-        "_"
-      );
+        .replace(
+          /\.[^.]+$/,
+          ""
+        )
+        .replace(
+          /[^\w.-]+/g,
+          "_"
+        );
 
 
     link.download =
@@ -3402,11 +5083,19 @@ ${makeSheet(
 
 
 /* ============================================================
-   STARTUP SAFETY CHECK
+   STARTUP
 ============================================================ */
 
 console.log(
   "Annotation Pay Studio loaded successfully."
+);
+
+console.log(
+  "Automatic assignment detection enabled."
+);
+
+console.log(
+  "Supported assignment headers: Assignee, Assigned, Annotator, Worker, Reviewer and spelling variations."
 );
 
 console.log(
