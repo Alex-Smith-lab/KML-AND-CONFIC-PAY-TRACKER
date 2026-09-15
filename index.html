@@ -3,211 +3,3417 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KML & CSV Annotation Pay Calculator</title>
+
+<title>Annotation Pay Studio</title>
+
 <style>
-:root{--bg:#f4f7fb;--panel:#fff;--text:#172033;--muted:#687386;--line:#dfe5ee;--accent:#2563eb;--accent2:#0f766e;--danger:#dc2626;--shadow:0 12px 35px rgba(20,30,55,.08)}
-[data-theme="dark"]{--bg:#0b1120;--panel:#111a2e;--text:#edf2ff;--muted:#9aa8bf;--line:#24314a;--accent:#60a5fa;--accent2:#2dd4bf;--danger:#f87171;--shadow:0 16px 40px rgba(0,0,0,.28)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
-button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1500px;margin:auto;padding:24px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}.brand{display:flex;gap:13px;align-items:center}.logo{width:46px;height:46px;border-radius:14px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}.brand h1{margin:0;font-size:22px}.brand p{margin:2px 0;color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:9px 13px;border-radius:10px}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.green{background:var(--accent2);border-color:var(--accent2);color:#fff}.btn.danger{color:var(--danger)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:25px;font-weight:800;margin-top:4px}.metric .sub{color:var(--muted);font-size:12px;margin-top:3px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow)}.panel h2{margin:0 0 12px;font-size:16px}.controls{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.field input,.field select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);outline:none}.field input:focus{border-color:var(--accent)}
-.uploads{display:grid;grid-template-columns:1fr 1fr;gap:14px}.drop{border:1.5px dashed var(--line);border-radius:13px;padding:18px;text-align:center}.drop strong{display:block;margin-bottom:4px}.drop small{display:block;color:var(--muted);margin-bottom:10px}.drop input{max-width:100%}
-.status{padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--muted);margin-top:12px}.status.ok{color:var(--accent2)}.status.err{color:var(--danger)}
-.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:12px;overflow:auto}.tab{border:0;background:transparent;color:var(--muted);padding:10px 12px;border-bottom:2px solid transparent;white-space:nowrap}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tablewrap{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:1000px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{position:sticky;top:0;background:var(--panel);z-index:1;font-size:12px}td.num{text-align:right}.badge{padding:3px 7px;border-radius:999px;background:var(--bg);font-size:11px}.paid{color:var(--accent2)}.excluded{color:var(--danger)}
-.note{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:13px}
-.empty{padding:35px;text-align:center;color:var(--muted)}
-.footer{color:var(--muted);text-align:center;font-size:12px;padding:12px}
-@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:repeat(3,1fr)}}@media(max-width:700px){.app{padding:12px}.grid,.uploads,.controls{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+:root{
+  --bg:#f4f7fb;
+  --panel:#ffffff;
+  --text:#172033;
+  --muted:#687386;
+  --line:#dfe5ee;
+  --accent:#2563eb;
+  --accent2:#0f766e;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --shadow:0 12px 35px rgba(20,30,55,.08);
+}
+
+[data-theme="dark"]{
+  --bg:#0b1120;
+  --panel:#111a2e;
+  --text:#edf2ff;
+  --muted:#9aa8bf;
+  --line:#24314a;
+  --accent:#60a5fa;
+  --accent2:#2dd4bf;
+  --danger:#f87171;
+  --warning:#fbbf24;
+  --shadow:0 16px 40px rgba(0,0,0,.28);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  min-height:100%;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font:14px/1.45 Inter,Segoe UI,Arial,sans-serif;
+  transition:background .2s,color .2s;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+button:disabled{
+  cursor:not-allowed;
+  opacity:.55;
+}
+
+.app{
+  max-width:1500px;
+  margin:auto;
+  padding:24px;
+}
+
+/* HEADER */
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.brand{
+  display:flex;
+  gap:13px;
+  align-items:center;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:var(--accent);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  font-size:20px;
+  box-shadow:0 8px 20px rgba(37,99,235,.25);
+}
+
+.brand h1{
+  margin:0;
+  font-size:22px;
+}
+
+.brand p{
+  margin:2px 0;
+  color:var(--muted);
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+/* BUTTONS */
+
+.btn{
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  padding:9px 13px;
+  border-radius:10px;
+  transition:.15s;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.btn.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+.btn.green{
+  background:var(--accent2);
+  border-color:var(--accent2);
+  color:#fff;
+}
+
+.btn.danger{
+  color:var(--danger);
+}
+
+/* PANELS */
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+
+.panel h2{
+  margin:0 0 12px;
+  font-size:16px;
+}
+
+/* PAYMENT CONTROLS */
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+}
+
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:10px 11px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(37,99,235,.08);
+}
+
+/* UPLOADS */
+
+.uploads{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.drop{
+  border:1.5px dashed var(--line);
+  border-radius:13px;
+  padding:18px;
+  text-align:center;
+  transition:.15s;
+}
+
+.drop:hover{
+  border-color:var(--accent);
+  background:rgba(37,99,235,.03);
+}
+
+.drop strong{
+  display:block;
+  margin-bottom:4px;
+}
+
+.drop small{
+  display:block;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+
+.drop input{
+  max-width:100%;
+}
+
+/* STATUS */
+
+.status{
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--bg);
+  color:var(--muted);
+  margin-top:12px;
+  border:1px solid transparent;
+}
+
+.status.ok{
+  color:var(--accent2);
+  border-color:rgba(15,118,110,.2);
+}
+
+.status.err{
+  color:var(--danger);
+  border-color:rgba(220,38,38,.2);
+}
+
+.status.warn{
+  color:var(--warning);
+  border-color:rgba(217,119,6,.2);
+}
+
+/* METRICS */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:16px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+
+.metric .label{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.metric .value{
+  font-size:25px;
+  font-weight:800;
+  margin-top:4px;
+}
+
+.metric .sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
+
+/* TABS */
+
+.tabs{
+  display:flex;
+  gap:6px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:12px;
+  overflow:auto;
+}
+
+.tab{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:10px 12px;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+}
+
+.tab:hover{
+  color:var(--text);
+}
+
+.tab.active{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+/* TABLES */
+
+.tablewrap{
+  overflow:auto;
+  max-height:560px;
+  border:1px solid var(--line);
+  border-radius:10px;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  min-width:1000px;
+}
+
+th,
+td{
+  padding:9px 10px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  white-space:nowrap;
+}
+
+th{
+  position:sticky;
+  top:0;
+  background:var(--panel);
+  z-index:1;
+  font-size:12px;
+}
+
+td.num{
+  text-align:right;
+}
+
+.badge{
+  padding:3px 7px;
+  border-radius:999px;
+  background:var(--bg);
+  font-size:11px;
+}
+
+.paid{
+  color:var(--accent2);
+}
+
+.excluded{
+  color:var(--danger);
+}
+
+/* NOTE */
+
+.note{
+  white-space:pre-wrap;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:13px;
+}
+
+/* EMPTY */
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:var(--muted);
+}
+
+/* FOOTER */
+
+.footer{
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+  padding:12px;
+}
+
+/* FILE STATUS */
+
+.file-status{
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:8px;
+  background:var(--bg);
+  color:var(--muted);
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.file-status.loaded{
+  color:var(--accent2);
+}
+
+/* ERROR BOX */
+
+.error-box{
+  background:rgba(220,38,38,.08);
+  border:1px solid rgba(220,38,38,.25);
+  color:var(--danger);
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  white-space:pre-wrap;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .controls{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:700px){
+  .app{
+    padding:12px;
+  }
+
+  .grid,
+  .uploads,
+  .controls{
+    grid-template-columns:1fr;
+  }
+
+  .top{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
+
+<!-- HEADER -->
+
 <header class="top">
-  <div class="brand"><div class="logo">K</div><div><h1>Annotation Pay Studio</h1><p>CSV + KML matching, annotation audit and grant calculator</p></div></div>
-  <div class="actions"><button class="btn" id="themeBtn">☾ Dark theme</button><button class="btn" id="resetBtn">Reset</button></div>
+
+  <div class="brand">
+
+    <div class="logo">K</div>
+
+    <div>
+      <h1>Annotation Pay Studio</h1>
+      <p>CSV + KML matching, annotation audit and grant calculator</p>
+    </div>
+
+  </div>
+
+  <div class="actions">
+
+    <button
+      type="button"
+      class="btn"
+      id="themeBtn">
+      ☾ Dark theme
+    </button>
+
+    <button
+      type="button"
+      class="btn"
+      id="resetBtn">
+      Reset
+    </button>
+
+  </div>
+
 </header>
 
-<section class="panel">
-<h2>1. Payment settings</h2>
-<div class="controls">
-  <div class="field"><label>Worker email</label><input id="worker" value="antonymbali96@gmail.com"></div>
-  <div class="field"><label>KML pay / hour ($)</label><input id="hourly" type="number" min="0" step="0.01" placeholder="Paste pay"></div>
-  <div class="field"><label>Minutes per KML block / row</label><input id="minutes" type="number" min="0" step="0.1" value="6"></div>
-  <div class="field"><label>CSV full annotation pay ($)</label><input id="fullPay" type="number" min="0" step="0.01" value="0.25"></div>
-  <div class="field"><label>CSV low annotation pay ($)</label><input id="lowPay" type="number" min="0" step="0.01" value="0.05"></div>
-  <div class="field"><label>CSV assignee column</label><input id="assigneeCol" type="number" min="1" value="22" title="1-based column number"></div>
-</div>
-<div class="status">Paste the KML hourly pay/rate above. The calculator never hard-codes the KML pay rate. KML payment = matched blocks × minutes per block × hourly rate ÷ 60.</div>
-</section>
+
+<!-- PAYMENT SETTINGS -->
 
 <section class="panel">
-<h2>2. Upload the route files</h2>
-<div class="uploads">
-  <div class="drop"><strong>CSV / annotation export</strong><small>Used to identify rows assigned to the worker.</small><input id="csvFile" type="file" accept=".csv,text/csv"></div>
-  <div class="drop"><strong>KML file</strong><small>Counts Location Description, R lines, BusStop, BusLane, BikeLane and other annotation labels.</small><input id="kmlFile" type="file" accept=".kml,.xml,application/vnd.google-earth.kml+xml"></div>
-</div>
-<div class="actions" style="margin-top:12px"><button class="btn primary" id="calculate">Calculate route</button><button class="btn green" id="export">Export Google Sheets workbook</button></div>
-<div id="status" class="status">Waiting for CSV and KML.</div>
+
+  <h2>1. Payment settings</h2>
+
+  <div class="controls">
+
+    <div class="field">
+      <label>Worker email</label>
+      <input
+        id="worker"
+        type="email"
+        value="antonymbali96@gmail.com">
+    </div>
+
+    <div class="field">
+      <label>KML pay / hour ($)</label>
+      <input
+        id="hourly"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="Paste pay">
+    </div>
+
+    <div class="field">
+      <label>Minutes per KML block / row</label>
+      <input
+        id="minutes"
+        type="number"
+        min="0"
+        step="0.1"
+        value="6">
+    </div>
+
+    <div class="field">
+      <label>CSV full annotation pay ($)</label>
+      <input
+        id="fullPay"
+        type="number"
+        min="0"
+        step="0.01"
+        value="0.25">
+    </div>
+
+    <div class="field">
+      <label>CSV low annotation pay ($)</label>
+      <input
+        id="lowPay"
+        type="number"
+        min="0"
+        step="0.01"
+        value="0.05">
+    </div>
+
+    <div class="field">
+      <label>CSV assignee column</label>
+      <input
+        id="assigneeCol"
+        type="number"
+        min="1"
+        value="22"
+        title="1-based column number">
+    </div>
+
+  </div>
+
+  <div class="status">
+    Paste the KML hourly pay/rate above.
+    The calculator never hard-codes the KML pay rate.
+
+    KML payment =
+    matched blocks × minutes per block × hourly rate ÷ 60.
+  </div>
+
 </section>
+
+
+<!-- FILE UPLOAD -->
+
+<section class="panel">
+
+  <h2>2. Upload the route files</h2>
+
+  <div class="uploads">
+
+    <div class="drop">
+
+      <strong>CSV / annotation export</strong>
+
+      <small>
+        Used to identify rows assigned to the worker.
+      </small>
+
+      <input
+        id="csvFile"
+        type="file"
+        accept=".csv,text/csv">
+
+      <div
+        id="csvFileStatus"
+        class="file-status">
+        No CSV selected
+      </div>
+
+    </div>
+
+
+    <div class="drop">
+
+      <strong>KML file</strong>
+
+      <small>
+        Counts Location Description, R lines,
+        BusStop, BusLane, BikeLane and other annotation labels.
+      </small>
+
+      <input
+        id="kmlFile"
+        type="file"
+        accept=".kml,.xml,application/vnd.google-earth.kml+xml">
+
+      <div
+        id="kmlFileStatus"
+        class="file-status">
+        No KML selected
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="actions"
+    style="margin-top:12px">
+
+    <button
+      type="button"
+      class="btn primary"
+      id="calculate">
+      Calculate route
+    </button>
+
+    <button
+      type="button"
+      class="btn green"
+      id="export">
+      Export Google Sheets workbook
+    </button>
+
+  </div>
+
+
+  <div
+    id="status"
+    class="status">
+    Waiting for CSV and KML.
+  </div>
+
+</section>
+
+
+<!-- METRICS -->
 
 <section class="grid">
-<div class="card metric"><div class="label">Matched KML blocks</div><div class="value" id="mBlocks">0</div><div class="sub">Paid to selected worker</div></div>
-<div class="card metric"><div class="label">KML annotation lines</div><div class="value" id="mLines">0</div><div class="sub">All supported annotation labels</div></div>
-<div class="card metric"><div class="label">Grant time</div><div class="value" id="mMin">0 min</div><div class="sub">Blocks × minutes</div></div>
-<div class="card metric"><div class="label">KML grant pay</div><div class="value" id="mPay">$0.00</div><div class="sub">Hourly rate supplied by user</div></div>
+
+  <div class="card metric">
+
+    <div class="label">
+      Matched KML blocks
+    </div>
+
+    <div
+      class="value"
+      id="mBlocks">
+      0
+    </div>
+
+    <div class="sub">
+      Paid to selected worker
+    </div>
+
+  </div>
+
+
+  <div class="card metric">
+
+    <div class="label">
+      KML annotation lines
+    </div>
+
+    <div
+      class="value"
+      id="mLines">
+      0
+    </div>
+
+    <div class="sub">
+      All supported annotation labels
+    </div>
+
+  </div>
+
+
+  <div class="card metric">
+
+    <div class="label">
+      Grant time
+    </div>
+
+    <div
+      class="value"
+      id="mMin">
+      0 min
+    </div>
+
+    <div class="sub">
+      Blocks × minutes
+    </div>
+
+  </div>
+
+
+  <div class="card metric">
+
+    <div class="label">
+      KML grant pay
+    </div>
+
+    <div
+      class="value"
+      id="mPay">
+      $0.00
+    </div>
+
+    <div class="sub">
+      Hourly rate supplied by user
+    </div>
+
+  </div>
+
 </section>
+
+
+<!-- RESULTS -->
 
 <section class="panel">
-<div class="tabs">
-<button class="tab active" data-tab="summary">Pay summary</button><button class="tab" data-tab="paid">Antony paid rows</button><button class="tab" data-tab="excluded">Excluded KML</button><button class="tab" data-tab="csvmissing">CSV without KML</button><button class="tab" data-tab="checks">Checks</button>
-</div>
-<div id="summary" class="tabcontent"></div><div id="paid" class="tabcontent" style="display:none"></div><div id="excluded" class="tabcontent" style="display:none"></div><div id="csvmissing" class="tabcontent" style="display:none"></div><div id="checks" class="tabcontent" style="display:none"></div>
+
+  <div class="tabs">
+
+    <button
+      type="button"
+      class="tab active"
+      data-tab="summary">
+      Pay summary
+    </button>
+
+    <button
+      type="button"
+      class="tab"
+      data-tab="paid">
+      Antony paid rows
+    </button>
+
+    <button
+      type="button"
+      class="tab"
+      data-tab="excluded">
+      Excluded KML
+    </button>
+
+    <button
+      type="button"
+      class="tab"
+      data-tab="csvmissing">
+      CSV without KML
+    </button>
+
+    <button
+      type="button"
+      class="tab"
+      data-tab="checks">
+      Checks
+    </button>
+
+  </div>
+
+
+  <div
+    id="summary"
+    class="tabcontent">
+  </div>
+
+
+  <div
+    id="paid"
+    class="tabcontent"
+    style="display:none">
+  </div>
+
+
+  <div
+    id="excluded"
+    class="tabcontent"
+    style="display:none">
+  </div>
+
+
+  <div
+    id="csvmissing"
+    class="tabcontent"
+    style="display:none">
+  </div>
+
+
+  <div
+    id="checks"
+    class="tabcontent"
+    style="display:none">
+  </div>
+
 </section>
 
-<section class="panel"><h2>Pay note</h2><div id="payNote" class="note">Run the calculator to generate the pay note.</div></section>
-<div class="footer">Professional route-pay audit • Dark/light theme • Local browser processing • No files are uploaded to a server by this page</div>
+
+<!-- PAY NOTE -->
+
+<section class="panel">
+
+  <h2>Pay note</h2>
+
+  <div
+    id="payNote"
+    class="note">
+    Run the calculator to generate the pay note.
+  </div>
+
+</section>
+
+
+<div class="footer">
+  Professional route-pay audit • Dark/light theme •
+  Local browser processing •
+  No files are uploaded to a server by this page
 </div>
 
-<script>
-let csvRows=[], kmlGroups=[], result=null, csvName='', kmlName='';
+</div>
 
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const money=n=>'$'+Number(n||0).toFixed(2);
-function setStatus(t,cls=''){ $('status').textContent=t; $('status').className='status '+cls; }
+
+<script>
+
+/* ============================================================
+   GLOBAL STATE
+============================================================ */
+
+let csvRows = [];
+let kmlGroups = [];
+let result = null;
+
+let csvName = "";
+let kmlName = "";
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+const $ = id => document.getElementById(id);
+
+
+const esc = value =>
+  String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      }[char])
+    );
+
+
+const money = value =>
+  "$" + Number(value || 0).toFixed(2);
+
+
+function setStatus(text, cls = ""){
+
+  const status = $("status");
+
+  if(!status) return;
+
+  status.textContent = text;
+
+  status.className = "status " + cls;
+}
+
+
+/* ============================================================
+   CSV PARSER
+============================================================ */
 
 function parseCSV(text){
-  const rows=[]; let row=[], cell='', q=false;
-  for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];
-    if(c=='"'&&q&&n=='"'){cell+='"';i++;continue}
-    if(c=='"'){q=!q;continue}
-    if(c==','&&!q){row.push(cell);cell='';continue}
-    if((c=='\n'||c=='\r')&&!q){if(c=='\r'&&n=='\n')i++;row.push(cell);cell='';if(row.some(x=>x.trim()!==''))rows.push(row);row=[];continue}
-    cell+=c;
+
+  const rows = [];
+
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for(let i = 0; i < text.length; i++){
+
+    const c = text[i];
+    const n = text[i + 1];
+
+    /* escaped quote */
+
+    if(c === '"' && quoted && n === '"'){
+
+      cell += '"';
+
+      i++;
+
+      continue;
+    }
+
+
+    /* quote start/end */
+
+    if(c === '"'){
+
+      quoted = !quoted;
+
+      continue;
+    }
+
+
+    /* comma */
+
+    if(c === "," && !quoted){
+
+      row.push(cell);
+
+      cell = "";
+
+      continue;
+    }
+
+
+    /* newline */
+
+    if(
+      (c === "\n" || c === "\r") &&
+      !quoted
+    ){
+
+      if(c === "\r" && n === "\n"){
+        i++;
+      }
+
+      row.push(cell);
+
+      cell = "";
+
+      if(
+        row.some(
+          value =>
+            String(value).trim() !== ""
+        )
+      ){
+
+        rows.push(row);
+      }
+
+      row = [];
+
+      continue;
+    }
+
+
+    cell += c;
   }
-  row.push(cell);if(row.some(x=>x.trim()!==''))rows.push(row);return rows;
+
+
+  /* final row */
+
+  row.push(cell);
+
+  if(
+    row.some(
+      value =>
+        String(value).trim() !== ""
+    )
+  ){
+
+    rows.push(row);
+  }
+
+
+  return rows;
 }
-function norm(s){return String(s||'').toLowerCase().replace(/\s+/g,' ').trim().replace(/^#/, '')}
+
+
+/* ============================================================
+   NORMALIZATION
+============================================================ */
+
+function norm(value){
+
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^#/, "");
+}
+
+
+function routeKey(value){
+
+  return norm(value)
+    .replace(/^#?/, "")
+    .replace(/\|/g, " ");
+}
+
+
+function directionLocation(value){
+
+  return routeKey(value);
+}
+
+
+function kmlLocation(block){
+
+  return norm(
+    block
+      .replace(/^#/, "")
+      .replace(/\|/g, " ")
+  );
+}
+
+
+/* ============================================================
+   KML PARSER
+============================================================ */
+
 function parseKML(text){
-  const xml=new DOMParser().parseFromString(text,'text/xml');
-  const ps=[...xml.getElementsByTagNameNS('*','Placemark')];
-  const groups=[];let cur=null;
-  ps.forEach(p=>{
-    const name=(p.getElementsByTagNameNS('*','name')[0]?.textContent||'').trim();
-    if(name.startsWith('#')){cur={block:name,items:[]};groups.push(cur)}
-    else if(cur)cur.items.push(name);
-  });return groups;
+
+  const parser = new DOMParser();
+
+  const xml =
+    parser.parseFromString(
+      text,
+      "text/xml"
+    );
+
+
+  /* Detect XML parser errors */
+
+  const parserError =
+    xml.getElementsByTagName("parsererror")[0];
+
+  if(parserError){
+
+    throw new Error(
+      "The KML file could not be read as valid XML."
+    );
+  }
+
+
+  const placemarks =
+    [
+      ...xml.getElementsByTagNameNS(
+        "*",
+        "Placemark"
+      )
+    ];
+
+
+  const groups = [];
+
+  let current = null;
+
+
+  placemarks.forEach(placemark => {
+
+    const name =
+      (
+        placemark
+          .getElementsByTagNameNS(
+            "*",
+            "name"
+          )[0]
+          ?.textContent || ""
+      ).trim();
+
+
+    if(!name){
+
+      return;
+    }
+
+
+    /*
+      A # block starts a new KML block.
+    */
+
+    if(name.startsWith("#")){
+
+      current = {
+        block:name,
+        items:[]
+      };
+
+      groups.push(current);
+
+      return;
+    }
+
+
+    /*
+      Every following annotation belongs
+      to the current block.
+    */
+
+    if(current){
+
+      current.items.push(name);
+    }
+
+  });
+
+
+  return groups;
 }
-function kmlLocation(block){return norm(block.replace(/^#/,'').replace(/\|/g,' '))}
+
+
+/* ============================================================
+   ANNOTATION LABEL DETECTION
+============================================================ */
+
 function labelType(name){
-  const x=norm(name);
-  if(x==='r0'||/^r\d+$/.test(x)) return x.toUpperCase();
-  if(x.includes('location description')||x==='locationdescription') return 'Location Description';
-  if(x.includes('busstop')||x.includes('bus stop')) return 'BusStop';
-  if(x.includes('buslane')||x.includes('bus lane')) return 'BusLane';
-  if(x.includes('bikelane')||x.includes('bike lane')||x.includes('bike_lane')) return 'BikeLane';
+
+  const x = norm(name);
+
+
+  /*
+    R0, R1, R2 ... R20 ... R100 etc.
+    No maximum.
+  */
+
+  if(
+    x === "r0" ||
+    /^r\d+$/.test(x)
+  ){
+
+    return x.toUpperCase();
+  }
+
+
+  if(
+    x.includes("location description") ||
+    x === "locationdescription"
+  ){
+
+    return "Location Description";
+  }
+
+
+  if(
+    x.includes("busstop") ||
+    x.includes("bus stop")
+  ){
+
+    return "BusStop";
+  }
+
+
+  if(
+    x.includes("buslane") ||
+    x.includes("bus lane")
+  ){
+
+    return "BusLane";
+  }
+
+
+  if(
+    x.includes("bikelane") ||
+    x.includes("bike lane") ||
+    x.includes("bike_lane")
+  ){
+
+    return "BikeLane";
+  }
+
+
   return null;
 }
+
+
+/* ============================================================
+   COUNT KML ANNOTATIONS
+============================================================ */
+
 function counts(items){
-  const c={};items.forEach(x=>{const t=labelType(x);if(t)c[t]=(c[t]||0)+1});return c;
+
+  const counts = {};
+
+
+  items.forEach(item => {
+
+    const type =
+      labelType(item);
+
+
+    if(type){
+
+      counts[type] =
+        (counts[type] || 0) + 1;
+    }
+
+  });
+
+
+  return counts;
 }
-function routeKey(s){return norm(s).replace(/^#?/,'').replace(/\|/g,' ')}
-function directionLocation(s){return routeKey(s)}
+
+
+/* ============================================================
+   ASSIGNEE CHECK
+============================================================ */
+
 function rowAssigned(row){
-  const email=$('worker').value.trim().toLowerCase();
-  const col=Math.max(1,Number($('assigneeCol').value)||22)-1;
-  return String(row[col]||'').trim().toLowerCase()===email;
+
+  const email =
+    $("worker")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const column =
+    Math.max(
+      1,
+      Number(
+        $("assigneeCol").value
+      ) || 22
+    ) - 1;
+
+
+  return String(
+    row[column] || ""
+  )
+    .trim()
+    .toLowerCase() === email;
 }
+
+
+/* ============================================================
+   FIND CSV → KML MATCHES
+============================================================ */
+
 function findMatches(){
-  const used=new Set(), paid=[], missing=[];
-  csvRows.forEach((row,i)=>{
-    if(i<2||!rowAssigned(row))return;
-    const loc=directionLocation(row[0]);
-    let j=kmlGroups.findIndex((g,idx)=>!used.has(idx)&&kmlLocation(g.block)===loc);
-    if(j<0) missing.push({row:i+1,location:row[0]});
-    else{used.add(j);paid.push({csvIndex:i,kmlIndex:j,row,g:kmlGroups[j],counts:counts(kmlGroups[j].items)})}
+
+  const used = new Set();
+
+  const paid = [];
+
+  const missing = [];
+
+
+  csvRows.forEach((row, index) => {
+
+    /*
+      Existing CSV format has two initial
+      non-data/header rows.
+    */
+
+    if(index < 2){
+
+      return;
+    }
+
+
+    if(!rowAssigned(row)){
+
+      return;
+    }
+
+
+    const location =
+      directionLocation(
+        row[0]
+      );
+
+
+    let matchIndex = -1;
+
+
+    for(
+      let j = 0;
+      j < kmlGroups.length;
+      j++
+    ){
+
+      if(
+        used.has(j)
+      ){
+
+        continue;
+      }
+
+
+      if(
+        kmlLocation(
+          kmlGroups[j].block
+        ) === location
+      ){
+
+        matchIndex = j;
+
+        break;
+      }
+
+    }
+
+
+    if(matchIndex < 0){
+
+      missing.push({
+
+        row:index + 1,
+
+        location:row[0] || ""
+
+      });
+
+    }
+    else{
+
+      used.add(matchIndex);
+
+
+      paid.push({
+
+        csvIndex:index,
+
+        kmlIndex:matchIndex,
+
+        row:row,
+
+        g:kmlGroups[matchIndex],
+
+        counts:
+          counts(
+            kmlGroups[
+              matchIndex
+            ].items
+          )
+
+      });
+
+    }
+
   });
-  return {paid,missing,used};
+
+
+  return {
+    paid,
+    missing,
+    used
+  };
 }
-function annotationColumns(p){
-  const c=p.counts; const keys=Object.keys(c).sort((a,b)=>{
-    const ra=a.match(/^R(\d+)$/),rb=b.match(/^R(\d+)$/);
-    if(ra&&rb)return +ra[1]-+rb[1];
-    if(ra)return -1;if(rb)return 1;
-    return a.localeCompare(b);
+
+
+/* ============================================================
+   SORT ANNOTATION TYPES
+============================================================ */
+
+function sortAnnotationTypes(types){
+
+  return [...types].sort(
+    (a,b) => {
+
+      const ra =
+        a.match(/^R(\d+)$/);
+
+      const rb =
+        b.match(/^R(\d+)$/);
+
+
+      if(ra && rb){
+
+        return (
+          Number(ra[1]) -
+          Number(rb[1])
+        );
+      }
+
+
+      if(ra){
+
+        return -1;
+      }
+
+
+      if(rb){
+
+        return 1;
+      }
+
+
+      return a.localeCompare(b);
+
+    }
+  );
+}
+
+
+/* ============================================================
+   TABLE RENDERER
+============================================================ */
+
+function renderTable(
+  container,
+  columns,
+  rows
+){
+
+  if(!container){
+
+    return;
+  }
+
+
+  if(!rows.length){
+
+    container.innerHTML =
+      '<div class="empty">No records.</div>';
+
+    return;
+  }
+
+
+  let html =
+    '<div class="tablewrap">' +
+    '<table>' +
+    '<thead>' +
+    '<tr>';
+
+
+  columns.forEach(column => {
+
+    html +=
+      "<th>" +
+      esc(column) +
+      "</th>";
+
   });
-  return keys;
+
+
+  html +=
+    "</tr>" +
+    "</thead>" +
+    "<tbody>";
+
+
+  rows.forEach(row => {
+
+    html += "<tr>";
+
+
+    columns.forEach(column => {
+
+      html +=
+        "<td>" +
+        esc(
+          row[column] ?? ""
+        ) +
+        "</td>";
+
+    });
+
+
+    html += "</tr>";
+
+  });
+
+
+  html +=
+    "</tbody>" +
+    "</table>" +
+    "</div>";
+
+
+  container.innerHTML = html;
 }
-function renderTable(container,cols,rows){
-  if(!rows.length){container.innerHTML='<div class="empty">No records.</div>';return}
-  container.innerHTML='<div class="tablewrap"><table><thead><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+
-  rows.map(r=>'<tr>'+cols.map(c=>'<td>'+esc(r[c]??'')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
-}
+
+
+/* ============================================================
+   MAIN CALCULATION
+============================================================ */
+
 function calculate(){
-  if(!csvRows.length||!kmlGroups.length){setStatus('Please select both CSV and KML files first.','err');return}
-  const rate=Number($('hourly').value); if(!(rate>=0)){setStatus('Paste the KML pay/hour before calculating.','err');return}
-  const mins=Number($('minutes').value);const {paid,missing,used}=findMatches();
-  const types=new Set(['Location Description','BusStop','BusLane','BikeLane']);
-  paid.forEach(p=>Object.keys(p.counts).forEach(t=>types.add(t)));
-  const typeList=[...types].sort((a,b)=>{const ra=a.match(/^R(\d+)$/),rb=b.match(/^R(\d+)$/);if(ra&&rb)return +ra[1]-+rb[1];if(ra)return -1;if(rb)return 1;return a.localeCompare(b)});
-  const lineRows=paid.map(p=>{const o={Location:p.row[0], 'CSV Note':p.row[39]||'', 'CSV Bus Lane':p.row[31]||''};typeList.forEach(t=>o[t]=p.counts[t]||0);o['Total KML lines']=1+typeList.reduce((s,t)=>s+(p.counts[t]||0),0);o['Grant minutes']=mins;o['KML pay']=money(mins*rate/60);return o});
-  const totals={};typeList.forEach(t=>totals[t]=lineRows.reduce((s,r)=>s+(Number(r[t])||0),0));
-  const paidLines=lineRows.reduce((s,r)=>s+r['Total KML lines'],0), blocks=paid.length, totalMin=blocks*mins, pay=totalMin*rate/60;
-  const excluded=kmlGroups.map((g,i)=>({g,i})).filter(x=>!used.has(x.i)).map(x=>{const c=counts(x.g.items),o={KML Block:x.g.block,Location:kmlLocation(x.g.block)};typeList.forEach(t=>o[t]=c[t]||0);o['Total KML lines']=1+typeList.reduce((s,t)=>s+(c[t]||0),0);o.Reason='Not represented by an Antony CSV row; excluded from Antony pay';return o});
-  const noBusStopLane=lineRows.filter(r=>Number(r.BusLane)>0&&Number(r.BusStop)===0);
-  const noBusStopBike=lineRows.filter(r=>Number(r.BikeLane)>0&&Number(r.BusStop)===0);
-  result={paid,lineRows,excluded,missing,typeList,totals,paidLines,blocks,totalMin,pay,excludedLines:excluded.reduce((s,r)=>s+r['Total KML lines'],0),noBusStopLane,noBusStopBike};
-  $('mBlocks').textContent=blocks;$('mLines').textContent=paidLines;$('mMin').textContent=totalMin+' min';$('mPay').textContent=money(pay);
-  const rows=[['Worker',$('worker').value],['CSV rows assigned to worker',csvRows.filter((r,i)=>i>=2&&rowAssigned(r)).length],['CSV rows matched to KML',blocks],['CSV rows without matching KML',missing.length],['KML blocks in file',kmlGroups.length],['KML blocks excluded',excluded.length],['Total KML annotation lines paid',paidLines],['Grant minutes',totalMin],['KML pay',pay],['Excluded KML annotation lines',result.excludedLines]];
-  const summaryRows=rows.map(x=>({Item:x[0],Value:x[1]}));
-  renderTable($('summary'),['Item','Value'],summaryRows);
-  renderTable($('paid'),['Location','CSV Note','CSV Bus Lane',...typeList,'Total KML lines','Grant minutes','KML pay'],lineRows);
-  renderTable($('excluded'),['KML Block','Location',...typeList,'Total KML lines','Reason'],excluded);
-  renderTable($('csvmissing'),['CSV Row','Location'],missing);
-  const checkRows=[
-    {Check:'BusLane present without BusStop',Count:noBusStopLane.length,Details:noBusStopLane.map(x=>x.Location).join(' | ')||'None'},
-    {Check:'BikeLane present without BusStop',Count:noBusStopBike.length,Details:noBusStopBike.map(x=>x.Location).join(' | ')||'None'},
-    {Check:'All R labels supported dynamically',Count:'Yes',Details:'R0, R1, R2 … R20+ are detected automatically; no hard-coded maximum.'},
-    {Check:'Payment method',Count:'Per matched block',Details:`${mins} minutes × ${blocks} matched blocks at ${money(rate)}/hour`},
-    {Check:'Excluded KML',Count:excluded.length,Details:'KML blocks not represented in the worker CSV are not paid.'}
-  ];
-  renderTable($('checks'),['Check','Count','Details'],checkRows);
-  const note=`Only KML blocks represented by ${$('worker').value} in the CSV are paid. KML annotations/blocks that are not in the CSV do not belong to this worker and are excluded from pay.
+
+  try{
+
+    if(!csvRows.length){
+
+      setStatus(
+        "Please select the CSV file first.",
+        "err"
+      );
+
+      return;
+    }
+
+
+    if(!kmlGroups.length){
+
+      setStatus(
+        "Please select the KML file first.",
+        "err"
+      );
+
+      return;
+    }
+
+
+    const rate =
+      Number(
+        $("hourly").value
+      );
+
+
+    if(
+      !Number.isFinite(rate) ||
+      rate < 0
+    ){
+
+      setStatus(
+        "Paste the KML pay/hour before calculating.",
+        "err"
+      );
+
+      $("hourly").focus();
+
+      return;
+    }
+
+
+    const minutes =
+      Number(
+        $("minutes").value
+      );
+
+
+    if(
+      !Number.isFinite(minutes) ||
+      minutes < 0
+    ){
+
+      setStatus(
+        "Minutes per KML block must be 0 or greater.",
+        "err"
+      );
+
+      $("minutes").focus();
+
+      return;
+    }
+
+
+    const matching =
+      findMatches();
+
+
+    const paid =
+      matching.paid;
+
+    const missing =
+      matching.missing;
+
+    const used =
+      matching.used;
+
+
+    /*
+      Always support these.
+    */
+
+    const annotationTypes =
+      new Set([
+        "Location Description",
+        "BusStop",
+        "BusLane",
+        "BikeLane"
+      ]);
+
+
+    /*
+      Add every R label found.
+      R0, R1 ... R20 ... R100 ...
+    */
+
+    paid.forEach(item => {
+
+      Object.keys(
+        item.counts
+      ).forEach(type => {
+
+        annotationTypes.add(type);
+
+      });
+
+    });
+
+
+    const typeList =
+      sortAnnotationTypes(
+        annotationTypes
+      );
+
+
+    /* ========================================================
+       PAID ROWS
+    ======================================================== */
+
+    const lineRows =
+      paid.map(item => {
+
+        const output = {
+
+          Location:
+            item.row[0] || "",
+
+          "CSV Note":
+            item.row[39] || "",
+
+          "CSV Bus Lane":
+            item.row[31] || ""
+
+        };
+
+
+        typeList.forEach(type => {
+
+          output[type] =
+            item.counts[type] || 0;
+
+        });
+
+
+        output["Total KML lines"] =
+          1 +
+          typeList.reduce(
+            (sum,type) =>
+              sum +
+              (
+                Number(
+                  item.counts[type]
+                ) || 0
+              ),
+            0
+          );
+
+
+        output["Grant minutes"] =
+          minutes;
+
+
+        output["KML pay"] =
+          money(
+            minutes *
+            rate /
+            60
+          );
+
+
+        return output;
+
+      });
+
+
+    /* ========================================================
+       EXCLUDED KML
+    ======================================================== */
+
+    const excluded =
+      kmlGroups
+        .map(
+          (group,index) => ({
+            group,
+            index
+          })
+        )
+        .filter(
+          item =>
+            !used.has(
+              item.index
+            )
+        )
+        .map(item => {
+
+          const annotationCounts =
+            counts(
+              item.group.items
+            );
+
+
+          /*
+            IMPORTANT:
+            "KML Block" is quoted because
+            the key contains a space.
+          */
+
+          const output = {
+
+            "KML Block":
+              item.group.block,
+
+            Location:
+              kmlLocation(
+                item.group.block
+              )
+
+          };
+
+
+          typeList.forEach(type => {
+
+            output[type] =
+              annotationCounts[type] || 0;
+
+          });
+
+
+          output["Total KML lines"] =
+            1 +
+            typeList.reduce(
+              (sum,type) =>
+                sum +
+                (
+                  Number(
+                    annotationCounts[type]
+                  ) || 0
+                ),
+              0
+            );
+
+
+          output.Reason =
+            "KML block is not represented by the selected worker's CSV row; excluded from worker pay";
+
+
+          return output;
+
+        });
+
+
+    /* ========================================================
+       TOTALS
+    ======================================================== */
+
+    const totals = {};
+
+
+    typeList.forEach(type => {
+
+      totals[type] =
+        lineRows.reduce(
+          (sum,row) =>
+            sum +
+            (
+              Number(
+                row[type]
+              ) || 0
+            ),
+          0
+        );
+
+    });
+
+
+    const paidLines =
+      lineRows.reduce(
+        (sum,row) =>
+          sum +
+          (
+            Number(
+              row["Total KML lines"]
+            ) || 0
+          ),
+        0
+      );
+
+
+    const blocks =
+      paid.length;
+
+
+    const totalMinutes =
+      blocks *
+      minutes;
+
+
+    const pay =
+      totalMinutes *
+      rate /
+      60;
+
+
+    const excludedLines =
+      excluded.reduce(
+        (sum,row) =>
+          sum +
+          (
+            Number(
+              row["Total KML lines"]
+            ) || 0
+          ),
+        0
+      );
+
+
+    /* ========================================================
+       BUS LANE WITHOUT BUS STOP
+    ======================================================== */
+
+    const noBusStopLane =
+      lineRows.filter(
+        row =>
+          Number(
+            row["BusLane"]
+          ) > 0 &&
+          Number(
+            row["BusStop"]
+          ) === 0
+      );
+
+
+    /* ========================================================
+       BIKE LANE WITHOUT BUS STOP
+    ======================================================== */
+
+    const noBusStopBike =
+      lineRows.filter(
+        row =>
+          Number(
+            row["BikeLane"]
+          ) > 0 &&
+          Number(
+            row["BusStop"]
+          ) === 0
+      );
+
+
+    /* ========================================================
+       SAVE RESULT
+    ======================================================== */
+
+    result = {
+
+      paid,
+
+      lineRows,
+
+      excluded,
+
+      missing,
+
+      typeList,
+
+      totals,
+
+      paidLines,
+
+      blocks,
+
+      totalMin:totalMinutes,
+
+      pay,
+
+      excludedLines,
+
+      noBusStopLane,
+
+      noBusStopBike
+
+    };
+
+
+    /* ========================================================
+       UPDATE METRICS
+    ======================================================== */
+
+    $("mBlocks").textContent =
+      blocks;
+
+
+    $("mLines").textContent =
+      paidLines;
+
+
+    $("mMin").textContent =
+      totalMinutes +
+      " min";
+
+
+    $("mPay").textContent =
+      money(pay);
+
+
+    /* ========================================================
+       SUMMARY
+    ======================================================== */
+
+    const assignedCount =
+      csvRows.filter(
+        (row,index) =>
+          index >= 2 &&
+          rowAssigned(row)
+      ).length;
+
+
+    const summaryRows = [
+
+      {
+        Item:"Worker",
+        Value:$("worker").value
+      },
+
+      {
+        Item:"CSV rows assigned to worker",
+        Value:assignedCount
+      },
+
+      {
+        Item:"CSV rows matched to KML",
+        Value:blocks
+      },
+
+      {
+        Item:"CSV rows without matching KML",
+        Value:missing.length
+      },
+
+      {
+        Item:"KML blocks in file",
+        Value:kmlGroups.length
+      },
+
+      {
+        Item:"KML blocks paid to worker",
+        Value:blocks
+      },
+
+      {
+        Item:"KML blocks excluded",
+        Value:excluded.length
+      },
+
+      {
+        Item:"Total KML annotation lines paid",
+        Value:paidLines
+      },
+
+      {
+        Item:"Grant rule",
+        Value:
+          minutes +
+          " minutes per matched KML block/row"
+      },
+
+      {
+        Item:"Grant minutes",
+        Value:totalMinutes
+      },
+
+      {
+        Item:"KML pay rate",
+        Value:money(rate) + "/hour"
+      },
+
+      {
+        Item:"KML grant pay",
+        Value:money(pay)
+      },
+
+      {
+        Item:"Excluded KML annotation lines",
+        Value:excludedLines
+      }
+
+    ];
+
+
+    renderTable(
+      $("summary"),
+      ["Item","Value"],
+      summaryRows
+    );
+
+
+    /* ========================================================
+       PAID ROWS TABLE
+    ======================================================== */
+
+    renderTable(
+      $("paid"),
+      [
+        "Location",
+        "CSV Note",
+        "CSV Bus Lane",
+        ...typeList,
+        "Total KML lines",
+        "Grant minutes",
+        "KML pay"
+      ],
+      lineRows
+    );
+
+
+    /* ========================================================
+       EXCLUDED TABLE
+    ======================================================== */
+
+    renderTable(
+      $("excluded"),
+      [
+        "KML Block",
+        "Location",
+        ...typeList,
+        "Total KML lines",
+        "Reason"
+      ],
+      excluded
+    );
+
+
+    /* ========================================================
+       CSV WITHOUT KML
+    ======================================================== */
+
+    renderTable(
+      $("csvmissing"),
+      [
+        "CSV Row",
+        "Location"
+      ],
+      missing
+    );
+
+
+    /* ========================================================
+       CHECKS
+    ======================================================== */
+
+    const checkRows = [
+
+      {
+        Check:
+          "BusLane present without BusStop",
+
+        Count:
+          noBusStopLane.length,
+
+        Details:
+          noBusStopLane.length
+            ? noBusStopLane
+                .map(
+                  row =>
+                    row.Location
+                )
+                .join(" | ")
+            : "None"
+      },
+
+
+      {
+        Check:
+          "BikeLane present without BusStop",
+
+        Count:
+          noBusStopBike.length,
+
+        Details:
+          noBusStopBike.length
+            ? noBusStopBike
+                .map(
+                  row =>
+                    row.Location
+                )
+                .join(" | ")
+            : "None"
+      },
+
+
+      {
+        Check:
+          "All R labels supported dynamically",
+
+        Count:
+          "YES",
+
+        Details:
+          "R0, R1, R2 … R20, R50, R100 and any other R-number are detected automatically."
+      },
+
+
+      {
+        Check:
+          "Payment method",
+
+        Count:
+          "Per matched block",
+
+        Details:
+          minutes +
+          " minutes × " +
+          blocks +
+          " matched blocks at " +
+          money(rate) +
+          "/hour"
+      },
+
+
+      {
+        Check:
+          "KML excluded from worker pay",
+
+        Count:
+          excluded.length,
+
+        Details:
+          "KML blocks not represented by the selected worker's CSV rows are excluded."
+      },
+
+
+      {
+        Check:
+          "KML payment is based on lines",
+
+        Count:
+          "NO",
+
+        Details:
+          "Payment is based on matched KML blocks/rows. All annotations inside those blocks are audited and counted."
+      }
+
+    ];
+
+
+    renderTable(
+      $("checks"),
+      [
+        "Check",
+        "Count",
+        "Details"
+      ],
+      checkRows
+    );
+
+
+    /* ========================================================
+       PAY NOTE
+    ======================================================== */
+
+    const worker =
+      $("worker").value.trim();
+
+
+    const note =
+
+`Only KML blocks represented by ${worker} in the CSV are paid. KML annotations/blocks that are not represented by this worker's CSV rows are excluded from this worker's pay.
 
 All annotation types inside a matched KML block are counted for the audit, including Location Description, BusStop, BusLane, BikeLane and every R label found (R0, R1, R2 … R20+).
 
-KML payment is based on blocks/rows, not individual annotation-line count:
-${blocks} matched blocks × ${mins} minutes × ${money(rate)}/hour ÷ 60 = ${money(pay)}.
+There is no hard-coded maximum R number. R0, R1, R2, R3, R4, R5, R20, R50, R100 and higher R numbers are detected automatically.
 
-Total paid KML annotation lines: ${paidLines}. Excluded KML blocks: ${excluded.length}. Excluded KML annotation lines: ${result.excludedLines}.`;
-  $('payNote').textContent=note;
-  setStatus(`Calculation complete: ${blocks} matched KML blocks, ${paidLines} annotation lines, ${money(pay)} KML pay.`,'ok');
+KML payment is based on matched blocks/rows, not individual annotation-line count:
+
+${blocks} matched blocks × ${minutes} minutes × ${money(rate)}/hour ÷ 60 = ${money(pay)}.
+
+Total paid KML annotation lines: ${paidLines}.
+
+Excluded KML blocks: ${excluded.length}.
+
+Excluded KML annotation lines: ${excludedLines}.
+
+CSV rows assigned to worker: ${assignedCount}.
+
+CSV rows matched to KML: ${blocks}.
+
+CSV rows without matching KML: ${missing.length}.`;
+
+
+    $("payNote").textContent =
+      note;
+
+
+    /* ========================================================
+       SUCCESS
+    ======================================================== */
+
+    setStatus(
+      "Calculation complete: " +
+      blocks +
+      " matched KML blocks, " +
+      paidLines +
+      " annotation lines, " +
+      money(pay) +
+      " KML pay.",
+      "ok"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Calculation error:",
+      error
+    );
+
+
+    setStatus(
+      "Calculation failed: " +
+      error.message,
+      "err"
+    );
+
+
+    const summary =
+      $("summary");
+
+
+    if(summary){
+
+      summary.innerHTML =
+        '<div class="error-box">' +
+        esc(
+          error.stack ||
+          error.message
+        ) +
+        "</div>";
+
+    }
+
+  }
+
 }
-$('csvFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;csvName=f.name;csvRows=parseCSV(await f.text());setStatus(`CSV loaded: ${f.name} (${csvRows.length} rows).`,'ok')};
-$('kmlFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;kmlName=f.name;kmlGroups=parseKML(await f.text());setStatus(`KML loaded: ${f.name} (${kmlGroups.length} blocks).`,'ok')};
-$('calculate').onclick=calculate;
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tabcontent').forEach(x=>x.style.display='none');b.classList.add('active');$(b.dataset.tab).style.display='block'});
-$('themeBtn').onclick=()=>{const dark=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=dark?'':'dark';$('themeBtn').textContent=dark?'☾ Dark theme':'☀ Light theme';localStorage.theme=dark?'light':'dark'};
-if(localStorage.theme==='dark'){document.documentElement.dataset.theme='dark';$('themeBtn').textContent='☀ Light theme'}
-$('resetBtn').onclick=()=>location.reload();
 
-$('export').onclick=()=>{
- if(!result){setStatus('Calculate the route first.','err');return}
- const escCSV=v=>`"${String(v??'').replaceAll('"','""')}"`;
- const sheets={
- 'PAY SUMMARY':[['Item','Value'],['Worker',$('worker').value],['CSV rows matched to KML',result.blocks],['KML blocks excluded',result.excluded.length],['KML annotation lines paid',result.paidLines],['Grant minutes',result.totalMin],['KML pay',result.pay],['Excluded KML annotation lines',result.excludedLines]],
- 'ANTONY PAID ROWS':[Object.keys(result.lineRows[0]||{Location:''}),...result.lineRows.map(r=>Object.values(r))],
- 'EXCLUDED KML':[Object.keys(result.excluded[0]||{KMLBlock:''}),...result.excluded.map(r=>Object.values(r))],
- 'CSV WITHOUT KML':[['CSV Row','Location'],...result.missing.map(x=>[x.row,x.location])],
- 'BUS LANE WITHOUT BUSSTOP':[['Location','BusLane','BusStop'],...result.noBusStopLane.map(x=>[x.Location,x.BusLane,x.BusStop])]
- };
- const parts=[]; for(const [name,data] of Object.entries(sheets)){parts.push(`<h2>${esc(name)}</h2><table border="1"><tr>${data[0].map(x=>`<th>${esc(x)}</th>`).join('')}</tr>${data.slice(1).map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</table>`)}
- const blob=new Blob([`<html><body>${parts.join('<br>')}</body></html>`],{type:'application/vnd.ms-excel'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(kmlName||'KML')+'_payment_google_sheets.xls';a.click();URL.revokeObjectURL(a.href);
-};
+
+/* ============================================================
+   CSV FILE BUTTON
+============================================================ */
+
+$("csvFile").addEventListener(
+  "change",
+  async function(event){
+
+    const file =
+      event.target.files &&
+      event.target.files[0];
+
+
+    if(!file){
+
+      return;
+    }
+
+
+    try{
+
+      csvName =
+        file.name;
+
+
+      const text =
+        await file.text();
+
+
+      csvRows =
+        parseCSV(text);
+
+
+      if(!csvRows.length){
+
+        throw new Error(
+          "The CSV file appears to be empty."
+        );
+      }
+
+
+      $("csvFileStatus").textContent =
+        file.name +
+        " • " +
+        csvRows.length +
+        " rows loaded";
+
+
+      $("csvFileStatus")
+        .classList.add("loaded");
+
+
+      setStatus(
+        "CSV loaded: " +
+        file.name +
+        " (" +
+        csvRows.length +
+        " rows).",
+        "ok"
+      );
+
+
+    }
+    catch(error){
+
+      console.error(
+        "CSV loading error:",
+        error
+      );
+
+
+      csvRows = [];
+
+
+      $("csvFileStatus").textContent =
+        "CSV could not be loaded";
+
+
+      $("csvFileStatus")
+        .classList.remove("loaded");
+
+
+      setStatus(
+        "CSV error: " +
+        error.message,
+        "err"
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   KML FILE BUTTON
+============================================================ */
+
+$("kmlFile").addEventListener(
+  "change",
+  async function(event){
+
+    const file =
+      event.target.files &&
+      event.target.files[0];
+
+
+    if(!file){
+
+      return;
+    }
+
+
+    try{
+
+      kmlName =
+        file.name;
+
+
+      const text =
+        await file.text();
+
+
+      kmlGroups =
+        parseKML(text);
+
+
+      if(!kmlGroups.length){
+
+        throw new Error(
+          "No KML blocks were found. The KML normally needs # block names."
+        );
+      }
+
+
+      $("kmlFileStatus").textContent =
+        file.name +
+        " • " +
+        kmlGroups.length +
+        " blocks loaded";
+
+
+      $("kmlFileStatus")
+        .classList.add("loaded");
+
+
+      setStatus(
+        "KML loaded: " +
+        file.name +
+        " (" +
+        kmlGroups.length +
+        " blocks).",
+        "ok"
+      );
+
+    }
+    catch(error){
+
+      console.error(
+        "KML loading error:",
+        error
+      );
+
+
+      kmlGroups = [];
+
+
+      $("kmlFileStatus").textContent =
+        "KML could not be loaded";
+
+
+      $("kmlFileStatus")
+        .classList.remove("loaded");
+
+
+      setStatus(
+        "KML error: " +
+        error.message,
+        "err"
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   CALCULATE BUTTON
+============================================================ */
+
+$("calculate").addEventListener(
+  "click",
+  function(){
+
+    calculate();
+
+  }
+);
+
+
+/* ============================================================
+   TABS
+============================================================ */
+
+document
+  .querySelectorAll(".tab")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function(){
+
+        const tabName =
+          button.dataset.tab;
+
+
+        /*
+          Deactivate every tab.
+        */
+
+        document
+          .querySelectorAll(".tab")
+          .forEach(tab => {
+
+            tab.classList.remove(
+              "active"
+            );
+
+          });
+
+
+        /*
+          Hide every content area.
+        */
+
+        document
+          .querySelectorAll(".tabcontent")
+          .forEach(content => {
+
+            content.style.display =
+              "none";
+
+          });
+
+
+        /*
+          Activate clicked tab.
+        */
+
+        button.classList.add(
+          "active"
+        );
+
+
+        const target =
+          $(tabName);
+
+
+        if(target){
+
+          target.style.display =
+            "block";
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* ============================================================
+   DARK / LIGHT THEME
+============================================================ */
+
+function updateThemeButton(){
+
+  const isDark =
+    document.documentElement
+      .dataset
+      .theme === "dark";
+
+
+  $("themeBtn").textContent =
+    isDark
+      ? "☀ Light theme"
+      : "☾ Dark theme";
+}
+
+
+$("themeBtn").addEventListener(
+  "click",
+  function(){
+
+    const isDark =
+      document.documentElement
+        .dataset
+        .theme === "dark";
+
+
+    if(isDark){
+
+      document.documentElement
+        .removeAttribute(
+          "data-theme"
+        );
+
+
+      localStorage.setItem(
+        "annotationPayTheme",
+        "light"
+      );
+
+    }
+    else{
+
+      document.documentElement
+        .setAttribute(
+          "data-theme",
+          "dark"
+        );
+
+
+      localStorage.setItem(
+        "annotationPayTheme",
+        "dark"
+      );
+
+    }
+
+
+    updateThemeButton();
+
+  }
+);
+
+
+/* Restore theme */
+
+if(
+  localStorage.getItem(
+    "annotationPayTheme"
+  ) === "dark"
+){
+
+  document.documentElement
+    .setAttribute(
+      "data-theme",
+      "dark"
+    );
+
+}
+
+
+updateThemeButton();
+
+
+/* ============================================================
+   RESET BUTTON
+============================================================ */
+
+$("resetBtn").addEventListener(
+  "click",
+  function(){
+
+    /*
+      Fully reset the application
+      without needing to refresh the page.
+    */
+
+    csvRows = [];
+
+    kmlGroups = [];
+
+    result = null;
+
+    csvName = "";
+
+    kmlName = "";
+
+
+    $("csvFile").value = "";
+
+    $("kmlFile").value = "";
+
+
+    $("csvFileStatus").textContent =
+      "No CSV selected";
+
+
+    $("kmlFileStatus").textContent =
+      "No KML selected";
+
+
+    $("csvFileStatus")
+      .classList.remove(
+        "loaded"
+      );
+
+
+    $("kmlFileStatus")
+      .classList.remove(
+        "loaded"
+      );
+
+
+    $("hourly").value = "";
+
+    $("minutes").value = "6";
+
+    $("fullPay").value = "0.25";
+
+    $("lowPay").value = "0.05";
+
+    $("assigneeCol").value = "22";
+
+    $("worker").value =
+      "antonymbali96@gmail.com";
+
+
+    $("mBlocks").textContent =
+      "0";
+
+    $("mLines").textContent =
+      "0";
+
+    $("mMin").textContent =
+      "0 min";
+
+    $("mPay").textContent =
+      "$0.00";
+
+
+    $("summary").innerHTML =
+      "";
+
+
+    $("paid").innerHTML =
+      "";
+
+
+    $("excluded").innerHTML =
+      "";
+
+
+    $("csvmissing").innerHTML =
+      "";
+
+
+    $("checks").innerHTML =
+      "";
+
+
+    $("payNote").textContent =
+      "Run the calculator to generate the pay note.";
+
+
+    /*
+      Return to first tab.
+    */
+
+    document
+      .querySelectorAll(".tab")
+      .forEach(
+        tab =>
+          tab.classList.remove(
+            "active"
+          )
+      );
+
+
+    document
+      .querySelectorAll(".tabcontent")
+      .forEach(
+        content =>
+          content.style.display =
+            "none"
+      );
+
+
+    const firstTab =
+      document.querySelector(
+        '.tab[data-tab="summary"]'
+      );
+
+
+    if(firstTab){
+
+      firstTab.classList.add(
+        "active"
+      );
+
+    }
+
+
+    $("summary").style.display =
+      "block";
+
+
+    setStatus(
+      "Calculator reset. Waiting for CSV and KML.",
+      ""
+    );
+
+  }
+);
+
+
+/* ============================================================
+   GOOGLE SHEETS / EXCEL EXPORT
+============================================================ */
+
+$("export").addEventListener(
+  "click",
+  function(){
+
+    exportWorkbook();
+
+  }
+);
+
+
+function exportWorkbook(){
+
+  try{
+
+    if(!result){
+
+      setStatus(
+        "Calculate the route first before exporting.",
+        "err"
+      );
+
+      return;
+    }
+
+
+    if(
+      !result.lineRows.length &&
+      !result.excluded.length
+    ){
+
+      setStatus(
+        "There is no calculation data to export.",
+        "err"
+      );
+
+      return;
+    }
+
+
+    /*
+      Safe Excel/Google Sheets cell escaping.
+    */
+
+    function escCSV(value){
+
+      return (
+        '"' +
+        String(
+          value ?? ""
+        )
+          .replaceAll(
+            '"',
+            '""'
+          ) +
+        '"'
+      );
+
+    }
+
+
+    /*
+      Convert array of arrays to HTML table.
+    */
+
+    function makeSheet(
+      sheetName,
+      data
+    ){
+
+      let html =
+        '<section style="margin-bottom:35px;">' +
+        "<h2>" +
+        esc(sheetName) +
+        "</h2>" +
+        '<table border="1" cellspacing="0" cellpadding="6">' +
+        "<thead>" +
+        "<tr>";
+
+
+      const headers =
+        data[0] || [];
+
+
+      headers.forEach(header => {
+
+        html +=
+          "<th>" +
+          esc(header) +
+          "</th>";
+
+      });
+
+
+      html +=
+        "</tr>" +
+        "</thead>" +
+        "<tbody>";
+
+
+      data
+        .slice(1)
+        .forEach(row => {
+
+          html += "<tr>";
+
+
+          headers.forEach(
+            (_,index) => {
+
+              html +=
+                "<td>" +
+                esc(
+                  row[index] ?? ""
+                ) +
+                "</td>";
+
+            }
+          );
+
+
+          html += "</tr>";
+
+        });
+
+
+      html +=
+        "</tbody>" +
+        "</table>" +
+        "</section>";
+
+
+      return html;
+    }
+
+
+    /* ========================================================
+       PAY SUMMARY SHEET
+    ======================================================== */
+
+    const summarySheet = [
+
+      [
+        "Item",
+        "Value"
+      ],
+
+      [
+        "Worker",
+        $("worker").value
+      ],
+
+      [
+        "CSV rows assigned to worker",
+        csvRows.filter(
+          (row,index) =>
+            index >= 2 &&
+            rowAssigned(row)
+        ).length
+      ],
+
+      [
+        "CSV rows matched to KML",
+        result.blocks
+      ],
+
+      [
+        "CSV rows without matching KML",
+        result.missing.length
+      ],
+
+      [
+        "KML blocks in file",
+        kmlGroups.length
+      ],
+
+      [
+        "KML blocks paid",
+        result.blocks
+      ],
+
+      [
+        "KML blocks excluded",
+        result.excluded.length
+      ],
+
+      [
+        "KML annotation lines paid",
+        result.paidLines
+      ],
+
+      [
+        "Grant rule",
+        $("minutes").value +
+        " minutes per matched KML block/row"
+      ],
+
+      [
+        "Grant minutes",
+        result.totalMin
+      ],
+
+      [
+        "KML hourly rate",
+        money(
+          Number(
+            $("hourly").value
+          )
+        )
+      ],
+
+      [
+        "KML grant pay",
+        money(result.pay)
+      ],
+
+      [
+        "Excluded KML annotation lines",
+        result.excludedLines
+      ]
+
+    ];
+
+
+    /* ========================================================
+       PAID ROWS SHEET
+    ======================================================== */
+
+    const paidHeaders =
+      Object.keys(
+        result.lineRows[0] || {
+          Location:""
+        }
+      );
+
+
+    const paidSheet = [
+
+      paidHeaders,
+
+      ...result.lineRows.map(
+        row =>
+          paidHeaders.map(
+            header =>
+              row[header] ?? ""
+          )
+      )
+
+    ];
+
+
+    /* ========================================================
+       EXCLUDED KML SHEET
+    ======================================================== */
+
+    const excludedHeaders =
+      Object.keys(
+        result.excluded[0] || {
+          "KML Block":"",
+          Location:""
+        }
+      );
+
+
+    const excludedSheet = [
+
+      excludedHeaders,
+
+      ...result.excluded.map(
+        row =>
+          excludedHeaders.map(
+            header =>
+              row[header] ?? ""
+          )
+      )
+
+    ];
+
+
+    /* ========================================================
+       CSV WITHOUT KML
+    ======================================================== */
+
+    const missingSheet = [
+
+      [
+        "CSV Row",
+        "Location"
+      ],
+
+      ...result.missing.map(
+        row =>
+          [
+            row.row,
+            row.location
+          ]
+      )
+
+    ];
+
+
+    /* ========================================================
+       BUS LANE WITHOUT BUS STOP
+    ======================================================== */
+
+    const busLaneSheet = [
+
+      [
+        "Location",
+        "BusLane",
+        "BusStop"
+      ],
+
+      ...result.noBusStopLane.map(
+        row =>
+          [
+            row.Location,
+            row.BusLane,
+            row.BusStop
+          ]
+      )
+
+    ];
+
+
+    /* ========================================================
+       BIKE LANE WITHOUT BUS STOP
+    ======================================================== */
+
+    const bikeLaneSheet = [
+
+      [
+        "Location",
+        "BikeLane",
+        "BusStop"
+      ],
+
+      ...result.noBusStopBike.map(
+        row =>
+          [
+            row.Location,
+            row.BikeLane,
+            row.BusStop
+          ]
+      )
+
+    ];
+
+
+    /* ========================================================
+       CHECKS SHEET
+    ======================================================== */
+
+    const checksSheet = [
+
+      [
+        "Check",
+        "Count",
+        "Details"
+      ],
+
+      [
+        "BusLane present without BusStop",
+        result.noBusStopLane.length,
+        result.noBusStopLane
+          .map(
+            row =>
+              row.Location
+          )
+          .join(" | ") ||
+          "None"
+      ],
+
+      [
+        "BikeLane present without BusStop",
+        result.noBusStopBike.length,
+        result.noBusStopBike
+          .map(
+            row =>
+              row.Location
+          )
+          .join(" | ") ||
+          "None"
+      ],
+
+      [
+        "All R labels supported dynamically",
+        "YES",
+        "R0, R1, R2 … R20+ and higher are detected automatically."
+      ],
+
+      [
+        "Payment method",
+        "Per matched block",
+        $("minutes").value +
+        " minutes × " +
+        result.blocks +
+        " matched blocks at " +
+        money(
+          Number(
+            $("hourly").value
+          )
+        ) +
+        "/hour"
+      ],
+
+      [
+        "Excluded KML",
+        result.excluded.length,
+        "KML blocks not represented in worker CSV are not paid."
+      ],
+
+      [
+        "Payment based on individual lines",
+        "NO",
+        "KML payment is based on matched blocks/rows."
+      ]
+
+    ];
+
+
+    /* ========================================================
+       PAY NOTE SHEET
+    ======================================================== */
+
+    const noteSheet = [
+
+      [
+        "Pay Note"
+      ],
+
+      [
+        $("payNote").textContent
+      ]
+
+    ];
+
+
+    /* ========================================================
+       BUILD COMPLETE WORKBOOK
+    ======================================================== */
+
+    const workbookHTML = `
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Annotation Pay Report</title>
+
+<style>
+
+body{
+  font-family:Arial,sans-serif;
+  padding:25px;
+}
+
+h1{
+  margin-bottom:25px;
+}
+
+h2{
+  margin-top:30px;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+}
+
+th{
+  background:#eeeeee;
+  font-weight:bold;
+}
+
+th,td{
+  border:1px solid #999;
+  padding:6px 8px;
+  text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Annotation Pay Studio Report</h1>
+
+${makeSheet(
+  "PAY SUMMARY",
+  summarySheet
+)}
+
+${makeSheet(
+  "ANTONY PAID ROWS",
+  paidSheet
+)}
+
+${makeSheet(
+  "EXCLUDED KML",
+  excludedSheet
+)}
+
+${makeSheet(
+  "CSV WITHOUT KML",
+  missingSheet
+)}
+
+${makeSheet(
+  "BUS LANE WITHOUT BUSSTOP",
+  busLaneSheet
+)}
+
+${makeSheet(
+  "BIKE LANE WITHOUT BUSSTOP",
+  bikeLaneSheet
+)}
+
+${makeSheet(
+  "CHECKS",
+  checksSheet
+)}
+
+${makeSheet(
+  "PAY NOTE",
+  noteSheet
+)}
+
+</body>
+
+</html>
+`;
+
+
+    const blob =
+      new Blob(
+        [
+          workbookHTML
+        ],
+        {
+          type:
+            "application/vnd.ms-excel"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href =
+      url;
+
+
+    const baseName =
+      (
+        kmlName ||
+        "Annotation_Pay"
+      )
+      .replace(
+        /\.[^.]+$/,
+        ""
+      )
+      .replace(
+        /[^\w.-]+/g,
+        "_"
+      );
+
+
+    link.download =
+      baseName +
+      "_payment_google_sheets.xls";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    setTimeout(
+      () =>
+        URL.revokeObjectURL(
+          url
+        ),
+      1000
+    );
+
+
+    setStatus(
+      "Google Sheets / Excel workbook exported successfully.",
+      "ok"
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "Export error:",
+      error
+    );
+
+
+    setStatus(
+      "Export failed: " +
+      error.message,
+      "err"
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   STARTUP SAFETY CHECK
+============================================================ */
+
+console.log(
+  "Annotation Pay Studio loaded successfully."
+);
+
+console.log(
+  "Supported KML annotations: Location Description, R0-R∞, BusStop, BusLane, BikeLane."
+);
+
 </script>
+
 </body>
 </html>
